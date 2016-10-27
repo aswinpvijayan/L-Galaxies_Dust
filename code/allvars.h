@@ -161,6 +161,61 @@ struct elements
 #endif //INDIVIDUAL_ELEMENTS
 #endif //DETAILED_METALS_AND_MASS_RETURN
 
+#ifdef DETAILED_DUST 			//Scott 15/11/2015
+
+struct DustMass
+{
+	struct AGB_dust
+	{
+		float SiC; 
+		float Sil;
+		float Cb;
+		float Fe;
+	}AGB;
+	struct SNII_dust
+	{
+		float SiC; 
+		float Sil;
+		float Cb;
+		float Fe;
+	}SNII;
+	struct SNIa_dust
+	{
+		float SiC; 
+		float Sil;
+		float Cb;
+		float Fe;
+	}SNIa;
+	struct Grown_dust
+	{
+		float SiC; 
+		float Sil;
+		float Cb;
+		float Fe;
+	}Growth;
+	struct Destruc_SNe
+	{
+		float SiC; 
+		float Sil;
+		float Cb;
+		float Fe;
+	}Destruction_SNe;
+	struct Destruc_SF
+	{
+		float SiC; 
+		float Sil;
+		float Cb;
+		float Fe;
+	}Destruction_SF;
+};
+
+//struct DustMass DustISM;		//DustISM.AGB.SiC
+//struct DustMass DustICM;
+//struct DustMass DustCGM;	
+
+#endif //DETAILED_DUST
+
+
 /**
  * Galaxy structure for output
  */
@@ -385,6 +440,12 @@ struct GALAXY_OUTPUT
   struct elements ICM_elements;
   struct elements EjectedMass_elements;
 #endif //INDIVIDUAL_ELEMENTS
+
+#ifdef DETAILED_DUST
+	struct DustMass DustISM;		//DustISM.AGB.SiC
+#endif
+
+
 };
 
 // next only of interest to DB output, which generally requires complete tree
@@ -640,6 +701,13 @@ struct GALAXY			/* Galaxy data */
   struct elements ICM_elements;
   struct elements EjectedMass_elements;
 #endif //INDIVIDUAL_ELEMENTS
+
+#ifdef DETAILED_DUST
+	struct DustMass DustISM;		//DustISM.AGB.SiC
+#endif
+
+
+
 } *Gal, *HaloGal;
 
 
@@ -1034,6 +1102,27 @@ float AGBRate2[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
 #endif
 
 #endif //DETAILED_METALS_AND_MASS_RETURN
+
+#ifdef DETAILED_DUST
+#define AGB_DUST_MASS_NUM 28
+#define AGB_DUST_METAL_NUM 6
+#define AGB_DUST_TYPE_NUM 11
+
+#define SIL_SI_DUST_FRACTION 0.5
+#define SIL_MG_DUST_FRACTION 0.5
+
+float AGBDustMasses[AGB_DUST_MASS_NUM]; //Initial star masses [Msun]
+float AGBDustMetallicities[AGB_DUST_METAL_NUM]; //Initial star metallicities [Msun]
+float AGBDustCreated[AGB_DUST_METAL_NUM][AGB_DUST_MASS_NUM][AGB_DUST_TYPE_NUM]; //Total mass ejected [Msun]
+
+float NormAGBDustYieldRate[(STEPS*MAXSNAPS)][SFH_NBIN][LIFETIME_Z_NUM][AGB_DUST_TYPE_NUM]; //+10????????
+
+float SNII_prevstep_Cold_Si[SFH_NBIN];
+float SNII_prevstep_Cold_Fe[SFH_NBIN];
+float SNII_prevstep_Cold_Cb[SFH_NBIN];
+float SNIa_prevstep_Cold_Fe[SFH_NBIN];
+
+#endif //DETAILED_DUST
 
 
 #ifdef COMPUTE_SPECPHOT_PROPERTIES

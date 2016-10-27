@@ -90,7 +90,7 @@ endif #FULL_SPECTRA
 endif ### COMPUTE_SPECPHOT_PROPERTIES
 
 # Chemical enrichment of individual element yields
-#OPT   += -DDETAILED_METALS_AND_MASS_RETURN
+OPT   += -DDETAILED_METALS_AND_MASS_RETURN
 ifeq (DETAILED_METALS_AND_MASS_RETURN,$(findstring DETAILED_METALS_AND_MASS_RETURN,$(OPT)))
 OPT   += -DFEEDBACK_COUPLED_WITH_MASS_RETURN
 OPT   += -DINDIVIDUAL_ELEMENTS
@@ -116,3 +116,13 @@ OPT  += -DBIMODALDTD #Use the Mannucci et al. (2006) delay time distribution. ~H
 #OPT  += -DINSTANTANEOUS_RECYCLE #Recycle all metals in one time step to resemble instantaneous recycling approximation 
 endif
 endif
+
+
+OPT += -DDETAILED_DUST
+OBJS += ./code/model_dustyields.o
+OBJS += ./code/dustyields_functions.o
+OBJS += ./code/dustyields_integrals.o
+OBJS += ./code/dustyields_read_tables.o
+
+
+

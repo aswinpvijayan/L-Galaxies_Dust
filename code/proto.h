@@ -349,5 +349,45 @@ void reset_ejection_rates(int i, int sfh_ibin,
 
 #endif //DETAILED_METALS_AND_MASS_RETURN
 
+#ifdef DETAILED_DUST
+
+double Chabrier_IMF_dust(double M);
+void read_dust_yield_tables();
+
+void update_dust_mass(int p, int centralgal, double dt, int nstep);
+int find_initial_metallicity_dust(int p, int sfh_bin, int table_type, int component_type);
+
+void init_integrated_dust_yields();
+void integrate_dust_yields();
+int find_initial_metallicity_comp_dust(int Zi, int sfh_bin, int table_type);
+int find_initial_mass_dust(double lifetime, int Zi_bin);
+int max_Mi_lower_dust(int Mi_lower, int channel_type);
+int min_Mi_upper_dust(int Mi_upper, int channel_type);
+int find_agb_mass_bin_dust(double masslimit);
+//void find_actual_ejecta_limits_dust(int k, double Mi_lower_actual, double Mi_upper_actual, int Mi_lower, int Mi_upper, int Zi, double* Yields_lower_actual, double* Yields_upper_actual);
+void find_actual_ejecta_limits_dust(int channel_type, double Mi_lower_actual, double Mi_upper_actual, int Mi_lower, int Mi_upper, int Zi, double* Yields_lower_actual, double* Yields_upper_actual);
+
+
+//in dust_functions.c
+struct DustMass DustMass_init();
+
+float DustMass_Total_SiC(struct DustMass dust);
+float DustMass_Total_Sil(struct DustMass dust);
+float DustMass_Total_Cb(struct DustMass dust);
+float DustMass_Total_Fe(struct DustMass dust);
+float DustMass_AGB_Total(struct DustMass dust);
+float DustMass_SNII_Total(struct DustMass dust);
+float DustMass_SNIa_Total(struct DustMass dust);
+float DustMass_Growth_Total(struct DustMass dust);
+float DustMass_Destruction_Total(struct DustMass dust);
+float DustMass_Total_Created(struct DustMass dust);
+float DustMass_Total_Created_Minus_Destroy(struct DustMass dust);
+struct DustMass DustMass_add(struct DustMass dust1, struct DustMass dust2, float fraction);
+
+
+
+
+#endif //DETAILED_DUST
+
 void print_galaxy(char string[], int p, int halonr);
 

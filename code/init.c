@@ -172,6 +172,12 @@ void init(void)
   integrate_yields();
 #endif
 
+#ifdef DETAILED_DUST
+  read_dust_yield_tables();
+  init_integrated_dust_yields();
+  integrate_dust_yields();
+#endif
+
 }
 
 
