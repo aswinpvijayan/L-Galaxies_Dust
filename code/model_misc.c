@@ -359,6 +359,11 @@ void init_galaxy(int p, int halonr)
   Gal[p].EjectedMass_elements = elements_init();
   Gal[p].ICM_elements = elements_init();
 #endif
+
+#ifdef DETAILED_DUST
+Gal[p].DustISM = DustMass_init();
+#endif //DDust
+
 }
 
 /**@brief Whenever star formation occurs, calculates the luminosity corresponding

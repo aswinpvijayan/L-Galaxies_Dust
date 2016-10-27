@@ -84,7 +84,12 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	sfh_time=Gal[p].sfh_t[i]+(0.5*Gal[p].sfh_dt[i]);
     	//time_to_ts = ((sfh_time+(0.5*Gal[p].sfh_dt[i])) - timet)*(UnitTime_in_years/Hubble_h)/1.0e6; //Time from high-z (upper) edge of SFH bin to middle of current timestep [in Myrs]
     	//tcut = 2.0*((Gal[p].Rvir/Gal[p].Vvir)/0.0001); //Maximum lifetime of stars that have their ejected put straight into the HotGas [in Myrs]
-
+#ifdef DETAILED_DUST
+		SNII_prevstep_Cold_Si[i] = 0.0;
+		SNII_prevstep_Cold_Fe[i] = 0.0;
+		SNII_prevstep_Cold_Cb[i] = 0.0;
+		SNIa_prevstep_Cold_Fe[i] = 0.0;
+#endif //DDust
 
 
     //*****************************************
@@ -208,6 +213,13 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].HotGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIIYieldRate_actual[3] + NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
     		Gal[p].HotGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIIYieldRate_actual[4] + NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
 #endif //MAINELEMENTS
+#ifdef DETAILED_DUST //Inside SNIA TO COLD!
+			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
+			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
+			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
+			SNIa_prevstep_Cold_Fe[i] += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10])));
+#endif //DDust
+
 #endif //SNIATOHOT
 #ifdef SNIATOHOT
     		Gal[p].HotGas_elements.H += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[0] + (Gal[p].sfh_ElementsDiskMass[i].H * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual)); //SN-II ejecta to HotGas in metal-rich wind (fwind)
@@ -269,6 +281,12 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
         	Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
         	Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
 #endif //MAINELEMENTS
+#ifdef DETAILED_DUST //Inside SNIA TO HOT!
+			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
+			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
+			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
+			SNIa_prevstep_Cold_Fe[i] += 0.0; //SNIA has gone to hot gas
+#endif //DDust
 #endif //SNIATOHOT
 #endif //PORTINARI
 #ifdef CHIEFFI
@@ -318,6 +336,12 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
     		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
 #endif //MAINELEMENTS
+#ifdef DETAILED_DUST //Inside SNIA TO COLD //CHIEFFI 
+			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[7]);
+			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10]);
+			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
+			SNIa_prevstep_Cold_Fe[i] += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[10]);
+#endif //DDust
 #endif //SNIATOHOT
 #ifdef SNIATOHOT
     		Gal[p].HotGas_elements.H += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[0]); //SN-II ejecta to HotGas in metal-rich wind (fwind) //NB: No unsynth component required for SN-II ejecta when using the CL04 SN-II yields
@@ -379,6 +403,12 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
     		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
 #endif //MAINELEMENTS
+#ifdef DETAILED_DUST //Inside SNIA TO HOT //CHIEFFI 
+			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[7]);
+			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10]);
+			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
+			SNIa_prevstep_Cold_Fe[i] += 0.0;
+#endif //DDust
 #endif //SNIATOHOT
 #endif //CHIEFFI
 #endif //INDIVIDUAL_ELEMENTS
