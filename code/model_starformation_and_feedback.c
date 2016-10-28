@@ -268,6 +268,11 @@ void update_from_star_formation(int p, double stars, bool flag_burst, int nstep)
   Gal[p].DiskMass_elements=elements_add(Gal[p].DiskMass_elements,Gal[p].ColdGas_elements,fraction);
   Gal[p].ColdGas_elements=elements_add(Gal[p].ColdGas_elements,Gal[p].ColdGas_elements,-fraction);
 #endif
+
+#ifdef DETAILED_DUST
+  transfer_dust_from_starformation(p, fraction);
+#endif
+
 #ifdef TRACK_BURST
   if (flag_burst) Gal[p].BurstMass+=stars_to_add;
 #endif

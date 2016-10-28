@@ -462,6 +462,10 @@ void add_galaxies_together(int t, int p)
   Gal[p].MergeSat=0.;
 
   transfer_gas(t,"Cold",p,"Cold",1.,"add_galaxies_together", __LINE__);
+#ifdef DETAILED_DUST
+  transfer_dust_mergers(t, p);
+#endif  
+  
   //transfer_gas(t,"Ejected",p,"Cold",1.,"add_galaxies_together", __LINE__);
   transfer_gas(t,"Hot",p,"Hot",1.,"add_galaxies_together", __LINE__);
   transfer_gas(t,"Ejected",p,"Ejected",1.,"add_galaxies_together", __LINE__);

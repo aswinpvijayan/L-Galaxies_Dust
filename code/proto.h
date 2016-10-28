@@ -384,7 +384,8 @@ float DustMass_Total_Created(struct DustMass dust);
 float DustMass_Total_Created_Minus_Destroy(struct DustMass dust);
 struct DustMass DustMass_add(struct DustMass dust1, struct DustMass dust2, float fraction);
 
-
+void transfer_dust_from_starformation(int p, double fraction);
+void transfer_dust_mergers(int p, int q);
 
 
 #endif //DETAILED_DUST
