@@ -119,6 +119,8 @@ endif
 
 
 OPT += -DDETAILED_DUST
+OPT += -DDUST_AGB
+OPT += -DDUST_SNII
 OBJS += ./code/model_dustyields.o
 OBJS += ./code/dustyields_functions.o
 OBJS += ./code/dustyields_integrals.o

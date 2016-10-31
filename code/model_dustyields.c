@@ -77,8 +77,7 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 //AGB ENRICHMENT FROM DISK STARS INTO COLD GAS:
 //*****************************************
 #ifdef DUST_AGB		
-   // if (Gal[p].sfh_DiskMass[i] > 0.0)
-    //{
+    if (Gal[p].sfh_DiskMass[i] > 0.0) {
      	//pre-calculations to speed up the code
     	DiskSFR = Gal[p].sfh_DiskMass[i]/Gal[p].sfh_dt[i];
     	step_width_times_DiskSFR = timestep_width * DiskSFR;
@@ -86,18 +85,28 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
     	step_width_times_DiskSFR_physical_units = timestep_width * DiskSFR_physical_units;
     	inverse_DiskMass_physical_units=Hubble_h/(Gal[p].sfh_DiskMass[i]*1.0e10);
     	Disk_total_metallicity=metals_total(Gal[p].sfh_MetalsDiskMass[i])/Gal[p].sfh_DiskMass[i];
+    	
+    	//printf("DT_metallicity = %g\t Metallicity = %g %g %g \t sfh_DM = %g\n",Disk_total_metallicity,Gal[p].sfh_MetalsDiskMass[i].agb,Gal[p].sfh_MetalsDiskMass[i].type1a,Gal[p].sfh_MetalsDiskMass[i].type2,Gal[p].sfh_DiskMass[i]);
 
     	Zi = find_initial_metallicity_dust(p, i, 1, 1);
     	//Interpolate the disk metallicity on the lifetimeMetallicities tables:
     	Zi_disp = (Disk_total_metallicity - lifetimeMetallicities[Zi])/(lifetimeMetallicities[Zi+1] - lifetimeMetallicities[Zi]);
+    	
+    	//printf("Zi_disp = %g\t DT_metallicity = %g\t Lifetime metallicities = %g\t%g\n",Zi_disp,Disk_total_metallicity,lifetimeMetallicities[Zi],lifetimeMetallicities[Zi+1]);
+    	
     	if (Zi_disp < 0.0) Zi_disp = 0.0; //Don't want to extrapolate yields down below lifetimeMetallicities[0]=0.0004. Instead, assume constant yield below this metallicity.
 
-
+			
 
  //interpolates yields from lookup tables we produced in dust_yield_integrals.c
 	    for (k=0;k<AGB_DUST_TYPE_NUM;k++)	//add numdustypes to allvars =4		//these are what we need for each type of dust
 	    {
 	    	NormAGBDustYieldRate_actual[k] = NormAGBDustYieldRate[TimeBin][i][Zi][k] + ((NormAGBDustYieldRate[TimeBin][i][Zi+1][k] - NormAGBDustYieldRate[TimeBin][i][Zi][k])*Zi_disp);	    	
+	    	
+	    	
+	    	//printf("NormAGBDustYieldRate_actual = %g\t NormAGBDustYieldRate[TimeBin][i][Zi][k] = %g\t%g\t Zi_disp = %g\n ",NormAGBDustYieldRate_actual[k],NormAGBDustYieldRate[TimeBin][i][Zi][k],NormAGBDustYieldRate[TimeBin][i][Zi+1][k],Zi_disp);
+	    	
+	    	
 	    	/*
 	    	printf("NormAGBDustYieldRate[TimeBin][i][Zi][k] = %g \n",NormAGBDustYieldRate[TimeBin][i][Zi][k]);
 	    	printf("NormAGBDustYieldRate[TimeBin][i][Zi+1][k]  = %g \n",NormAGBDustYieldRate[TimeBin][i][Zi+1][k]);
@@ -112,7 +121,9 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 	    	
 	    	printf("NormAGBDustYieldRate_actual[k] = %g \n",NormAGBDustYieldRate_actual[k]);*/
 	    }
+	    
 		CarOxyRatio = Gal[p].ColdGas_elements.Cb/Gal[p].ColdGas_elements.O;
+		//printf("%g\t%g\tCarOxyRatio = %g\n",Gal[p].ColdGas_elements.Cb,Gal[p].ColdGas_elements.O,CarOxyRatio);
 		if (CarOxyRatio < 0.85) {
 			//dust_scenario = 1;	//Mstars
 			//printf("dust_scenario = 1\n");	
@@ -186,8 +197,8 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 				Gal[p].ColdGas_elements.Cb -= 0.0;
 				Gal[p].ColdGas_elements.Fe -= 0.0;
 				
-				printf("1\n");
-				printf("DustISM.AGB.Sil = %g \n",Gal[p].DustISM.AGB.Sil);
+				//printf("1\n");
+				//printf("DustISM.AGB.Sil = %g \n",Gal[p].DustISM.AGB.Sil);
 
 				
 
@@ -220,8 +231,8 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 		
 				Gal[p].ColdGas_elements.Fe -= (step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[7]);
 				
-				printf("2\n");
-				printf("DustISM.AGB.Sil = %g \n",Gal[p].DustISM.AGB.Sil);
+				//printf("2\n");
+				//printf("DustISM.AGB.Sil = %g \n",Gal[p].DustISM.AGB.Sil);
 
 
 				break;
@@ -235,6 +246,8 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 				Gal[p].DustISM.AGB.SiC += 0.0; //C_SiC = none
 		
 				Gal[p].DustISM.AGB.Cb   += (step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[10]); //C_carbon
+
+				//printf("SWTDPU = %g\t NormAGBYRate = %g\tAGB CB = %g\n",step_width_times_DiskSFR_physical_units,NormAGBDustYieldRate_actual[9],(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[10]));
 
 				SumAGBDust = 0.0;
 				for (j=9; j<11; j++){
@@ -256,6 +269,7 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 
 				break;
 		}
+		} //if sfh_DM >0
     
 
 #endif //DUST_AGB

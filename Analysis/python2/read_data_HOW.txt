@@ -1,0 +1,63 @@
+HOWTO read L-Galaxies output...               Last updated 23-Sep-15
+
+...in IDL
+
+This requires a template file for the galaxy structure, to be found
+together with the data usually in a file called snap_template.pro.
+The file itself can (should) be created from the Makfile using the
+command "make metadata".  It will then appear in
+L-Galaxies/awk/idl/Lgalaxy.pro after which it needs minor editing to
+put it in the right format.
+
+The template file does not, of itself, supply enough information.  We
+also need to know what magnitude bands have been used.  This requires
+that a copy of all the relevant input files also be kept.  This has
+not always been done, but check in the relevant data directory just in
+case.
+
+The snapshot data can be read using the routine read_lgal.pro to be
+found in SAM/Idl/read_lgal.pro.  An example of how to do this can be
+found in SAM/Idl/read_script.pro.
+
+Reading the the raw data can take a long time.  It is recommended that
+you write a script to select only those galaxies that you want and
+then use the 'save' procedure within IDL to write that data in native
+binary format - that will make it much quicker to 'restore' the next
+time that you want to load it.
+
+Examples of scripts to make plots with said data can be found in
+SAM/Idl/plot_script.pro and SAM/Idl/plot_procedure.pro.
+
+...in python
+
+This requires a template file for the galaxy structure, to be found
+together with the data usually in a file called snap_template.py.
+The file itself can (should) be created from the Makfile using the
+command "make metadata".  It will then appear in
+L-Galaxies/awk/python/LGalaxyStruct.py after which my recommendation
+is to rename it snap_template.py and move it to the data directory.
+
+The template file does not, of itself, supply enough information.  We
+also need to know what magnitude bands have been used.  This requires
+that a copy of all the relevant input files also be kept.  This has
+not always been done, but check in the relevant data directory just in
+case.
+
+The snapshot data can be read using the routine read_lgal.py to be
+found in SAM/python(3)/.  An example of how to do this can be found in
+SAM/python(3)/script_read.py.  Unlike the IDL version, this script can
+be modified to read in only those galaxy properties that you desire.
+
+Reading the the raw data can take a long time.  It is recommended that
+you write a script to select only those galaxies that you want and
+then use the 'pickle' function within python to write that data in native
+binary format - that will make it much quicker to 'unpickle' the next
+time that you want to load it.  Example scripts can be found at
+SAM/python(3)/script_(un)pickle.py.
+
+Examples of scripts to make plots with said data can be found in
+SAM/python(3)/script_smf.py and the like.
+
+
+
+
