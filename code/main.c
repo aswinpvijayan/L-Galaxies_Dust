@@ -850,6 +850,37 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 		//printf("DustISM.SNII.Sil = %g\n",Gal[p].DustISM.SNII.Sil);
 		//printf("DustISM.AGB = %g\n",DustMass_AGB_Total(Gal[p].DustISM));
 		//printf("DustISM.SNII = %g\n",DustMass_SNII_Total(Gal[p].DustISM));
+		//printf("Type = %d\n",Gal[p].Type);
+		
+		
+		//printf("***********************\n");
+		//printf("DustISM.AGB.SiC = %g\n",Gal[p].DustISM.AGB.SiC);
+		//printf("DustISM.AGB.Sil = %g\n",Gal[p].DustISM.AGB.Sil);
+		//printf("DustISM.AGB.Cb = %g\n",Gal[p].DustISM.AGB.Cb);
+		//printf("DustISM.AGB.Fe = %g\n",Gal[p].DustISM.AGB.Fe); 
+		/*
+		printf("DustISM.SNII.SiC = %g\n",Gal[p].DustISM.SNII.SiC);
+		printf("DustISM.SNII.Sil = %g\n",Gal[p].DustISM.SNII.Sil);
+		printf("DustISM.SNII.Cb = %g\n",Gal[p].DustISM.SNII.Cb);
+		printf("DustISM.SNII.Fe = %g\n",Gal[p].DustISM.SNII.Fe);
+		printf("DustISM.SNIa.SiC = %g\n",Gal[p].DustISM.SNIa.SiC);
+		printf("DustISM.SNIa.Sil = %g\n",Gal[p].DustISM.SNIa.Sil);
+		printf("DustISM.SNIa.Cb = %g\n",Gal[p].DustISM.SNIa.Cb);
+		printf("DustISM.SNIa.Fe = %g\n",Gal[p].DustISM.SNIa.Fe);
+		printf("DustISM.Growth.SiC = %g\n",Gal[p].DustISM.Growth.SiC);
+		printf("DustISM.Growth.Sil = %g\n",Gal[p].DustISM.Growth.Sil);
+		printf("DustISM.Growth.Cb = %g\n",Gal[p].DustISM.Growth.Cb); 
+		printf("DustISM.Growth.Fe = %g\n",Gal[p].DustISM.Growth.Fe); 
+		printf("DustISM.Destruction_SNe.SiC = %g\n",Gal[p].DustISM.Destruction_SNe.SiC);
+		printf("DustISM.Destruction_SNe.Sil = %g\n",Gal[p].DustISM.Destruction_SNe.Sil);
+		printf("DustISM.Destruction_SNe.Cb = %g\n",Gal[p].DustISM.Destruction_SNe.Cb);
+		printf("DustISM.Destruction_SNe.Fe = %g\n",Gal[p].DustISM.Destruction_SNe.Fe);
+		printf("DustISM.Destruction_SF.SiC = %g\n",Gal[p].DustISM.Destruction_SF.SiC);
+		printf("DustISM.Destruction_SF.Sil = %g\n",Gal[p].DustISM.Destruction_SF.Sil);
+		printf("DustISM.Destruction_SF.Cb = %g\n",Gal[p].DustISM.Destruction_SF.Cb); 
+		printf("DustISM.Destruction_SF.Fe = %g\n",Gal[p].DustISM.Destruction_SF.Fe); 
+		printf("***********************\n");
+		*/
 		
 		#endif
 	  }

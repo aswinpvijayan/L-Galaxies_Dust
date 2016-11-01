@@ -2,7 +2,7 @@
 #
 #  Script to read in L-galaxies snapshot data
 #
-#  To force a re-read of the data do gals=None
+#  To force a re-read of the data do Gal=None
 #
 #-------------------------------------------------------------------------
 
@@ -10,138 +10,94 @@
 
 import sys
 
+# Path to data
+#datadir = '/mnt/lustre/scratch/virgo/SAM_output/Hen14_sfh2'
+#datadir = '/mnt/lustre/scratch/bf77/L-Galaxies/Hen14_MR/output'
+#datadir = '/lustre/scratch/astro/bf77/L-Galaxies/Hen14_MR/test_run'
+#datadir = '/lustre/scratch/astro/bf77/L-Galaxies/Hen14_MR/output_ref'
+#datadir = '/mnt/lustre/scratch/bf77/L-Galaxies/Hen14_MR/output_XS'
+#datadir = '/mnt/lustre/scratch/bf77/L-Galaxies/Hen14_MR/output_cooling_new'
+
+datadir = '../../output/'
+#datadir = '/lustre/scratch/astro/bf77/HANNAH_test/'
+#datadir = '/lustre/scratch/astro/bf77/L-Galaxies/Hen14_MR/output_newcoolx8'
+#datadir = '/lustre/scratch/astro/bf77/L-Galaxies/Hen14_MR/output_newcoolx10infmod' #test_run'
+
+#datadir = '/mnt/lustre/scratch/bf77/output_test'
+#datadir = '/mnt/lustre/scratch/bf77/L-Galaxies/Hen14_MR/output_test_sample'
+sys.path.insert(0,datadir)
+
 # Template structure for L-Galaxies data
+import snap_template   # structure temple for data
 import read_lgal       # function to read in data
 
 #-------------------------------------------------------------------------
 
 # Parameters
 
-# Decide what data set you want
-# Allow for calling with model set from metascript
-try:
-    model
-except:
-    #model='Hen14'
-    #model='Hen14_spin'
-    model='Guo10'
-    #model='Guo10_spin'
-    #model='Hen14_MRII'
+# Snaplist file
+snaplist_file = '../MRPlancksnaplist.txt'
 
-# Decide what redshift you want
-# Allow for calling with redshift set from metascript
-try:
-    redshift
-except:
-    redshift=0.15
+# Define what snapshot you want
+snapshot = 58 #58 => z = 0
 
 # Define which files you want to read in
-# 0-511 gives all the files (but takes a long time)
-firstfile = 0
-lastfile = 511
-
-# Path to input data
-if model=='Hen14': idatadir = '/lustre/scratch/astro/virgo/SAM_output/Hen14_sfh2'
-if model=='Hen14_spin': idatadir = '/lustre/scratch/astro/virgo/SAM_output/Hen14_spin'
-if model=='Guo10': idatadir = '/lustre/scratch/astro/virgo/SAM_output/Guo10_sfh2'
-if model=='Guo10_spin': idatadir = '/lustre/scratch/astro/virgo/SAM_output/Guo10_spin'
-if model=='Hen14_MRII': idatadir = '/lustre/scratch/astro/virgo/SAM_output/Hen14_MRII'
-
-# Path for output data
-if model=='Hen14': odatadir = 'data/Hen14_sfh2'
-if model=='Hen14_spin': odatadir = 'data/Hen14_spin'
-if model=='Guo10': odatadir = 'data/Guo10_sfh2'
-if model=='Guo10_spin': odatadir = 'data/Guo10_spin'
-if model=='Hen14_MRII': odatadir = 'data/Hen14_MRII'
-
-# import template
-sys.path.insert(0,idatadir)
-import snap_template
+firstfile = 5
+lastfile = 5 #511
 
 # Define what properties you want to read in
 props = snap_template.properties_used
+
 props['Type'] = True
-props['Rvir'] = True
-props['Mvir'] = True
-props['CentralMvir'] = True
-props['DistanceToCentralGal'] = True
-props['Pos'] = True
-props['Vel'] = True
-props['Vmax'] = True
-props['InfallVmax'] = True
-props['InfallVmaxPeak'] = True
-if model=='Hen14_spin':
-    props['BulgeSpin'] = True
-    props['BulgeSpinMax'] = True
-    props['DiskSpin'] = True
-    props['DiskSpinMax'] = True
-    props['ColdGasSpin'] = True
+props['ColdGas'] = True
+props['StellarMass'] = True
 props['BulgeMass'] = True
 props['DiskMass'] = True
-props['StellarMass'] = True
-props['ColdGas'] = True
 props['HotGas'] = True
-props['EjectedMass'] = True
-props['MetalsDiskMass'] = True
-props['MetalsStellarMass'] = True
-props['MetalsBulgeMass'] = True
+props['ICM'] = True
 props['MetalsColdGas'] = True
+props['MetalsBulgeMass'] = True
+props['MetalsDiskMass'] = True
 props['MetalsHotGas'] = True
 props['MetalsEjectedMass'] = True
-props['BulgeSize'] = True
-if model=='Hen14_spin':
-    props['DiskRadius'] = True
-    props['ColdGasRadius'] = True
+props['MetalsICM'] = True
 props['Sfr'] = True
-props['BlackHoleMass'] = True
-props['BlackHoleGas'] = True
-props['QuasarAccretionRate'] = True
-props['RadioAccretionRate'] = True
-if model=='Hen14_spin' or model=='Guo10_spin':
-    props['ObsMag'] = True
-else:
-    props['Mag'] = True
-props['sfh_ibin'] = True
-props['sfh_numbins'] = True
-props['sfh_DiskMass'] = True
-props['sfh_BulgeMass'] = True
-props['sfh_MetalsDiskMass'] = True
-props['sfh_MetalsBulgeMass'] = True
-
+props['SfrBulge'] = True
+props['DiskMass_elements'] = True
+props['BulgeMass_elements'] = True
+props['ColdGas_elements'] = True
+props['DustMass'] = True
+# 
 
 #-------------------------------------------------------------------------
 
 # Working body of the program
 
-# Matching between redshift and snapshot provided by dictionary
-# In future create this dictionary from appropriate files
-snapz_Hen14={0:58,0.15:53,0.25:50,0.5:45,1:38,1.5:34,2:30,2.5:28,3:25,4:22,5:19,6:17}
-snapz_Guo10={0:63,0.15:57,0.25:54,0.5:48,0.75:52,1:41,1.5:36,2:32,3:27,4:24,5:21,6:18}
-snapz_Hen14_MRII={0:62,0.25:54,0.5:49,1:42,1.5:38,2:34,3:29,4:26,5:23,6:21}
-if model=='Hen14': snapshot = snapz_Hen14[redshift]
-if model=='Hen14_spin': snapshot = snapz_Hen14[redshift]
-if model=='Guo10': snapshot = snapz_Guo10[redshift]
-if model=='Guo10_spin': snapshot = snapz_Guo10[redshift]
-if model=='Hen14_MRII': snapshot = snapz_Hen14_MRII[redshift]
-
-# Snaplist file
-if model=='Hen14': snaplist_file = idatadir+'/MRPlancksnaplist.txt'
-if model=='Hen14_spin': snaplist_file = idatadir+'/MRPlancksnaplist.txt'
-if model=='Guo10': snaplist_file = idatadir+'/MRW1snaplist.txt'
-if model=='Guo10_spin': snaplist_file = idatadir+'/MRW1snaplist.txt'
-if model=='Hen14_MRII': snaplist_file = idatadir+'/MRIIPlancksnaplist.txt'
-
 # Read in redshift of snapshot and create file prefix
-f = open(snaplist_file)
-lines = f.readlines()
-f.close()
-for this_line in lines:
-    words = this_line.split()
+#f = open(snaplist_file)
+#lines = f.readlines()
+#f.close()
+#for this_line in lines:
+#    words = this_line.split()
     #print words[0],words[2]
-    if words[0]==str(snapshot):
-        file_prefix = "SA_z"+words[2]
-
+#    if words[0]==str(snapshot):
+#        file_prefix = "SA_z"+words[2]
+#        print "z = ", words[2]
+file_prefix = "SA_z0.00"
 # Read in galaxy output
 (nTrees,nHalos,nTreeHalos,gals) = \
-    read_lgal.read_snap(idatadir,file_prefix,firstfile,lastfile,\
+    read_lgal.read_snap(datadir,file_prefix,firstfile,lastfile,\
                             props,snap_template.struct_dtype)
+
+
+import cPickle
+
+#fout = open('/mnt/lustre/scratch/bf77/Dave_lum.pkl', 'wb')
+#fout = open('/mnt/lustre/scratch/bf77/Lgal_coolXS_less.pkl', 'wb')
+#fout = open('/lustre/scratch/astro/bf77/Lgal_runx10mcmc_z0_part1.pkl', 'wb')
+#fout = open('/lustre/scratch/astro/bf77/Lgal_runx10infmod_z0_part1.pkl', 'wb')
+#fout = open('/lustre/scratch/astro/bf77/try3.pkl', 'wb') #Lgal_runx10AGNXS01_z0_part1.pkl', 'wb')
+#fout = open('/lustre/scratch/astro/bf77/Lgal_run_X10_NewReinc_NoQuasar_Infall0_less.pkl', 'wb')
+fout = open('../data/lgal_output.pkl','wb')
+cPickle.dump(gals,fout,cPickle.HIGHEST_PROTOCOL)
+fout.close()
