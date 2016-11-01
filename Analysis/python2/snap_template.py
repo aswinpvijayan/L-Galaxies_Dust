@@ -75,7 +75,8 @@ struct_dtype = np.dtype([
 ('HotGas_elements',np.float32,11),
 ('ICM_elements',np.float32,11),
 ('EjectedMass_elements',np.float32,11),
-('DustMass',np.float32,24)
+('DustMassISM',np.float32,24),
+('DustMassCGM',np.float32,24)
 ])
 
 properties_used = {}

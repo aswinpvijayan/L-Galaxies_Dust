@@ -362,6 +362,8 @@ void init_galaxy(int p, int halonr)
 
 #ifdef DETAILED_DUST
 Gal[p].DustISM = DustMass_init();
+Gal[p].DustCGM = DustMass_init();
+
 #endif //DDust
 
 }
