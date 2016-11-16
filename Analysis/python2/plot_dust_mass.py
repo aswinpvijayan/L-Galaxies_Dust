@@ -7,6 +7,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pylab
 
+obs_DM, obs_DM_err, obs_SM = np.loadtxt('../observations/z0.txt',unpack=True)
+obs_DM_act_err = obs_DM*(obs_DM_err/100.0)
+
+print obs_DM
+
 for loop in range(0,10):
 	fin = open('../data/lgal_z'+str(loop)+'.pkl','rb')
 	gals=cPickle.load(fin)
@@ -18,6 +23,7 @@ for loop in range(0,10):
 	SNIa_Dust_Mass = np.zeros(len(gals['Type']))
 	Growth_Dust_Mass = np.zeros(len(gals['Type']))
 	Stellar_Mass = np.zeros(len(gals['Type']))
+	All_Dust_Mass = np.zeros(len(gals['Type']))
 	
 	AGB_Dust_SiC= np.zeros(len(gals['Type']))
 	AGB_Dust_Sil= np.zeros(len(gals['Type']))
@@ -32,11 +38,14 @@ for loop in range(0,10):
 		Growth_Dust_Mass[i] = (gals['DustMassISM'][i][12]+gals['DustMassISM'][i][13]+gals['DustMassISM'][i][14]+gals['DustMassISM'][i][15])
 		Stellar_Mass[i] = gals['StellarMass'][i]*1.0E10/0.673
 		
+		
 		AGB_Dust_SiC[i] = gals['DustMassISM'][i][0]
 		AGB_Dust_Sil[i] = gals['DustMassISM'][i][1]
 		AGB_Dust_Fe[i]  = gals['DustMassISM'][i][2]
 		AGB_Dust_Cb[i]  = gals['DustMassISM'][i][3]
 		
+		for j in range(0,16):
+			All_Dust_Mass[i] += gals['DustMassISM'][i][j]
 		
 		
 		
@@ -54,6 +63,8 @@ for loop in range(0,10):
 
 
 	log_SM = np.log10(Stellar_Mass)
+	
+	log_ALL = np.log10(All_Dust_Mass)
 
 
 
@@ -114,7 +125,7 @@ for loop in range(0,10):
 	stdev_SNII=np.zeros(5)
 
 	j=0
-	xxx=[7,8,9,10,11]
+	xxx=[7.5,8.5,9.5,10.5,11.5]
 	for i in range(7,12):
 		low=i
 		high=low+1
@@ -141,7 +152,7 @@ for loop in range(0,10):
 	stdev_GROW=np.zeros(5)
 
 	j=0
-	xxx=[7,8,9,10,11]
+	xxx=[7.5,8.5,9.5,10.5,11.5]
 	for i in range(7,12):
 		low=i
 		high=low+1
@@ -161,7 +172,35 @@ for loop in range(0,10):
 	pylab.savefig('./graphs/stellar_GROWdust_z'+str(loop)+'.png', bbox_inches=0)
 	plt.close()
 
+	#---------------------ALL
+	# Mean values
+	avg_ALL=np.zeros(5)
+	stdev_ALL=np.zeros(5)
 
+	j=0
+	xxx=[7.5,8.5,9.5,10.5,11.5]
+	for i in range(7,12):
+		low=i
+		high=low+1
+		avg_ALL[j]=np.mean(log_ALL[(log_SM>=low)&(log_SM<high)])
+		stdev_ALL[j] =np.std(log_ALL[(log_SM>=low)&(log_SM<high)])
+		#print i, avg[j],stdev[j]
+		j=j+1
+	
+	plt.xlim([6,12])
+	plt.hexbin(log_SM,log_ALL,gridsize=500,mincnt=1,label='Dust ALL')
+	plt.errorbar(xxx,(avg_ALL),yerr=(stdev_ALL),color='r',label='Dust ALL')
+	if(loop == 0):
+		#plt.scatter(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM_err),color='g',label='RemyRuyer2014')
+		plt.errorbar(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM)*(obs_DM_err/100.0),color='g',label='RemyRuyer2014',fmt='o')
+
+	plt.xlabel(r'log$_{10}$(Mstellar/M$_{\odot}$)', fontsize=14,labelpad=10)
+	plt.ylabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=0)
+	plt.tick_params(axis='both', which='major', labelsize=10)
+	plt.tick_params(axis='both', which='minor', labelsize=8)
+	plt.legend(loc='lower right')
+	pylab.savefig('./graphs/stellar_ALLdust_z'+str(loop)+'.png', bbox_inches=0)
+	plt.close()
 
 
 # 0		dust.AGB.SiC    

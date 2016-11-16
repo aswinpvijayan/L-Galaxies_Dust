@@ -8,6 +8,9 @@
  *
  * Created: Oct2016
  * Author: ScottClay
+ *
+ * Nov 2016 - Removed a lot of redundant code and changed integration limit to be 7.0 all the time, ignore Mi_upper stuff
+ *
  */
 
 #include <stdio.h>
@@ -55,8 +58,9 @@ void integrate_dust_yields()
 	int snap, step,i,mb;
 	double timet;
 
-	int Mi_lower, Mi_upper,Zi_AGB;
+	int Mi_lower, Mi_upper,Zi_Dust;
 	int Mi_lower_AGB, Mi_upper_AGB, t_lower_lifetime, t_upper_lifetime;
+	int Mi_lower_Dust, Mi_upper_Dust;
 	int width_in_timesteps, mbmax; //Number of current timesteps that fit in any given SFH bin, and the number of mini bins considered for any given SFH bin (max. = 30, for memory considerations)
 	double dt, t_lower, t_upper, Mi_lower_actual, Mi_upper_actual;
 	double AGBYields_lower_actual[AGB_DUST_TYPE_NUM], AGBYields_upper_actual[AGB_DUST_TYPE_NUM];
@@ -88,131 +92,47 @@ void integrate_dust_yields()
 	        	  int Zi;
 	        	  for (Zi=0;Zi<LIFETIME_Z_NUM;Zi++) //LOOP OVER POSSIBLE INITIAL METALLICITIES
 	        	  {
-	        	  	//Mi_lower_upper goes to get the bin number, so an integer, from the lifetime array
-	        	  	//Mi_lower_upper_actual is the actual mass in Msol
-	        		
+	        	  	
+	        	  	//Mi_upper goes to get the bin number, so an integer, from the lifetime array
+	        		//Mi_lower = bin number for lifetime array for lowest mass star possible to die
+	        		//at this time
 	        		Mi_lower = find_initial_mass_dust(t_upper, Zi); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
-	        		Mi_upper = find_initial_mass_dust(t_lower, Zi); //Mass bin (lifetime arrays) corresp. to highest mass of star to 'die' in current timestep, from SFH bin i.
-	        
-	        		Mi_lower_actual = lifetimeMasses[Mi_lower] + ((lifetimeMasses[Mi_lower+1]-lifetimeMasses[Mi_lower]) * ((t_upper-lifetimes[Zi][Mi_lower])/(lifetimes[Zi][Mi_lower+1]-lifetimes[Zi][Mi_lower]))); //IN MSUN  //Lowest mass of star to 'die' in current timestep from SFH bin i.
-	        		Mi_upper_actual = lifetimeMasses[Mi_upper] + ((lifetimeMasses[Mi_upper+1]-lifetimeMasses[Mi_upper]) * ((t_lower-lifetimes[Zi][Mi_upper])/(lifetimes[Zi][Mi_upper+1]-lifetimes[Zi][Mi_upper]))); //IN MSUN  //Highest mass of star to 'die' in current timestep from SFH bin i.
 
-
-	        		if (Mi_upper_actual <= 0.0 || Mi_upper_actual > 120.0 || Mi_upper == LIFETIME_MASS_NUM-1)
-	        			Mi_upper_actual = SNII_MAX_MASS; //Mi_upper_actual can be	< 0.0 for the highest Zi, as lifetimes[5][149+1] = 0.0 (i.e. doesn't exist!)
-
-	        		if (Mi_lower_actual <= 0.85) Mi_lower_actual = AGB_MIN_MASS; //No stars below 0.85 Msun contribute to chemical enrichment.
-	        		//if (Mi_upper == LIFETIME_MASS_NUM-1) Mi_upper_actual = SNII_MAX_MASS; //No stars above 120 Msun assumed to exist.
-	        		if (lifetimeMasses[Mi_upper] >= SNII_MAX_MASS) Mi_upper_actual = SNII_MAX_MASS; //No stars of mass above max. SN-II progenitor assumed to exist.
-
-	        		//if (Mi_upper_actual <= 0.0) {Mi_upper_actual = Mi_lower_actual;} //ROB: Just a condition added when artificially changing lifetimes. (08-01-13) //printf("USED!!\n");
+					//*****************************************
+					//AGB Winds (Disc and Bulge):
+					//*****************************************
 					
-					if (Mi_upper_actual <= 0.85) Mi_upper_actual = AGB_MIN_MASS;
-					if (Mi_lower_actual >= 120.0) Mi_lower_actual = SNII_MAX_MASS;
+					//finds the metallicity in dust table that corresponds to metallicity bin in the lifetimes table 
+					Zi_Dust = find_initial_metallicity_comp_dust(Zi, i, 4); 
 					
-					/*
-					if ( Mi_lower_actual > Mi_upper_actual) {
-						//printf("%f \t %f \n",Mi_lower_actual,Mi_upper_actual);
-						printf("%f\t%f\t%d\t%d\t%d\t%f\t%f\t%f\t%f\n",Mi_lower_actual,Mi_upper_actual,Mi_upper,Mi_upper+1,Zi,lifetimeMasses[Mi_upper],lifetimeMasses[Mi_upper+1],t_lower,lifetimes[Zi][Mi_upper]);
-						}
-					*/
+					//Mi_lower_AGB = integer mass bin from lifetime arrays
+					//max/min functions below shift Mi_lower_AGB to correspond to lifetime
+					//bin closest to limits if we have a limit problem
+					Mi_lower_AGB = max_Mi_lower_dust(Mi_lower,4); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
 
+					//if (Mi_lower_AGB <= Mi_upper_AGB)
+					//{
+					//Mi_lower_Dust = bin number for lowest mass to integrate from in Dust tables mass value
+					Mi_lower_Dust = find_agb_mass_bin_dust(lifetimeMasses[Mi_lower_AGB]);
+					//Mi_upper_Dust = find_agb_mass_bin_dust(lifetimeMasses[Mi_upper_AGB]);
 
-
-
-	        		if (t_upper >= lifetimes[Zi][LIFETIME_MASS_NUM-1]) //If the longest time from SFH bin i to current timestep is shorter than the shortest possible lifetime, there's no enrichment, so skip calculations.
-	        		{
-	        			//*****************************************
-	        			//AGB Winds (Disc and Bulge):
-	        			//*****************************************
-	        			//Zi = lifetime metallicity bun number, Zi_AGB goes to find the metallicity from the dust table that matches this lifetime metallicity. 
-	        	    	Zi_AGB = find_initial_metallicity_comp_dust(Zi, i, 4); //finds the metallicity in dust table that corresponds to metallicity bin in the lifetimes table 
-						
-						//Mi_lower_upper = integer mass bin from lifetime arrays
-	        			Mi_lower_AGB = max_Mi_lower(Mi_lower,4); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
-	        			Mi_upper_AGB = min_Mi_upper(Mi_upper,4); //Mass bin (lifetime arrays) corresp. to highest mass of star to 'die' in current timestep, from SFH bin i.
-
-	        	    	if (Mi_lower_AGB <= Mi_upper_AGB)
-	        	    	{
-	        	    		//Mi_lower_upper_AGB = INTEGER = dust agb mass bin number 
-	        	    		Mi_lower_AGB = find_agb_mass_bin_dust(lifetimeMasses[Mi_lower_AGB]);
-	        	    		Mi_upper_AGB = find_agb_mass_bin_dust(lifetimeMasses[Mi_upper_AGB]);
-
-	        	    		find_actual_ejecta_limits_dust(4, Mi_lower_actual, Mi_upper_actual, Mi_lower_AGB, Mi_upper_AGB, Zi_AGB,
-	        	    				AGBYields_lower_actual, AGBYields_upper_actual);
-
-							//Actual integration
-	        	    		int j;
-	        	    		for (j=Mi_lower_AGB;j<Mi_upper_AGB;j++)
-	        	    		//for (j=Mi_lower_AGB;j<=Mi_upper_AGB;j++)
-
-	        	    		{       
-	        	    			int k;
-								for (k=0;k<AGB_DUST_TYPE_NUM;k++) { 
-									NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] += (AGBDustMasses[j+1]-AGBDustMasses[j]) * ((AGBDustCreated[Zi_AGB][j][k] + AGBDustCreated[Zi_AGB][j+1][k])/2.0);
-        	    					if (NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] < 0.0) {
-        	    						printf("0\t%d\t\t%f \t %f \t %f \t %f \t %f \n",j,NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k], AGBDustMasses[j+1], AGBDustMasses[j], AGBDustCreated[Zi_AGB][j][k], AGBDustCreated[Zi_AGB][j+1][k]);
-        	    						}
-        	    					}
-	        	    		
-	        	    		 	    				
-        	    			/*	
-        	    				if (j != Mi_lower_AGB && j != Mi_upper_AGB)
-        	    				{
-									int k;
-									for (k=0;k<AGB_DUST_TYPE_NUM;k++) { 
-										NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] += (AGBDustMasses[j+1]-AGBDustMasses[j]) * ((AGBDustCreated[Zi_AGB][j][k] + AGBDustCreated[Zi_AGB][j+1][k])/2.0);
-        	    						if (NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] < 0.0) {
-        	    							printf("1\t%f \t %f \t %f \t %f \t %f \n",NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k], AGBDustMasses[j+1], AGBDustMasses[j], AGBDustCreated[Zi_AGB][j][k], AGBDustCreated[Zi_AGB][j+1][k]);
-        	    							}
-        	    					}
-        	    				} 
-        	    				else {
-									int k;
-									for (k=0;k<AGB_DUST_TYPE_NUM;k++) { 
-        	    					NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] = 0.0;
-        	
-        	    				}*/
-        	    				/*
-        	    				else if (j == Mi_lower_AGB && j == Mi_upper_AGB && Mi_lower_actual <= AGB_MAX_MASS)
-        	    				{
-									int k;
-									for (k=0;k<AGB_DUST_TYPE_NUM;k++) { 
-										NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] += (Mi_upper_actual-Mi_lower_actual) * ((AGBYields_lower_actual[k] + AGBYields_upper_actual[k])/2.0);
-        	    						if (NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] < 0.0) {
-        	    							printf("2\t%f \t %f \t %f \t %f \t %f \n",NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k], Mi_upper_actual, Mi_lower_actual, AGBYields_lower_actual[k], AGBYields_upper_actual[k]);
-        	    							}
-        	    					
-        	    					}
-        	    				}
-        	    				else if (j == Mi_lower_AGB && j != Mi_upper_AGB)
-        	    				{
-									int k;
-									for (k=0;k<AGB_DUST_TYPE_NUM;k++) { 
-										NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] += (AGBDustMasses[j+1]-Mi_lower_actual) * ((AGBYields_lower_actual[k] + AGBDustCreated[Zi_AGB][j+1][k])/2.0);
-        	    						if (NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] < 0.0) {
-        	    							printf("3\t%f \t %f \t %f \t %f \t %f \n",NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k], AGBDustMasses[j+1],Mi_lower_actual, AGBYields_lower_actual[k], AGBDustCreated[Zi_AGB][j+1][k]);
-        	    							}
-        	    					
-        	    					}
-        	    				}
-        	    				else if (j == Mi_upper_AGB && j != Mi_lower_AGB)
-        	    				{
-        	    					int k;
-									for (k=0;k<AGB_DUST_TYPE_NUM;k++) { 
-										NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] += (Mi_upper_actual-AGBDustMasses[j]) * ((AGBDustCreated[Zi_AGB][j][k] + AGBYields_upper_actual[k])/2.0);
-        	    						if (NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] < 0.0) {
-        	    						
-        	    							printf("4\t%f \t %f \t %f \t %f \t %f \n",NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k], Mi_upper_actual, AGBDustMasses[j], AGBDustCreated[Zi_AGB][j][k], AGBYields_upper_actual[k]);
-        	    							}
-									
-									
-        	    					}
-         	    				}*/
-        	    			}	//for (j=Mi_lower_AGB;j<=Mi_upper_AGB;j++)
-	        	    	} //if (Mi_lower_AGB <= Mi_upper_AGB)
+					//Actual integration
+					int j;
+					//for (j=Mi_lower_Dust;j<Mi_upper_Dust;j++)
+					for (j=Mi_lower_Dust;j<AGB_DUST_MASS_NUM-1;j++)
+					{       
+						int k;
+						for (k=0;k<AGB_DUST_TYPE_NUM;k++) { 
+							NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] += (AGBDustMasses[j+1]-AGBDustMasses[j]) * ((AGBDustCreated[Zi_Dust][j][k] + AGBDustCreated[Zi_Dust][j+1][k])/2.0);
+							//if (NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] < 0.0) {
+							//	printf("0\t%d\t\t%f \t %f \t %f \t %f \t %f \n",j,NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k], AGBDustMasses[j+1], AGBDustMasses[j], AGBDustCreated[Zi_Dust][j][k], AGBDustCreated[Zi_Dust][j+1][k]);
+							//	}
+							}
+					
+											
+					}	//for (j=Mi_lower_AGB;j<=Mi_upper_AGB;j++)
+					//} //if (Mi_lower_AGB <= Mi_upper_AGB)
 	        	    	
-	        	   } //if (t_upper >= lifetimes[Zi][Mi_lower+1])
 
 	        	} //for (Zi=0;Zi<LIFETIME_Z_NUM;Zi++)
 	          } //for (j=0;j<=width_in_timesteps;j++) //MINI_BINS	
