@@ -286,13 +286,13 @@ if (Gal[p].sfh_DiskMass[i] > 0.0) {
 	float eta_SNIa_SiC = 0.0;
 	float eta_SNIa_Cb  = 0.0;
 
-	//float A_Fe_dust  = 55.85;
-	//float A_Fe = 55.85;
+	float A_Fe_dust  = 55.85;
+	float A_Fe = 55.85;
 
 	Gal[p].DustISM.SNIa.Fe  += SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe;
 	Gal[p].ColdGas_elements.Fe -= SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe;
-	Gal[p].ColdGas -= (SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe)/(1.0e10/Hubble_h);
 	Gal[p].MetalsColdGas.type1a -= (SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe)/(1.0e10/Hubble_h);
+
 }
 #endif //DUST_SNIA
 
@@ -376,12 +376,11 @@ if (Gal[p].sfh_DiskMass[i] > 0.0) {
 			Gal[p].ColdGas_elements.Cb -= max(0.0,(Xc*Gal[p].DustISM.SNII.Cb*(dt/t_acc_0)*Z_fraction));
 			Gal[p].MetalsColdGas.type2 -= max(0.0,(Xc*Gal[p].DustISM.SNII.Cb*(dt/t_acc_0)*Z_fraction)/(1.0e10/Hubble_h));
 			
-			/*
+#ifdef DUST_SNIA		
 			Gal[p].DustISM.Growth.Fe += max(0.0,(Xc*Gal[p].DustISM.SNIa.Fe*(dt/t_acc_0)*Z_fraction));			
 			Gal[p].ColdGas_elements.Fe -= max(0.0,(Xc*Gal[p].DustISM.SNIa.Fe*(dt/t_acc_0)*Z_fraction));
 			Gal[p].MetalsColdGas.type1a -= max(0.0,(Xc*Gal[p].DustISM.SNIa.Fe*(dt/t_acc_0)*Z_fraction)/(1.0e10/Hubble_h));
-			*/
-
+#endif //DUST_SNIA
 } 
 #endif //DUST_GROWTH
 
@@ -456,11 +455,11 @@ if (Gal[p].sfh_DiskMass[i] > 0.0) {
 				Gal[p].MetalsColdGas.type2+= max(0.0,(1.0-agb_sne_ratio)*(Gal[p].DustISM.Growth.Fe *des_frac)/(1.0e10/Hubble_h));			
 				Gal[p].DustISM.Growth.Fe -= max(0.0,Gal[p].DustISM.Growth.Fe *des_frac);
 
-				/* //SNIa dust
-				Gal[p].ColdGas_elements.Fe +=  max(0.0,Gal[p].DustISM.SNIa.Fe *des_frac);
+#ifdef DUST_SNIA		
+				Gal[p].ColdGas_elements.Fe += max(0.0, Gal[p].DustISM.SNIa.Fe *des_frac);
 				Gal[p].MetalsColdGas.type1a += max(0.0,(Gal[p].DustISM.SNIa.Fe *des_frac)/(1.0e10/Hubble_h));
 				Gal[p].DustISM.SNIa.Fe -= max(0.0,Gal[p].DustISM.SNIa.Fe *des_frac);
-				*/
+#endif //DUST_SNIA		
 				
 			
 				//SiC dust
