@@ -71,6 +71,10 @@ void integrate_dust_yields()
 	    previoustime = NumToTime(snap); //Time to z=0 from start of current snapshot [in code units]
 	    newtime = NumToTime(snap+1); //Time to z=0 from end of current snapshot [in code units]
 	    deltaT = previoustime - newtime; //timestep
+		
+		//printf("snap = %d\t time to z=0 = %g\n",snap,previoustime* UnitTime_in_years/Hubble_h);
+		//printf("snap = %d\t actual time = %g\n",snap,(NumToTime(0)-previoustime)* UnitTime_in_years/Hubble_h);
+
 
 	    for(step=0;step<STEPS;step++) //LOOP OVER TIMESTEPS
 	    {
@@ -120,6 +124,7 @@ void integrate_dust_yields()
 					int j;
 					//for (j=Mi_lower_Dust;j<Mi_upper_Dust;j++)
 					for (j=Mi_lower_Dust;j<AGB_DUST_MASS_NUM-1;j++)
+					//for (j=0;j<AGB_DUST_MASS_NUM-1;j++)
 					{       
 						int k;
 						for (k=0;k<AGB_DUST_TYPE_NUM;k++) { 

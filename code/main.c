@@ -846,12 +846,13 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 		update_yields_and_return_mass(p, centralgal, deltaT/STEPS, nstep);
 		#ifdef DETAILED_DUST
 		update_dust_mass(p, centralgal, deltaT/STEPS, nstep);
+		#endif
 		//printf("DustISM.AGB.Cb = %g\n",Gal[p].DustISM.AGB.Cb);
 		//printf("DustISM.SNII.Sil = %g\n",Gal[p].DustISM.SNII.Sil);
 		//printf("DustISM.AGB = %g\n",DustMass_AGB_Total(Gal[p].DustISM));
 		//printf("DustISM.SNII = %g\n",DustMass_SNII_Total(Gal[p].DustISM));
 		//printf("Type = %d\n",Gal[p].Type);
-
+	    //printf("%g\t%g\t%g\n",Gal[p].ColdGas_elements.Fe,Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2);
 		/*
 		printf("***********************\n");
 		printf("DustCGM.AGB.SiC = %g\n",Gal[p].DustCGM.AGB.SiC);
@@ -893,7 +894,7 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 		printf("***********************\n");
 		*/
 		
-		#endif
+		//#endif
 	  }
 #endif
 

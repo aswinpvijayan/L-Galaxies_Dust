@@ -47,7 +47,7 @@ void read_dust_yield_tables(void)
         {
 	  fscanf(fd1, "%f", &m1);
 	  AGBDustMasses[i1] = m1;
-      printf("%f\n", AGBDustMasses[i1]);
+     //printf("%f\n", AGBDustMasses[i1]);
         }
 	fclose(fd1);
 	
@@ -74,7 +74,7 @@ void read_dust_yield_tables(void)
         {
 	  fscanf(fd2, "%f", &m2);
 	  AGBDustMetallicities[i2] = m2;
-      printf("%f\n", AGBDustMetallicities[i2]);
+      //printf("%f\n", AGBDustMetallicities[i2]);
         }
 	fclose(fd2);
 	
@@ -106,7 +106,7 @@ void read_dust_yield_tables(void)
         			fscanf(fd3, "%f", &m3);
         			AGBDustCreated[i3][j3][k3] = m3 * Chabrier_IMF_dust(AGBDustMasses[j3]);
         			//printf("%f\n", AGBDustCreated[i3][j3][k3]);
-        			printf("%g\t%g\t%g\t%g\n",AGBDustMetallicities[i3],AGBDustMasses[j3],m3,AGBDustCreated[i3][j3][k3]);
+        			//printf("%g\t%g\t%g\t%g\n",AGBDustMetallicities[i3],AGBDustMasses[j3],m3,AGBDustCreated[i3][j3][k3]);
 	        	}
 			}
 		}
