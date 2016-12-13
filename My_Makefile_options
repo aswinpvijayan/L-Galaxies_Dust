@@ -120,11 +120,10 @@ endif
 
 OPT += -DDETAILED_DUST
 OPT += -DDUST_AGB
-##OPT += -DDUST_INC_HOT
 OPT += -DDUST_SNII
 OPT += -DDUST_SNIA
 OPT += -DDUST_GROWTH
-OPT += -DDUST_DESTRUCTION
+#OPT += -DDUST_DESTRUCTION
 OBJS += ./code/model_dustyields.o
 OBJS += ./code/dustyields_functions.o
 OBJS += ./code/dustyields_integrals.o

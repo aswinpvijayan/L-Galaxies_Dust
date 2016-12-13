@@ -1107,7 +1107,7 @@ float AGBRate2[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
 
 #ifdef DETAILED_DUST
 #define AGB_DUST_MASS_NUM 28
-#define AGB_DUST_METAL_NUM 6
+#define AGB_DUST_METAL_NUM 4//6
 #define AGB_DUST_TYPE_NUM 11
 
 #define SIL_SI_DUST_FRACTION 0.5
@@ -1123,6 +1123,13 @@ float SNII_prevstep_Cold_Si[SFH_NBIN];
 float SNII_prevstep_Cold_Fe[SFH_NBIN];
 float SNII_prevstep_Cold_Cb[SFH_NBIN];
 float SNIa_prevstep_Cold_Fe[SFH_NBIN];
+
+int Zi_saved;
+float Zi_disp_saved;
+
+double TotalMassReturnedToColdDiskGas;
+double TotalMassReturnedToHotGas;
+
 
 #endif //DETAILED_DUST
 

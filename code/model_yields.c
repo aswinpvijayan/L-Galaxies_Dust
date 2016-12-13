@@ -49,7 +49,9 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 	double ICMSFR, step_width_times_ICMSFR, ICMSFR_physical_units, step_width_times_ICMSFR_physical_units, inverse_ICM_physical_units;
 	double Disk_total_metallicity, Bulge_total_metallicity, ICM_total_metallicity;
 	double NormMassEjecRateSumAllTypes;
+#ifndef DETAILED_DUST
 	double TotalMassReturnedToColdDiskGas, TotalMassReturnedToHotGas;
+#endif
 	int n; //Iterator used for loop over NOUT when updating MassWeightedAge
 	double AgeCorrectionDisk[NOUT];
 	double AgeCorrectionBulge[NOUT];
@@ -111,6 +113,9 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	Zi_disp = (Disk_total_metallicity - lifetimeMetallicities[Zi])/(lifetimeMetallicities[Zi+1] - lifetimeMetallicities[Zi]);
     	if (Zi_disp < 0.0) Zi_disp = 0.0; //Don't want to extrapolate yields down below lifetimeMetallicities[0]=0.0004. Instead, assume constant yield below this metallicity.
 
+		Zi_saved = Zi;
+		Zi_disp_saved = Zi_disp;		
+    	
     	NormSNIIMassEjecRate_actual = NormSNIIMassEjecRate[TimeBin][i][Zi] + ((NormSNIIMassEjecRate[TimeBin][i][Zi+1] - NormSNIIMassEjecRate[TimeBin][i][Zi])*Zi_disp);
     	NormSNIaMassEjecRate_actual = NormSNIaMassEjecRate[TimeBin][i][Zi] + ((NormSNIaMassEjecRate[TimeBin][i][Zi+1] - NormSNIaMassEjecRate[TimeBin][i][Zi])*Zi_disp);
     	NormAGBMassEjecRate_actual = NormAGBMassEjecRate[TimeBin][i][Zi] + ((NormAGBMassEjecRate[TimeBin][i][Zi+1] - NormAGBMassEjecRate[TimeBin][i][Zi])*Zi_disp);
@@ -805,23 +810,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	Hotmetallicity[ii]=metals_total(Gal[p].MetalsHotGas)/Gal[p].HotGas/((float)RNUM);
     }
 #endif
-
-#ifdef FEEDBACK_COUPLED_WITH_MASS_RETURN
-    if(TotalMassReturnedToColdDiskGas>0.)
-#ifndef H2_AND_RINGS
-    	SN_feedback(p, centralgal, TotalMassReturnedToColdDiskGas, "ColdGas");
-#else
-    SN_feedback(p, centralgal, TotalMassReturnedToColdDiskGas, TotalMassReturnedToColdDiskGasr, "ColdGas", Coldmetallicityr);
-#endif
-    if(TotalMassReturnedToHotGas>0.)
-#ifndef H2_AND_RINGS
-    	SN_feedback(p, centralgal, TotalMassReturnedToHotGas, "HotGas");
-#else
-    SN_feedback(p, centralgal, TotalMassReturnedToHotGas, TotalMassReturnedToHotGasr, "HotGas", Hotmetallicity);
-#endif
-#endif
-
-
 
 }
 

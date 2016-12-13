@@ -101,7 +101,7 @@ void integrate_dust_yields()
 	        		//Mi_lower = bin number for lifetime array for lowest mass star possible to die
 	        		//at this time
 	        		Mi_lower = find_initial_mass_dust(t_upper, Zi); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
-
+	        		Mi_upper = find_initial_mass_dust(t_lower, Zi); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
 					//*****************************************
 					//AGB Winds (Disc and Bulge):
 					//*****************************************
@@ -113,17 +113,18 @@ void integrate_dust_yields()
 					//max/min functions below shift Mi_lower_AGB to correspond to lifetime
 					//bin closest to limits if we have a limit problem
 					Mi_lower_AGB = max_Mi_lower_dust(Mi_lower,4); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
+					Mi_upper_AGB = min_Mi_upper_dust(Mi_upper,4); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
 
 					//if (Mi_lower_AGB <= Mi_upper_AGB)
 					//{
 					//Mi_lower_Dust = bin number for lowest mass to integrate from in Dust tables mass value
 					Mi_lower_Dust = find_agb_mass_bin_dust(lifetimeMasses[Mi_lower_AGB]);
-					//Mi_upper_Dust = find_agb_mass_bin_dust(lifetimeMasses[Mi_upper_AGB]);
+					Mi_upper_Dust = find_agb_mass_bin_dust(lifetimeMasses[Mi_upper_AGB]);
 
 					//Actual integration
 					int j;
-					//for (j=Mi_lower_Dust;j<Mi_upper_Dust;j++)
-					for (j=Mi_lower_Dust;j<AGB_DUST_MASS_NUM-1;j++)
+					for (j=Mi_lower_Dust;j<Mi_upper_Dust;j++)
+					//for (j=Mi_lower_Dust;j<AGB_DUST_MASS_NUM-1;j++)
 					//for (j=0;j<AGB_DUST_MASS_NUM-1;j++)
 					{       
 						int k;
@@ -132,6 +133,11 @@ void integrate_dust_yields()
 							//if (NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] < 0.0) {
 							//	printf("0\t%d\t\t%f \t %f \t %f \t %f \t %f \n",j,NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k], AGBDustMasses[j+1], AGBDustMasses[j], AGBDustCreated[Zi_Dust][j][k], AGBDustCreated[Zi_Dust][j+1][k]);
 							//	}
+							
+						//	if (k==9) { //Cb dust
+						//	printf("%g\t%g\t%g\n",NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k],NormAGBYieldRate[(STEPS*snap)+step][i][Zi][2],NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k]/NormAGBYieldRate[(STEPS*snap)+step][i][Zi][2]);
+						//	}		
+						
 							}
 					
 											

@@ -847,6 +847,13 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 		#ifdef DETAILED_DUST
 		update_dust_mass(p, centralgal, deltaT/STEPS, nstep);
 		#endif
+		
+  
+   if ((Gal[p].MetalsColdGas.type2<0.0) || (Gal[p].MetalsColdGas.agb<0.0) || (Gal[p].MetalsColdGas.type1a<0.0) ) {
+	 	printf("AGB = %g\t SNII = %g\t SNIa = %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
+//		printf("%g\t%g\t%g\t%g\n",Gal[p].DustISM.AGB.Cb,Gal[p].DustISM.AGB.Fe,Gal[p].DustISM.AGB.Sil,Gal[p].DustISM.AGB.SiC);
+		}
+	
 		//printf("DustISM.AGB.Cb = %g\n",Gal[p].DustISM.AGB.Cb);
 		//printf("DustISM.SNII.Sil = %g\n",Gal[p].DustISM.SNII.Sil);
 		//printf("DustISM.AGB = %g\n",DustMass_AGB_Total(Gal[p].DustISM));
@@ -894,6 +901,14 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 		printf("***********************\n");
 		*/
 		
+#ifdef DETAILED_DUST		
+#ifdef FEEDBACK_COUPLED_WITH_MASS_RETURN
+    if(TotalMassReturnedToColdDiskGas>0.)
+    	SN_feedback(p, centralgal, TotalMassReturnedToColdDiskGas, "ColdGas");
+    if(TotalMassReturnedToHotGas>0.)
+    	SN_feedback(p, centralgal, TotalMassReturnedToHotGas, "HotGas");
+#endif //FB_C_W_Mass_return
+#endif //DDdust
 		//#endif
 	  }
 #endif

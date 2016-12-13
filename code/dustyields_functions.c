@@ -49,6 +49,38 @@ struct DustMass DustMass_init() {
 	return (dust);
 }
 
+float DustMass_Total(struct DustMass dust) {
+	float Sum = 0.0;
+	Sum += dust.AGB.SiC;
+	Sum += dust.AGB.Sil;
+	Sum += dust.AGB.Fe;
+	Sum += dust.AGB.Cb;
+	
+	Sum += dust.SNII.SiC;
+	Sum += dust.SNII.Sil;
+	Sum += dust.SNII.Fe;
+	Sum += dust.SNII.Cb;
+	
+	Sum += dust.SNIa.Fe;
+	
+	Sum += dust.Growth.Fe;
+	
+	return Sum;
+}
+
+void Print_DustMass(struct DustMass dust) {
+	printf("Start of galaxy dust output\n");
+	printf("Dust.AGB.SiC = %g\n",dust.AGB.SiC);
+	printf("Dust.AGB.Sil = %g\n",dust.AGB.Sil);
+	printf("Dust.AGB.Fe = %g\n",dust.AGB.Fe);
+	printf("Dust.AGB.Cb = %g\n",dust.AGB.Cb);
+	printf("Dust.SNII.SiC = %g\n",dust.SNII.SiC);
+	printf("Dust.SNII.Sil = %g\n",dust.SNII.Sil);
+	printf("Dust.SNII.Fe = %g\n",dust.SNII.Fe);
+	printf("Dust.SNII.Cb = %g\n",dust.SNII.Cb);
+	printf("Dust.SNIa.Fe = %g\n",dust.SNIa.Fe);
+	printf("Dust.Growth.Fe = %g\n",dust.Growth.Fe);
+	}
 float DustMass_Total_SiC(struct DustMass dust) {
 	return(dust.AGB.SiC+dust.SNII.SiC+dust.SNIa.SiC+dust.Growth.SiC-dust.Destruction_SNe.SiC-dust.Destruction_SF.SiC);
 }

@@ -58,7 +58,7 @@ void read_dust_yield_tables(void)
 	char buf2[100];
 	int i2;
 	float m2;
-	static char *name2 = "Zhukovska_AGByields_Metallicity2.txt";
+	static char *name2 = "Zhukovska_AGByields_Metallicity3.txt";
 	//float AGBDustMetallicity[AGB_DUST_METAL_NUM]; //Initial star masses [Msun] //now defined in allvars.h
 
 	sprintf(buf2, "./DustTables/%s", name2);
@@ -86,7 +86,7 @@ void read_dust_yield_tables(void)
 	char buf3[100];
 	int i3,j3,k3;
 	float m3;
-	static char *name3 = "Zhukovska_AGByields2.txt";
+	static char *name3 = "Zhukovska_AGByields3.txt";
 	//float AGBDustCreated[AGB_DUST_METAL_NUM][AGB_DUST_MASS_NUM][AGB_DUST_TYPE_NUM]; //now defined in allvars.h
 
 	sprintf(buf3, "./DustTables/%s", name3);

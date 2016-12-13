@@ -371,6 +371,8 @@ void find_actual_ejecta_limits_dust(int channel_type, double Mi_lower_actual, do
 //in dust_functions.c
 struct DustMass DustMass_init();
 
+float DustMass_Total(struct DustMass dust);
+void Print_Dust(struct DustMass dust);
 float DustMass_Total_SiC(struct DustMass dust);
 float DustMass_Total_Sil(struct DustMass dust);
 float DustMass_Total_Cb(struct DustMass dust);
@@ -386,7 +388,7 @@ struct DustMass DustMass_add(struct DustMass dust1, struct DustMass dust2, float
 
 void transfer_dust_from_starformation(int p, double fraction);
 void transfer_dust_mergers(int p, int q);
-
+void transfer_dust_to_hot(int p, double fraction);
 
 #endif //DETAILED_DUST
 
