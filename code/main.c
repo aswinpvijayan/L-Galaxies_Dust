@@ -850,7 +850,7 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 		
   
    if ((Gal[p].MetalsColdGas.type2<0.0) || (Gal[p].MetalsColdGas.agb<0.0) || (Gal[p].MetalsColdGas.type1a<0.0) ) {
-	 	printf("AGB = %g\t SNII = %g\t SNIa = %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
+	 	//printf("AGB = %g\t SNII = %g\t SNIa = %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
 //		printf("%g\t%g\t%g\t%g\n",Gal[p].DustISM.AGB.Cb,Gal[p].DustISM.AGB.Fe,Gal[p].DustISM.AGB.Sil,Gal[p].DustISM.AGB.SiC);
 		}
 	
