@@ -444,6 +444,7 @@ struct GALAXY_OUTPUT
 #ifdef DETAILED_DUST
 	struct DustMass DustISM;		//DustISM.AGB.SiC
 	struct DustMass DustCGM;		//DustISM.AGB.SiC
+	struct elements Dust_elements; 
 #endif
 
 
@@ -706,6 +707,8 @@ struct GALAXY			/* Galaxy data */
 #ifdef DETAILED_DUST
 	struct DustMass DustISM;		//DustISM.AGB.SiC
 	struct DustMass DustCGM;		//DustISM.AGB.SiC
+	
+	struct elements Dust_elements; 
 #endif
 
 
