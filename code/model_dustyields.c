@@ -185,11 +185,11 @@ printf("Total Dust = %g\n",elements_total(Gal[p].Dust_elements));
 		Gal[p].ColdGas_elements.O  -= Dust_Quartz * 0.694998;
 		
 		//SiC SiC -----------------------------------------------------
-		Gal[p].Dust_elements.Si += Dust_SiC * 0.305002;
-		Gal[p].Dust_elements.O  += Dust_SiC * 0.694998;
+		Gal[p].Dust_elements.Si += Dust_SiC * 0.299547;
+		Gal[p].Dust_elements.Cb  += Dust_SiC * 0.700453;
 
-		Gal[p].ColdGas_elements.Si -= Dust_SiC * 0.305002;
-		Gal[p].ColdGas_elements.O  -= Dust_SiC * 0.694998;
+		Gal[p].ColdGas_elements.Si -= Dust_SiC * 0.299547;
+		Gal[p].ColdGas_elements.Cb  -= Dust_SiC * 0.700453;
 		
 		//Iron Fe -----------------------------------------------------
 		Gal[p].Dust_elements.Fe += Dust_Iron * 1.0;
@@ -274,11 +274,11 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		
 		//SNII SiC ---------------------------------------------------------------------------
 
-		Gal[p].Dust_elements.Si += Dust_SiC * 0.305002;
-		Gal[p].Dust_elements.O  += Dust_SiC * 0.694998;
+		Gal[p].Dust_elements.Si += Dust_SiC * 0.299547;
+		Gal[p].Dust_elements.Cb  += Dust_SiC * 0.700453;
 
-		Gal[p].ColdGas_elements.Si -= Dust_SiC * 0.305002;
-		Gal[p].ColdGas_elements.O  -= Dust_SiC * 0.694998;
+		Gal[p].ColdGas_elements.Si -= Dust_SiC * 0.299547;
+		Gal[p].ColdGas_elements.Cb  -= Dust_SiC * 0.700453;
 
 		//SNII Fe ---------------------------------------------------------------------------
 
