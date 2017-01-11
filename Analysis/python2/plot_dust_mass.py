@@ -73,7 +73,7 @@ for loop in range(0,10):
 	Fe_Mass = np.zeros(len(gals['Type']))
 	
 	
-
+	New_Dust_Mass = np.zeros(len(gals['Type']))
 
 
 
@@ -81,12 +81,30 @@ for loop in range(0,10):
 
 
 	for i in range(0,len(gals['Type'])):
+		#print gals['Type'][i]
 		AGB_Dust_Mass[i] = (gals['DustMassISM'][i][0]+gals['DustMassISM'][i][1]+gals['DustMassISM'][i][2]+gals['DustMassISM'][i][3])
 		SNII_Dust_Mass[i] = (gals['DustMassISM'][i][4]+gals['DustMassISM'][i][5]+gals['DustMassISM'][i][6]+gals['DustMassISM'][i][7])
 		SNIa_Dust_Mass[i] = (gals['DustMassISM'][i][8]+gals['DustMassISM'][i][9]+gals['DustMassISM'][i][10]+gals['DustMassISM'][i][11])
 		Growth_Dust_Mass[i] = (gals['DustMassISM'][i][12]+gals['DustMassISM'][i][13]+gals['DustMassISM'][i][14]+gals['DustMassISM'][i][15])
 		for j in range(0,16):
 			All_Dust_Mass[i] += gals['DustMassISM'][i][j]
+		for j in range(0,11):
+			#New_Dust_Mass[i] += gals['Dust_elements']
+			print 'H = ' ,gals['Dust_elements'][i][0]
+			print 'He = ',gals['Dust_elements'][i][1]
+			print 'Cb = ',gals['Dust_elements'][i][2]
+			print 'N = ' ,gals['Dust_elements'][i][3]
+			print 'O = ' ,gals['Dust_elements'][i][4]
+			print 'Ne = ',gals['Dust_elements'][i][5]
+			print 'Mg = ',gals['Dust_elements'][i][6]
+			print 'Si = ',gals['Dust_elements'][i][7]
+			print 'S = ' ,gals['Dust_elements'][i][8]
+			print 'Ca = ',gals['Dust_elements'][i][9]
+			print 'Fe = ',gals['Dust_elements'][i][10]
+				
+				
+				
+				
 				
 		H_Mass = gals['ColdGas_elements'][0]
 		He_Mass = gals['ColdGas_elements'][1]

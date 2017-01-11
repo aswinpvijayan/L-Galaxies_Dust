@@ -413,7 +413,9 @@ void update_from_feedback(int p, int centralgal, double reheated_mass, double ej
 	  fraction_sn_feedback = ((float)reheated_mass)/Gal[p].ColdGas; 
 	  transfer_gas(p,"Hot",p,"Cold",((float)reheated_mass)/Gal[p].ColdGas,"update_from_feedback", __LINE__);
 	  //printf("AA p = %d\treheat_mass = %g\tcoldgas = %g\n",p,((float)reheated_mass),Gal[p].ColdGas);
+#ifdef DETAILED_DUST
 	  transfer_dust_to_hot(p,fraction_sn_feedback);
+#endif	  
 	  //printf("BB p = %d\treheat_mass = %g\tcoldgas = %g\n",p,((float)reheated_mass),Gal[p].ColdGas);
 	}
       else if(Gal[p].Type <3)
@@ -447,14 +449,17 @@ void update_from_feedback(int p, int centralgal, double reheated_mass, double ej
 	  //transfer massremain
 	  fraction_sn_feedback = massremain/Gal[p].ColdGas;
 	  transfer_gas(Gal[p].CentralGal,"Hot",p,"Cold",massremain/Gal[p].ColdGas,"update_from_feedback", __LINE__);
+#ifdef DETAILED_DUST	  
 	  transfer_dust_to_hot(p, fraction_sn_feedback);
-
+#endif
 	  //transfer reheated_mass-massremain from galaxy to the type 0
 	  if (reheated_mass > massremain)
 	    if(Gal[p].ColdGas > 0.) //if the reheat to itself, left cold gas below limit do not reheat to central
 	      fraction_sn_feedback = (reheated_mass-massremain)/Gal[p].ColdGas;
 	      transfer_gas(centralgal,"Hot",p,"Cold",(reheated_mass-massremain)/Gal[p].ColdGas,"update_from_feedback", __LINE__);
+#ifdef DETAILED_DUST		  
 		  transfer_dust_to_hot(p,fraction_sn_feedback);
+#endif		  
 	}//types
 
   }//if(Gal[p].ColdGas > 0.)

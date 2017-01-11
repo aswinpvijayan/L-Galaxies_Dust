@@ -1180,102 +1180,86 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
 }
 #ifdef DETAILED_DUST
 void transfer_dust_from_starformation(int p, double fraction)
-  {
+  {  
+  //	printf("1fraction = %g\n",fraction);
+	Gal[p].DiskMass_elements.Cb += fraction * Gal[p].Dust_elements.Cb;
+	Gal[p].DiskMass_elements.N  += fraction * Gal[p].Dust_elements.N;
+	Gal[p].DiskMass_elements.O  += fraction * Gal[p].Dust_elements.O;
+	Gal[p].DiskMass_elements.Ne += fraction * Gal[p].Dust_elements.Ne;
+	Gal[p].DiskMass_elements.Mg += fraction * Gal[p].Dust_elements.Mg;
+	Gal[p].DiskMass_elements.Si += fraction * Gal[p].Dust_elements.Si;
+	Gal[p].DiskMass_elements.S  += fraction * Gal[p].Dust_elements.S;
+	Gal[p].DiskMass_elements.Ca += fraction * Gal[p].Dust_elements.Ca;
+	Gal[p].DiskMass_elements.Fe += fraction * Gal[p].Dust_elements.Fe;
   
-  //Function transfers fraction of dust in galaxy p to
-  //DiskMass_elements due to star formation
-  
-  
-  //struct DustMass DustYield;
-  //init = 0.0
-  //DustYield= DustMass_init();
-  //fraction of dust that needs removing due to SFR and added to element yields
-  //DustYield= DustMass_add(DustMass_init(),Gal[p].DustISM,fraction);
-  //
-  //Gal[p].DustISM = DustMass_add(Gal[p].DustISM, DustYield, -1.0);
-  
-  // Add dust to diskmass elements
-  //Should this be added to Disk elements instead of coldgas? The answer is yes I think. 
-  // DiskMass elements OR Coldgas_elements
-  
-  Gal[p].DiskMass_elements.Si += fraction * Gal[p].DustISM.AGB.Sil;
-  Gal[p].DiskMass_elements.Si += fraction * Gal[p].DustISM.SNII.Sil;
-  //Gal[p].DiskMass_elements.Si += fraction * Gal[p].DustISM.Growth.Sil;
-  Gal[p].DiskMass_elements.Fe += fraction * Gal[p].DustISM.AGB.Fe;
-  Gal[p].DiskMass_elements.Fe += fraction * Gal[p].DustISM.SNII.Fe;
-  Gal[p].DiskMass_elements.Fe += fraction * Gal[p].DustISM.Growth.Fe;
-  Gal[p].DiskMass_elements.Fe += fraction * Gal[p].DustISM.SNIa.Fe;
-  Gal[p].DiskMass_elements.Cb += fraction * Gal[p].DustISM.AGB.Cb;
-  Gal[p].DiskMass_elements.Cb += fraction * Gal[p].DustISM.SNII.Cb;
-  //Gal[p].DiskMass_elements.Cb += fraction * Gal[p].DustISM.Growth.Cb;
-  Gal[p].DiskMass_elements.Si += 0.5*(fraction * Gal[p].DustISM.AGB.SiC);
-  Gal[p].DiskMass_elements.Si += 0.5*(fraction * Gal[p].DustISM.SNII.SiC);
-  //Gal[p].DiskMass_elements.Si += 0.5*(fraction * Gal[p].DustISM.Growth.SiC);
-  Gal[p].DiskMass_elements.Cb += 0.5*(fraction * Gal[p].DustISM.AGB.SiC);
-  Gal[p].DiskMass_elements.Cb += 0.5*(fraction * Gal[p].DustISM.SNII.SiC);
-  //Gal[p].DiskMass_elements.Cb += 0.5*(fraction * Gal[p].DustISM.Growth.SiC);
-  
-  Gal[p].DustISM.AGB.Sil    -= fraction * Gal[p].DustISM.AGB.Sil;
-  Gal[p].DustISM.SNII.Sil   -= fraction * Gal[p].DustISM.SNII.Sil;
-  //Gal[p].DustISM.Growth.Sil -= fraction * Gal[p].DustISM.Growth.Sil;
-  Gal[p].DustISM.AGB.Fe     -= fraction * Gal[p].DustISM.AGB.Fe;
-  Gal[p].DustISM.SNII.Fe    -= fraction * Gal[p].DustISM.SNII.Fe;
-  Gal[p].DustISM.Growth.Fe  -= fraction * Gal[p].DustISM.Growth.Fe;
-  Gal[p].DustISM.SNIa.Fe    -= fraction * Gal[p].DustISM.SNIa.Fe;
-  Gal[p].DustISM.AGB.Cb     -= fraction * Gal[p].DustISM.AGB.Cb;
-  Gal[p].DustISM.SNII.Cb    -= fraction * Gal[p].DustISM.SNII.Cb;
-  //Gal[p].DustISM.Growth.Cb  -= fraction * Gal[p].DustISM.Growth.Cb;
-  Gal[p].DustISM.AGB.SiC    -= fraction * Gal[p].DustISM.AGB.SiC;
-  Gal[p].DustISM.SNII.SiC   -= fraction * Gal[p].DustISM.SNII.SiC;
-  //Gal[p].DustISM.Growth.SiC -= fraction * Gal[p].DustISM.Growth.SiC;
+	Gal[p].Dust_elements.Cb -= fraction * Gal[p].Dust_elements.Cb;
+	Gal[p].Dust_elements.N  -= fraction * Gal[p].Dust_elements.N;
+	Gal[p].Dust_elements.O  -= fraction * Gal[p].Dust_elements.O;
+	Gal[p].Dust_elements.Ne -= fraction * Gal[p].Dust_elements.Ne;
+	Gal[p].Dust_elements.Mg -= fraction * Gal[p].Dust_elements.Mg;
+	Gal[p].Dust_elements.Si -= fraction * Gal[p].Dust_elements.Si;
+	Gal[p].Dust_elements.S  -= fraction * Gal[p].Dust_elements.S;
+	Gal[p].Dust_elements.Ca -= fraction * Gal[p].Dust_elements.Ca;
+	Gal[p].Dust_elements.Fe -= fraction * Gal[p].Dust_elements.Fe;
   
   return;
   }  
 
 void transfer_dust_mergers(int p, int q)
   {
+  /*	
   struct DustMass DustYield;
   DustYield= DustMass_init();
   DustYield= DustMass_add(DustMass_init(),Gal[q].DustISM,1.0);
   Gal[p].DustISM = DustMass_add(Gal[p].DustISM, DustYield, 1.0);
   Gal[q].DustISM = DustMass_add(Gal[q].DustISM, DustYield, -1.0);
+  */
+
+	Gal[p].Dust_elements.Cb + Gal[q].Dust_elements.Cb;
+	Gal[p].Dust_elements.N  + Gal[q].Dust_elements.N;
+	Gal[p].Dust_elements.O  + Gal[q].Dust_elements.O;
+	Gal[p].Dust_elements.Ne + Gal[q].Dust_elements.Ne;
+	Gal[p].Dust_elements.Mg + Gal[q].Dust_elements.Mg;
+	Gal[p].Dust_elements.Si + Gal[q].Dust_elements.Si;
+	Gal[p].Dust_elements.S  + Gal[q].Dust_elements.S;
+	Gal[p].Dust_elements.Ca + Gal[q].Dust_elements.Ca;
+	Gal[p].Dust_elements.Fe + Gal[q].Dust_elements.Fe;
+	
+	Gal[q].Dust_elements.Cb = 0.0;
+	Gal[q].Dust_elements.N  = 0.0;
+	Gal[q].Dust_elements.O  = 0.0;
+	Gal[q].Dust_elements.Ne = 0.0;
+	Gal[q].Dust_elements.Mg = 0.0;
+	Gal[q].Dust_elements.Si = 0.0;
+	Gal[q].Dust_elements.S  = 0.0;
+	Gal[q].Dust_elements.Ca = 0.0;
+	Gal[q].Dust_elements.Fe = 0.0;
+
   return;
   }
  
 void transfer_dust_to_hot(int p, double fraction)
   {
-  //printf("fraction = %g\n",fraction);
-  Gal[p].HotGas_elements.Si += fraction * Gal[p].DustISM.AGB.Sil;
-  Gal[p].HotGas_elements.Si += fraction * Gal[p].DustISM.SNII.Sil;
- // Gal[p].HotGas_elements.Si += fraction * Gal[p].DustISM.Growth.Sil;
-  Gal[p].HotGas_elements.Fe += fraction * Gal[p].DustISM.AGB.Fe;
-  Gal[p].HotGas_elements.Fe += fraction * Gal[p].DustISM.SNII.Fe;
-  Gal[p].HotGas_elements.Fe += fraction * Gal[p].DustISM.Growth.Fe;
-  Gal[p].HotGas_elements.Fe += fraction * Gal[p].DustISM.SNIa.Fe;
-  Gal[p].HotGas_elements.Cb += fraction * Gal[p].DustISM.AGB.Cb;
-  Gal[p].HotGas_elements.Cb += fraction * Gal[p].DustISM.SNII.Cb;
-  //Gal[p].HotGas_elements.Cb += fraction * Gal[p].DustISM.Growth.Cb;
-  Gal[p].HotGas_elements.Si += 0.5*(fraction * Gal[p].DustISM.AGB.SiC);
-  Gal[p].HotGas_elements.Si += 0.5*(fraction * Gal[p].DustISM.SNII.SiC);
-  //Gal[p].HotGas_elements.Si += 0.5*(fraction * Gal[p].DustISM.Growth.SiC);
-  Gal[p].HotGas_elements.Cb += 0.5*(fraction * Gal[p].DustISM.AGB.SiC);
-  Gal[p].HotGas_elements.Cb += 0.5*(fraction * Gal[p].DustISM.SNII.SiC);
-  //Gal[p].HotGas_elements.Cb += 0.5*(fraction * Gal[p].DustISM.Growth.SiC);
+//  	printf("1fraction = %g\n",fraction);
+	Gal[p].HotGas_elements.Cb += fraction * Gal[p].Dust_elements.Cb;
+	Gal[p].HotGas_elements.N  += fraction * Gal[p].Dust_elements.N;
+	Gal[p].HotGas_elements.O  += fraction * Gal[p].Dust_elements.O;
+	Gal[p].HotGas_elements.Ne += fraction * Gal[p].Dust_elements.Ne;
+	Gal[p].HotGas_elements.Mg += fraction * Gal[p].Dust_elements.Mg;
+	Gal[p].HotGas_elements.Si += fraction * Gal[p].Dust_elements.Si;
+	Gal[p].HotGas_elements.S  += fraction * Gal[p].Dust_elements.S;
+	Gal[p].HotGas_elements.Ca += fraction * Gal[p].Dust_elements.Ca;
+	Gal[p].HotGas_elements.Fe += fraction * Gal[p].Dust_elements.Fe;
   
-  Gal[p].DustISM.AGB.Sil    -= fraction * Gal[p].DustISM.AGB.Sil;
-  Gal[p].DustISM.SNII.Sil   -= fraction * Gal[p].DustISM.SNII.Sil;
-  //Gal[p].DustISM.Growth.Sil -= fraction * Gal[p].DustISM.Growth.Sil;
-  Gal[p].DustISM.AGB.Fe     -= fraction * Gal[p].DustISM.AGB.Fe;
-  Gal[p].DustISM.SNII.Fe    -= fraction * Gal[p].DustISM.SNII.Fe;
-  Gal[p].DustISM.Growth.Fe  -= fraction * Gal[p].DustISM.Growth.Fe;
-  Gal[p].DustISM.SNIa.Fe    -= fraction * Gal[p].DustISM.SNIa.Fe;
-  Gal[p].DustISM.AGB.Cb     -= fraction * Gal[p].DustISM.AGB.Cb;
-  Gal[p].DustISM.SNII.Cb    -= fraction * Gal[p].DustISM.SNII.Cb;
-  //Gal[p].DustISM.Growth.Cb  -= fraction * Gal[p].DustISM.Growth.Cb;
-  Gal[p].DustISM.AGB.SiC    -= fraction * Gal[p].DustISM.AGB.SiC;
-  Gal[p].DustISM.SNII.SiC   -= fraction * Gal[p].DustISM.SNII.SiC;
-  //Gal[p].DustISM.Growth.SiC -= fraction * Gal[p].DustISM.Growth.SiC;
- 
+	Gal[p].Dust_elements.Cb -= fraction * Gal[p].Dust_elements.Cb;
+	Gal[p].Dust_elements.N  -= fraction * Gal[p].Dust_elements.N;
+	Gal[p].Dust_elements.O  -= fraction * Gal[p].Dust_elements.O;
+	Gal[p].Dust_elements.Ne -= fraction * Gal[p].Dust_elements.Ne;
+	Gal[p].Dust_elements.Mg -= fraction * Gal[p].Dust_elements.Mg;
+	Gal[p].Dust_elements.Si -= fraction * Gal[p].Dust_elements.Si;
+	Gal[p].Dust_elements.S  -= fraction * Gal[p].Dust_elements.S;
+	Gal[p].Dust_elements.Ca -= fraction * Gal[p].Dust_elements.Ca;
+	Gal[p].Dust_elements.Fe -= fraction * Gal[p].Dust_elements.Fe;
   
   return;
   }

@@ -99,6 +99,7 @@ for i in range(0,10):
 	props['ColdGas_elements'] = True
 	props['DustMassISM'] = True
 	props['DustMassCGM'] = True
+	props['Dust_elements'] = True
 
 	# 
 
