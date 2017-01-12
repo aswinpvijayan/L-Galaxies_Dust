@@ -236,7 +236,7 @@ for loop in range(0,10):
 
 	if(sum(count)>0):	
 		plt.xlim([6,12])
-		plt.ylim([-6,8])
+		plt.ylim([-6,9])
 		plt.hexbin(log_Stellar_Mass,log_All_Dust_Mass,gridsize=500,mincnt=1, label='Dust All')
 		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust All')
 		plt.xlabel(r'log$_{10}$(Mstellar/M$_{\odot}$)', fontsize=14,labelpad=10)
@@ -244,8 +244,8 @@ for loop in range(0,10):
 		plt.tick_params(axis='both', which='major', labelsize=10)
 		plt.tick_params(axis='both', which='minor', labelsize=8)
 		#plt.legend(loc='lower right')
-		plt.text(6.2,4,"N = "+str(sum(count)))
-		plt.text(10,-5,"z = "+str(loop)+" :All dust")
+		plt.text(6.2,-4,"N = "+str(sum(count)))
+		plt.text(10,-5,"z = "+str(loop)+" : All dust")
 		if(loop == 0):
 			#plt.scatter(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM_err),color='g',label='RemyRuyer2014')
 			plt.errorbar(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM)*(obs_DM_err/100.0),color='g',label='RemyRuyer2014',fmt='o')

@@ -148,7 +148,8 @@ void integrate_yields()
 		printf("****************\n\n");
 	}
 
-	for(snap=0;snap<(LastDarkMatterSnapShot+1)-1;snap++) //LOOP OVER SNAPSHOTS
+//	for(snap=0;snap<(LastDarkMatterSnapShot+1)-1;snap++) //LOOP OVER SNAPSHOTS
+	for(snap=0;snap<(LastDarkMatterSnapShot+1);snap++) //LOOP OVER SNAPSHOTS
 	{
 	    previoustime = NumToTime(snap); //Time to z=0 from start of current snapshot [in code units]
 	    newtime = NumToTime(snap+1); //Time to z=0 from end of current snapshot [in code units]
