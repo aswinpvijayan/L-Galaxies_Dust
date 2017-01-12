@@ -40,6 +40,8 @@ obs_DM_act_err = obs_DM*(obs_DM_err/100.0)
 
 #print obs_DM
 
+print "Redshift [Number of galaxies in each mass bin]"	
+
 for loop in range(0,10):
 #for loop in range(0,1):
 
@@ -56,6 +58,7 @@ for loop in range(0,10):
 
 	Stellar_Mass = np.zeros(len(gals['Type']))
 	ColdGas = np.zeros(len(gals['Type']))
+	Metals = np.zeros(len(gals['Type']))
 	Metals_AGB = np.zeros(len(gals['Type']))
 	Metals_SNII = np.zeros(len(gals['Type']))
 	Metals_SNIA = np.zeros(len(gals['Type']))
@@ -88,21 +91,11 @@ for loop in range(0,10):
 		Growth_Dust_Mass[i] = (gals['DustMassISM'][i][12]+gals['DustMassISM'][i][13]+gals['DustMassISM'][i][14]+gals['DustMassISM'][i][15])
 		for j in range(0,16):
 			All_Dust_Mass[i] += gals['DustMassISM'][i][j]
-		for j in range(0,11):
-			#New_Dust_Mass[i] += gals['Dust_elements']
-			print 'H = ' ,gals['Dust_elements'][i][0]
-			print 'He = ',gals['Dust_elements'][i][1]
-			print 'Cb = ',gals['Dust_elements'][i][2]
-			print 'N = ' ,gals['Dust_elements'][i][3]
-			print 'O = ' ,gals['Dust_elements'][i][4]
-			print 'Ne = ',gals['Dust_elements'][i][5]
-			print 'Mg = ',gals['Dust_elements'][i][6]
-			print 'Si = ',gals['Dust_elements'][i][7]
-			print 'S = ' ,gals['Dust_elements'][i][8]
-			print 'Ca = ',gals['Dust_elements'][i][9]
-			print 'Fe = ',gals['Dust_elements'][i][10]
-				
-				
+ 		for j in range(0,11):
+			New_Dust_Mass[i] += gals['Dust_elements'][i][j]  
+		for j in range(2,11):
+			Metals[i] += gals['ColdGas_elements'][i][j]
+
 				
 				
 				
@@ -120,10 +113,51 @@ for loop in range(0,10):
 		
 		Stellar_Mass[i] = gals['StellarMass'][i]*1.0E10/0.673
 		ColdGas[i] = gals['ColdGas'][i]*1.0E10/0.673
+
 		
 		Metals_AGB  = gals['MetalsColdGas'][i][0]*1.0E10/0.673
 		Metals_SNII = gals['MetalsColdGas'][i][1]*1.0E10/0.673
 		Metals_SNIA = gals['MetalsColdGas'][i][2]*1.0E10/0.673
+		
+		
+		
+		
+	#---------------------All NEW dust Plots
+
+	condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>0)
+	
+	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
+	log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])
+	
+	SM_bins,Dust_bins,Dust_std_dev,Dust_std_err,count = fit_scatter(log_Stellar_Mass, log_New_Dust_Mass, ret_n=True, ret_sterr=True, nbins=10)
+	print loop, count
+
+	if(sum(count)>0):	
+		plt.xlim([6,12])
+		plt.ylim([-2,10.2])
+		plt.hexbin(log_Stellar_Mass,log_New_Dust_Mass,gridsize=500,mincnt=1, label='Dust All')
+		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust All')
+		plt.xlabel(r'log$_{10}$(Mstellar/M$_{\odot}$)', fontsize=14,labelpad=10)
+		plt.ylabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=0)
+		plt.tick_params(axis='both', which='major', labelsize=10)
+		plt.tick_params(axis='both', which='minor', labelsize=8)
+		#plt.legend(loc='lower right')
+		plt.text(6.2,-4,"N = "+str(sum(count)))
+		plt.text(10,-5,"z = "+str(loop)+" :New dust")
+		if(loop == 0):
+			#plt.scatter(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM_err),color='g',label='RemyRuyer2014')
+			plt.errorbar(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM)*(obs_DM_err/100.0),color='g',label='RemyRuyer2014',fmt='o')
+		
+		pylab.savefig('./graphs/stellar_Newdust_z'+str(loop)+'.png', bbox_inches=0)
+		plt.close()
+	
+	if loop == 0:
+		avg_NEW_dust = np.array([np.mean(log_New_Dust_Mass)])
+		std_NEW_dust = np.array([np.std(log_New_Dust_Mass)/np.sqrt(len(log_New_Dust_Mass))])
+
+	else:
+		avg_NEW_dust = np.append(avg_NEW_dust,np.mean(log_New_Dust_Mass))
+		std_NEW_dust = np.append(std_NEW_dust,np.std(log_New_Dust_Mass)/np.sqrt(len(log_New_Dust_Mass)))
 		
 		
 
@@ -143,7 +177,7 @@ for loop in range(0,10):
 
 	if(sum(count)>0):	
 		plt.xlim([6,12])
-		plt.ylim([-6,8])
+		plt.ylim([-2,10.2])
 		plt.hexbin(log_Stellar_Mass,log_AGB_Dust_Mass,gridsize=500,mincnt=1, label='Dust AGB')
 		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust AGB')
 		plt.xlabel(r'log$_{10}$(Mstellar/M$_{\odot}$)', fontsize=14,labelpad=10)
@@ -184,7 +218,7 @@ for loop in range(0,10):
 	
 	if(sum(count)>0):	
 		plt.xlim([6,12])
-		plt.ylim([-6,8])
+		plt.ylim([-2,10.2])
 		plt.hexbin(log_Stellar_Mass,log_SNII_Dust_Mass,gridsize=500,mincnt=1, label='Dust SNII')
 		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust SNII')
 		plt.xlabel(r'log$_{10}$(Mstellar/M$_{\odot}$)', fontsize=14,labelpad=10)
@@ -204,7 +238,37 @@ for loop in range(0,10):
 		avg_SNII_dust = np.append(avg_SNII_dust,np.mean(log_SNII_Dust_Mass))
 		std_SNII_dust = np.append(std_SNII_dust,np.std(log_SNII_Dust_Mass)/np.sqrt(len(log_SNII_Dust_Mass)))
 	
+	#---------------------SNIa Plots
+
+	condition = np.logical_and(SNIa_Dust_Mass>0,Stellar_Mass>0)
 	
+	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
+	log_SNIa_Dust_Mass = np.log10(SNIa_Dust_Mass[condition==1])
+	
+	SM_bins,Dust_bins,Dust_std_dev,Dust_std_err,count = fit_scatter(log_Stellar_Mass, log_SNIa_Dust_Mass, ret_n=True, ret_sterr=True, nbins=10)
+	print loop, count
+	
+	if(sum(count)>0):	
+		plt.xlim([6,12])
+		plt.ylim([-2,10.2])
+		plt.hexbin(log_Stellar_Mass,log_SNIa_Dust_Mass,gridsize=500,mincnt=1, label='Dust SNIa')
+		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust SNII')
+		plt.xlabel(r'log$_{10}$(Mstellar/M$_{\odot}$)', fontsize=14,labelpad=10)
+		plt.ylabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=0)
+		plt.tick_params(axis='both', which='major', labelsize=10)
+		plt.tick_params(axis='both', which='minor', labelsize=8)
+		#plt.legend(loc='lower right')
+		plt.text(6.2,4,"N = "+str(sum(count)))
+		plt.text(10,-5,"z = "+str(loop)+" :SNII dust")
+		pylab.savefig('./graphs/stellar_SNIadust_z'+str(loop)+'.png', bbox_inches=0)
+		plt.close()
+	
+	if loop == 0:
+		avg_SNIa_dust = np.array([np.mean(log_SNIa_Dust_Mass)])
+		std_SNIa_dust = np.array([np.std(log_SNIa_Dust_Mass)/np.sqrt(len(log_SNIa_Dust_Mass))])
+	else:
+		avg_SNIa_dust = np.append(avg_SNIa_dust,np.mean(log_SNIa_Dust_Mass))
+		std_SNIa_dust = np.append(std_SNIa_dust,np.std(log_SNIa_Dust_Mass)/np.sqrt(len(log_SNIa_Dust_Mass)))
 
 
 	#---------------------Growth Plots
@@ -219,7 +283,7 @@ for loop in range(0,10):
 	
 	if(sum(count)>0):	
 		plt.xlim([6,12])
-		plt.ylim([-6,8])
+		plt.ylim([-2,10.2])
 		plt.hexbin(log_Stellar_Mass,log_Growth_Dust_Mass,gridsize=500,mincnt=1, label='Dust Growth')
 		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust Growth')
 		plt.xlabel(r'log$_{10}$(Mstellar/M$_{\odot}$)', fontsize=14,labelpad=10)
@@ -254,7 +318,7 @@ for loop in range(0,10):
 
 	if(sum(count)>0):	
 		plt.xlim([6,12])
-		plt.ylim([-6,8])
+		plt.ylim([-2,10.2])
 		plt.hexbin(log_Stellar_Mass,log_All_Dust_Mass,gridsize=500,mincnt=1, label='Dust All')
 		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust All')
 		plt.xlabel(r'log$_{10}$(Mstellar/M$_{\odot}$)', fontsize=14,labelpad=10)
@@ -264,9 +328,6 @@ for loop in range(0,10):
 		#plt.legend(loc='lower right')
 		plt.text(6.2,4,"N = "+str(sum(count)))
 		plt.text(10,-5,"z = "+str(loop)+" :All dust")
-		if(loop == 0):
-			#plt.scatter(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM_err),color='g',label='RemyRuyer2014')
-			plt.errorbar(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM)*(obs_DM_err/100.0),color='g',label='RemyRuyer2014',fmt='o')
 		
 		pylab.savefig('./graphs/stellar_ALLdust_z'+str(loop)+'.png', bbox_inches=0)
 		plt.close()
@@ -282,18 +343,109 @@ for loop in range(0,10):
 
 
 
+	#---------------------Metal Dust ratios
+
+	condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>0)
+	
+	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
+	log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])
+	log_Metals = np.log10(Metals[condition==1])
+	
+	Ratio = log_New_Dust_Mass - log_Metals
+	
+	SM_bins,Dust_bins,Dust_std_dev,Dust_std_err,count = fit_scatter(log_Stellar_Mass, Ratio, ret_n=True, ret_sterr=True, nbins=10)
+	print loop, count
+
+	if(sum(count)>0):	
+		plt.xlim([6,12])
+		plt.ylim([-8,2])
+		plt.hexbin(log_Stellar_Mass,Ratio,gridsize=500,mincnt=1, label='Dust All')
+		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust/Metal ratio')
+		plt.xlabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=10)
+		plt.ylabel(r'log$_{10}$(Mdust/Mmetals$)', fontsize=14,labelpad=0)
+		plt.tick_params(axis='both', which='major', labelsize=10)
+		plt.tick_params(axis='both', which='minor', labelsize=8)
+		#plt.legend(loc='lower right')
+		plt.text(2,-7,"N = "+str(sum(count)))
+		plt.text(2,-5,"z = "+str(loop)+" :All dust")
+		
+		pylab.savefig('./graphs/stellar_dustmetalratio_z'+str(loop)+'.png', bbox_inches=0)
+		plt.close()
+
+
+	#---------------------Gas Dust ratios
+
+	condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>0)
+	
+	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
+	log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])
+	log_ColdGas = np.log10(ColdGas[condition==1])
+	
+	Ratio = log_New_Dust_Mass - log_ColdGas
+	
+	SM_bins,Dust_bins,Dust_std_dev,Dust_std_err,count = fit_scatter(log_Stellar_Mass, Ratio, ret_n=True, ret_sterr=True, nbins=10)
+	print loop, count
+
+	if(sum(count)>0):	
+		plt.xlim([6,12])
+		plt.ylim([-8,2])
+		plt.hexbin(log_Stellar_Mass,Ratio,gridsize=500,mincnt=1, label='Dust All')
+		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust/Metal ratio')
+		plt.xlabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=10)
+		plt.ylabel(r'log$_{10}$(Mdust/Mcoldgas$)', fontsize=14,labelpad=0)
+		plt.tick_params(axis='both', which='major', labelsize=10)
+		plt.tick_params(axis='both', which='minor', labelsize=8)
+		#plt.legend(loc='lower right')
+		plt.text(2,-7,"N = "+str(sum(count)))
+		plt.text(2,-5,"z = "+str(loop)+" :All dust")
+		
+		pylab.savefig('./graphs/stellar_dustgasratio_z'+str(loop)+'.png', bbox_inches=0)
+		plt.close()
+
+
+	#---------------------Dust mass functions
+
+	
+	log_New_Dust_Mass = np.log10(New_Dust_Mass[New_Dust_Mass>0.0])
+	
+	hist, bin_edges = np.histogram(log_New_Dust_Mass)	
+	bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+	
+	print hist
+	print bin_edges
+	
+	plt.xlim([6,12])
+	#plt.ylim([-8,2])
+	
+ 	volume = (480.279/0.673)**3.0
+# 	volume = (0.938044921/0.673)**3.0
+	binsize = 1.35135751
+	
+	plt.plot(bin_centers,hist/(volume*binsize),color='k',label='Dust All')
+	
+	plt.xlabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=10)
+	#plt.ylabel(r'log$_{10}$(Mdust/Mcoldgas$)', fontsize=14,labelpad=0)
+	plt.tick_params(axis='both', which='major', labelsize=10)
+	plt.tick_params(axis='both', which='minor', labelsize=8)
+	#plt.legend(loc='lower right')
+	#plt.text(2,-7,"N = "+str(sum(count)))
+	#plt.text(2,-5,"z = "+str(loop)+" :All dust")
+	
+	pylab.savefig('./graphs/dustmass_function_z'+str(loop)+'.png', bbox_inches=0)
+	plt.close()
+
 
 
 #---------------------Redshift vs Dust mass plot
-print redshift
-print avg_AGB_dust
-print std_AGB_dust
-print avg_SNII_dust
-print std_SNII_dust
-print avg_GROW_dust
-print std_GROW_dust
-print avg_ALL_dust
-print std_ALL_dust
+# print redshift
+# print avg_AGB_dust
+# print std_AGB_dust
+# print avg_SNII_dust
+# print std_SNII_dust
+# print avg_GROW_dust
+# print std_GROW_dust
+# print avg_ALL_dust
+# print std_ALL_dust
 
 
 plt.xlabel(r'redshift', fontsize=14,labelpad=10)
@@ -304,8 +456,9 @@ plt.tick_params(axis='both', which='minor', labelsize=8)
 plt.errorbar(redshift,avg_AGB_dust ,std_AGB_dust, color='r',label='AGB')
 plt.errorbar(redshift,avg_SNII_dust,std_SNII_dust, color='b',label='SNII')
 plt.errorbar(redshift,avg_GROW_dust,std_GROW_dust, color='g',label='Grown')
-#plt.errorbar(redshift,	avg_SNIA_dust,std_SNIA_dust, color='k',label='SNIA')
+plt.errorbar(redshift,avg_SNIa_dust,std_SNIa_dust, color='y',label='SNIA')
 plt.errorbar(redshift,avg_ALL_dust,std_ALL_dust, color='k',label='ALL')
+#plt.errorbar(redshift,avg_NEW_dust,std_NEW_dust, color='yellow',label='New')
 
 plt.legend(loc='lower left')
 pylab.savefig('./graphs/dust_redshift.png', bbox_inches=0)

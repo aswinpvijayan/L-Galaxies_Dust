@@ -3,7 +3,7 @@
 
 # Options that control I/O
 OPT += -DOVERWRITE_OUTPUT    # overwrite output files if they exist (otherwise will quit without overwriting)
-OPT += -DNOUT=28             # This sets the number of galaxy output times. IGNORED IN GALAXYTREE MODE. VALUE CORRESPONDS TO NO. OF ROWS READ FROM desired_outputsnaps FILE
+OPT += -DNOUT=34             # This sets the number of galaxy output times. IGNORED IN GALAXYTREE MODE. VALUE CORRESPONDS TO NO. OF ROWS READ FROM desired_outputsnaps FILE
 #OPT += -DNOUT=1             # This sets the number of galaxy output times. IGNORED IN GALAXYTREE MODE. VALUE CORRESPONDS TO NO. OF ROWS READ FROM desired_outputsnaps FILE
 
 #OPT += -DPARALLEL

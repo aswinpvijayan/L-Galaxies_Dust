@@ -29,7 +29,7 @@ snaplist_file = '../MRPlancksnaplist.txt'
 
 
 
-for i in range(0,10):
+for i in range(0,16):
 	if i==0:
 		snapshot=58
 		file_prefix = "SA_z0.00"
@@ -70,6 +70,32 @@ for i in range(0,10):
 		snapshot=12
 		file_prefix = "SA_z8.93"
 		output_file = "../data/lgal_z9.pkl"
+	elif i==10:
+		snapshot=11
+		file_prefix = "SA_z9.72"
+		output_file = "../data/lgal_z10.pkl"
+	elif i==11:
+		snapshot=10
+		file_prefix = "SA_z10.57"
+		output_file = "../data/lgal_z11.pkl"
+	elif i==12:
+		snapshot=9
+		file_prefix = "SA_z11.51"
+		output_file = "../data/lgal_z12.pkl"
+	elif i==13:
+		snapshot=8
+		file_prefix = "SA_z12.53"
+		output_file = "../data/lgal_z13.pkl"
+	elif i==14:
+		snapshot=7
+		file_prefix = "SA_z13.66"
+		output_file = "../data/lgal_z14.pkl"
+	elif i==15:
+		snapshot=6
+		file_prefix = "SA_z14.90"
+		output_file = "../data/lgal_z15.pkl"
+		
+		
 
 
 	# Define which files you want to read in
