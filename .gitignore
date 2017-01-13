@@ -5,7 +5,6 @@ L-Galaxies
 L-Galaxies.bash
 MCMC/
 README.txt
-YieldTables/
 cosma.bash
 docs/
 go
@@ -20,14 +19,13 @@ input/MCMC_inputs/
 input/MRIIPlancksnaplist.txt
 input/MRPlancksnaplist.txt
 input/MRW1snaplist.txt
-input/Mc.txt
 input/filenr.txt
 input/hdf5_field_props.txt
-input/zlists/
 make_tarball.sh
 odin.bash
 odin_Halo_Model.bash
-output/
+output/SA*
+output/SFH_Bins
 quick_cosma.bash
 input/LegacyModels_inputs/*
 Analysis/data/

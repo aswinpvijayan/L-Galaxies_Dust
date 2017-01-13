@@ -843,63 +843,14 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 #ifdef DETAILED_METALS_AND_MASS_RETURN
       //DELAYED ENRICHMENT AND MASS RETURN + FEEDBACK: No fixed yield or recycling fraction anymore. FB synced with enrichment
       for (p = 0; p < ngal; p++) {
+        //elements_print("start",Gal[p].ColdGas_elements);
 		update_yields_and_return_mass(p, centralgal, deltaT/STEPS, nstep);
-		#ifdef DETAILED_DUST
+#ifdef DETAILED_DUST
+       // elements_print("middle",Gal[p].ColdGas_elements);
 		update_dust_mass(p, centralgal, deltaT/STEPS, nstep);
-		#endif
-		
-  
-   if ((Gal[p].MetalsColdGas.type2<0.0) || (Gal[p].MetalsColdGas.agb<0.0) || (Gal[p].MetalsColdGas.type1a<0.0) ) {
-	 	//printf("AGB = %g\t SNII = %g\t SNIa = %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
-//		printf("%g\t%g\t%g\t%g\n",Gal[p].DustISM.AGB.Cb,Gal[p].DustISM.AGB.Fe,Gal[p].DustISM.AGB.Sil,Gal[p].DustISM.AGB.SiC);
-		}
-	
-		//printf("DustISM.AGB.Cb = %g\n",Gal[p].DustISM.AGB.Cb);
-		//printf("DustISM.SNII.Sil = %g\n",Gal[p].DustISM.SNII.Sil);
-		//printf("DustISM.AGB = %g\n",DustMass_AGB_Total(Gal[p].DustISM));
-		//printf("DustISM.SNII = %g\n",DustMass_SNII_Total(Gal[p].DustISM));
-		//printf("Type = %d\n",Gal[p].Type);
-	    //printf("%g\t%g\t%g\n",Gal[p].ColdGas_elements.Fe,Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2);
-		/*
-		printf("***********************\n");
-		printf("DustCGM.AGB.SiC = %g\n",Gal[p].DustCGM.AGB.SiC);
-		printf("DustCGM.AGB.Sil = %g\n",Gal[p].DustCGM.AGB.Sil);
-		printf("DustCGM.AGB.Cb = %g\n", Gal[p].DustCGM.AGB.Cb);
-		printf("DustCGM.AGB.Fe = %g\n", Gal[p].DustCGM.AGB.Fe); 
-		*/
-
-
-		/*
-		printf("***********************\n");
-		printf("DustISM.AGB.SiC = %g\n",Gal[p].DustISM.AGB.SiC);
-		printf("DustISM.AGB.Sil = %g\n",Gal[p].DustISM.AGB.Sil);
-		printf("DustISM.AGB.Cb = %g\n",Gal[p].DustISM.AGB.Cb);
-		printf("DustISM.AGB.Fe = %g\n",Gal[p].DustISM.AGB.Fe); 
-		
-		printf("DustISM.SNII.SiC = %g\n",Gal[p].DustISM.SNII.SiC);
-		printf("DustISM.SNII.Sil = %g\n",Gal[p].DustISM.SNII.Sil);
-		printf("DustISM.SNII.Cb = %g\n",Gal[p].DustISM.SNII.Cb);
-		printf("DustISM.SNII.Fe = %g\n",Gal[p].DustISM.SNII.Fe);
-		printf("DustISM.SNIa.SiC = %g\n",Gal[p].DustISM.SNIa.SiC);
-		printf("DustISM.SNIa.Sil = %g\n",Gal[p].DustISM.SNIa.Sil);
-		printf("DustISM.SNIa.Cb = %g\n",Gal[p].DustISM.SNIa.Cb);
-		printf("DustISM.SNIa.Fe = %g\n",Gal[p].DustISM.SNIa.Fe);
-		printf("DustISM.Growth.SiC = %g\n",Gal[p].DustISM.Growth.SiC);
-		printf("DustISM.Growth.Sil = %g\n",Gal[p].DustISM.Growth.Sil);
-		printf("DustISM.Growth.Cb = %g\n",Gal[p].DustISM.Growth.Cb); 
-		printf("DustISM.Growth.Fe = %g\n",Gal[p].DustISM.Growth.Fe);
-		*/
-		/* 
-		printf("DustISM.Destruction_SNe.SiC = %g\n",Gal[p].DustISM.Destruction_SNe.SiC);
-		printf("DustISM.Destruction_SNe.Sil = %g\n",Gal[p].DustISM.Destruction_SNe.Sil);
-		printf("DustISM.Destruction_SNe.Cb = %g\n",Gal[p].DustISM.Destruction_SNe.Cb);
-		printf("DustISM.Destruction_SNe.Fe = %g\n",Gal[p].DustISM.Destruction_SNe.Fe);
-		printf("DustISM.Destruction_SF.SiC = %g\n",Gal[p].DustISM.Destruction_SF.SiC);
-		printf("DustISM.Destruction_SF.Sil = %g\n",Gal[p].DustISM.Destruction_SF.Sil);
-		printf("DustISM.Destruction_SF.Cb = %g\n",Gal[p].DustISM.Destruction_SF.Cb); 
-		printf("DustISM.Destruction_SF.Fe = %g\n",Gal[p].DustISM.Destruction_SF.Fe); 
-		printf("***********************\n");
-		*/
+        //elements_print("Dust",Gal[p].Dust_elements);
+        //elements_print("Metals",Gal[p].ColdGas_elements);
+#endif
 		
 #ifdef DETAILED_DUST		
 #ifdef FEEDBACK_COUPLED_WITH_MASS_RETURN
