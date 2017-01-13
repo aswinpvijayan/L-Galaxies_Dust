@@ -119,12 +119,15 @@ for loop in range(0,10):
 		Metals_SNII = gals['MetalsColdGas'][i][1]*1.0E10/0.673
 		Metals_SNIA = gals['MetalsColdGas'][i][2]*1.0E10/0.673
 		
+		Stellar_Mass_Condition = 1.0E9
+		Dust_Mass_Condition = 0.0 
+		
 		
 		
 		
 	#---------------------All NEW dust Plots
 
-	condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>0)
+	condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])
@@ -163,7 +166,7 @@ for loop in range(0,10):
 
 	#---------------------AGB Plots
 
-	condition = np.logical_and(AGB_Dust_Mass>0,Stellar_Mass>0)
+	condition = np.logical_and(AGB_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_AGB_Dust_Mass = np.log10(AGB_Dust_Mass[condition==1])
@@ -208,7 +211,7 @@ for loop in range(0,10):
 
 	#---------------------SNII Plots
 
-	condition = np.logical_and(SNII_Dust_Mass>0,Stellar_Mass>0)
+	condition = np.logical_and(SNII_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_SNII_Dust_Mass = np.log10(SNII_Dust_Mass[condition==1])
@@ -240,7 +243,7 @@ for loop in range(0,10):
 	
 	#---------------------SNIa Plots
 
-	condition = np.logical_and(SNIa_Dust_Mass>0,Stellar_Mass>0)
+	condition = np.logical_and(SNIa_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_SNIa_Dust_Mass = np.log10(SNIa_Dust_Mass[condition==1])
@@ -273,7 +276,7 @@ for loop in range(0,10):
 
 	#---------------------Growth Plots
 
-	condition = np.logical_and(Growth_Dust_Mass>0,Stellar_Mass>0)
+	condition = np.logical_and(Growth_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_Growth_Dust_Mass = np.log10(Growth_Dust_Mass[condition==1])
@@ -308,7 +311,7 @@ for loop in range(0,10):
 
 	#---------------------All dust Plots
 
-	condition = np.logical_and(All_Dust_Mass>0,Stellar_Mass>0)
+	condition = np.logical_and(All_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_All_Dust_Mass = np.log10(All_Dust_Mass[condition==1])
@@ -460,7 +463,7 @@ plt.errorbar(redshift,avg_SNIa_dust,std_SNIa_dust, color='y',label='SNIA')
 plt.errorbar(redshift,avg_ALL_dust,std_ALL_dust, color='k',label='ALL')
 #plt.errorbar(redshift,avg_NEW_dust,std_NEW_dust, color='yellow',label='New')
 
-plt.legend(loc='lower left')
+plt.legend(loc='upper right')
 pylab.savefig('./graphs/dust_redshift.png', bbox_inches=0)
 
 
