@@ -66,8 +66,7 @@ void integrate_dust_yields()
 	double AGBYields_lower_actual[AGB_DUST_TYPE_NUM], AGBYields_upper_actual[AGB_DUST_TYPE_NUM];
 	
 	
-//	for(snap=0;snap<(LastDarkMatterSnapShot+1)-1;snap++) //LOOP OVER SNAPSHOTS
-	for(snap=0;snap<(LastDarkMatterSnapShot+1);snap++) //LOOP OVER SNAPSHOTS
+	for(snap=0;snap<(LastDarkMatterSnapShot+1)-1;snap++) //LOOP OVER SNAPSHOTS
 	{
 	    previoustime = NumToTime(snap); //Time to z=0 from start of current snapshot [in code units]
 	    newtime = NumToTime(snap+1); //Time to z=0 from end of current snapshot [in code units]
