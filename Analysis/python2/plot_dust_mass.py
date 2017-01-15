@@ -35,8 +35,33 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pylab
 
-obs_DM, obs_DM_err, obs_SM = np.loadtxt('../observations/z0.txt',unpack=True)
-obs_DM_act_err = obs_DM*(obs_DM_err/100.0)
+
+
+#### Read in observational data
+
+#### Remy-Ruyer 2014 z=0
+#z0_obs_DM, obs_DM_err, obs_SM = np.loadtxt('../observations/z0.txt',unpack=True)
+#z0_obs_DM_act_err = obs_DM*(obs_DM_err/100.0)
+#Name DustMass DMerror% SMass MHI MHIerror% 12+log(O/H) MH2,mw MH2,Z
+Remy_DM, Remy_DMerr, Remy_SM, Remy_MHI, Remy_MHIerr, Remy_Metals, Remy_H2mw, Remy_MH2z = np.loadtxt('../observations/Remy_Ruyer_2014_KINGFISH_z0.txt',unpack=True,comments='#')
+Remy_DM_err_actual = Remy_DM*(Remy_DMerr/100.0)
+
+
+#### Santini 2014 z=0,1,2
+# SM DM DM+err DM-err
+Santini_SM_z0, Santini_DM_z0, Santini_DMuperr_z0, Santini_DMdownerr_z0 = np.loadtxt('../observations/Santini_2014_z0.txt',unpack=True,comments='#')
+Santini_SM_z1, Santini_DM_z1, Santini_DMuperr_z1, Santini_DMdownerr_z1 = np.loadtxt('../observations/Santini_2014_z1.txt',unpack=True,comments='#')
+Santini_SM_z2, Santini_DM_z2, Santini_DMuperr_z2, Santini_DMdownerr_z2 = np.loadtxt('../observations/Santini_2014_z2.txt',unpack=True,comments='#')
+
+#### daCunha 2015
+#Phot_z z+err z-err SM SM+err SM-err DM DM+err DM-err
+daCunha_z,daCunha_zuperr,daCunha_zdownerr,daCunha_SM,daCunha_SMuperr,daCunha_SMdownerr,daCunha_DM,daCunha_DMuperr,daCunha_DMdownerr = np.loadtxt('../observations/daCunha_2015_z_3_4_5.txt',unpack=True,comments='#')
+
+
+####Mancini2015
+
+Mancini_z, Mancini_SM, Mancini_SMerr, Mancini_DM, Mancini_DMerr = np.loadtxt('../observations/Mancini_2015_z6_z7.txt',unpack=True,comments='#')
+
 
 #print obs_DM
 
@@ -119,7 +144,8 @@ for loop in range(0,10):
 		Metals_SNII = gals['MetalsColdGas'][i][1]*1.0E10/0.673
 		Metals_SNIA = gals['MetalsColdGas'][i][2]*1.0E10/0.673
 		
-		Stellar_Mass_Condition = 1.0E9
+		#Stellar_Mass_Condition = 1.0E9
+		Stellar_Mass_Condition = 0.0
 		Dust_Mass_Condition = 0.0 
 		
 		
@@ -144,13 +170,21 @@ for loop in range(0,10):
 		plt.ylabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=0)
 		plt.tick_params(axis='both', which='major', labelsize=10)
 		plt.tick_params(axis='both', which='minor', labelsize=8)
-		#plt.legend(loc='lower right')
 		plt.text(6.2,-4,"N = "+str(sum(count)))
 		plt.text(10,-5,"z = "+str(loop)+" :New dust")
 		if(loop == 0):
-			#plt.scatter(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM_err),color='g',label='RemyRuyer2014')
-			plt.errorbar(obs_SM,np.log10(obs_DM),yerr=np.log10(obs_DM)*(obs_DM_err/100.0),color='g',label='RemyRuyer2014',fmt='o')
-		
+			plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
+			plt.errorbar(Santini_SM_z0, Santini_DM_z0, yerr = (Santini_DMdownerr_z0, Santini_DMuperr_z0), color='r',label='Santini2014',fmt='o')
+		if(loop == 1):
+			plt.errorbar(Santini_SM_z1, Santini_DM_z1, yerr = (Santini_DMdownerr_z1, Santini_DMuperr_z1), color='g',label='Santini2014',fmt='o')
+		if(loop == 2):
+			plt.errorbar(Santini_SM_z2, Santini_DM_z2, yerr = (Santini_DMdownerr_z2, Santini_DMuperr_z2), color='g',label='Santini2014',fmt='o')
+		if( (loop == 3) or (loop == 4) or (loop == 5) ):
+			plt.errorbar(daCunha_SM, daCunha_DM, yerr = (daCunha_DMdownerr, daCunha_DMuperr), color='g',label='daCunha2014',fmt='o')
+		if( (loop == 6) or (loop == 7) ):
+			plt.errorbar(Mancini_SM, Mancini_DM, yerr = Mancini_DMerr, xerr = Mancini_SMerr, color='g',label='Mancini2015',fmt='o')
+		plt.legend(loc='lower right')
+			
 		pylab.savefig('./graphs/stellar_Newdust_z'+str(loop)+'.png', bbox_inches=0)
 		plt.close()
 	

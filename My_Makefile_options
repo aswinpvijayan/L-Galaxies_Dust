@@ -118,18 +118,18 @@ endif
 endif
 
 
-OPT += -DDETAILED_DUST
-OPT += -DDUST_AGB
-OPT += -DDUST_SNII
-OPT += -DDUST_SNIA
-OPT += -DDUST_GROWTH
-OPT += -DDUST_GROWTH_H2_FRACTION
-OPT += -DFULL_DUST
-OPT += -DDUST_DESTRUCTION
-OBJS += ./code/model_dustyields.o
-OBJS += ./code/dustyields_functions.o
-OBJS += ./code/dustyields_integrals.o
-OBJS += ./code/dustyields_read_tables.o
+#OPT += -DDETAILED_DUST
+#OPT += -DDUST_AGB
+#OPT += -DDUST_SNII
+#OPT += -DDUST_SNIA
+#OPT += -DDUST_GROWTH
+#OPT += -DDUST_GROWTH_H2_FRACTION
+#OPT += -DFULL_DUST
+#OPT += -DDUST_DESTRUCTION
+#OBJS += ./code/model_dustyields.o
+#OBJS += ./code/dustyields_functions.o
+#OBJS += ./code/dustyields_integrals.o
+#OBJS += ./code/dustyields_read_tables.o
 
 
 
