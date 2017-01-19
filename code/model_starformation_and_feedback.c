@@ -166,9 +166,9 @@ void starformation(int p, int centralgal, double time, double dt, int nstep)
 void update_stars_due_to_reheat(int p, int centralgal, double *stars)
 {
   double MergeCentralVvir=0.;
-  double fac;
+  //double fac;
   double CentralVvir=0.;
-  double reheated_mass=0., ejected_mass=0.;
+  double reheated_mass=0.;//, ejected_mass=0.;
   /* SN FEEDBACK RECIPES */
 
   /* In Guo2010 type 1s can eject, reincorporate gas and get gas from their
@@ -297,7 +297,7 @@ void update_from_star_formation(int p, double stars, bool flag_burst, int nstep)
  * is returned to the hot gas - onle ejection.*/
 void SN_feedback(int p, int centralgal, double stars, char feedback_location[])
 {
-  double CentralVvir, MergeCentralVvir=0., EjectVmax, EjectVvir, SN_Energy, Reheat_Energy, fac;
+  double CentralVvir, MergeCentralVvir=0., EjectVmax, EjectVvir, SN_Energy, Reheat_Energy;//, fac;
   double reheated_mass=0., ejected_mass=0.;
   /* SN FEEDBACK MODEL */
 
@@ -537,9 +537,9 @@ void check_disk_instability(int p)
       stars = diskmass - Mcrit;
       fraction = stars / diskmass;
     }
-  else if (DiskInstabilityModel == 1)
+  else /*(DiskInstabilityModel == 1)*/ {
     stars = 0.;
-
+	}
   /* add excess stars to the bulge */
   if(stars > 0.0)
     {

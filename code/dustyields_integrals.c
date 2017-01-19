@@ -59,11 +59,11 @@ void integrate_dust_yields()
 	double timet;
 
 	int Mi_lower, Mi_upper,Zi_Dust;
-	int Mi_lower_AGB, Mi_upper_AGB, t_lower_lifetime, t_upper_lifetime;
+	int Mi_lower_AGB, Mi_upper_AGB;//, t_lower_lifetime, t_upper_lifetime;
 	int Mi_lower_Dust, Mi_upper_Dust;
 	int width_in_timesteps, mbmax; //Number of current timesteps that fit in any given SFH bin, and the number of mini bins considered for any given SFH bin (max. = 30, for memory considerations)
-	double dt, t_lower, t_upper, Mi_lower_actual, Mi_upper_actual;
-	double AGBYields_lower_actual[AGB_DUST_TYPE_NUM], AGBYields_upper_actual[AGB_DUST_TYPE_NUM];
+	double dt, t_lower, t_upper;//, Mi_lower_actual, Mi_upper_actual;
+	//double AGBYields_lower_actual[AGB_DUST_TYPE_NUM], AGBYields_upper_actual[AGB_DUST_TYPE_NUM];
 	
 	
 	for(snap=0;snap<(LastDarkMatterSnapShot+1)-1;snap++) //LOOP OVER SNAPSHOTS

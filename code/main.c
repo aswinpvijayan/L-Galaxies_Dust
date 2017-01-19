@@ -698,7 +698,7 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
   int p, q, nstep, centralgal, merger_centralgal, currenthalo, prevgal, start, i;
   double infallingGas, deltaT, Zcurr;
   double time, previoustime, newtime;
-  double AGNaccreted, t_Edd;
+  double t_Edd; //,AGNaccreted
 #ifdef STAR_FORMATION_HISTORY
   double age_in_years;
 #endif

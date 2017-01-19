@@ -591,7 +591,7 @@ void add_galaxies_together(int t, int p)
 
 void make_bulge_from_burst(int p)
 {
-	int outputbin;
+	//int outputbin;
   /* generate bulge */
   transfer_stars(p,"Bulge",p,"Disk",1.);
 

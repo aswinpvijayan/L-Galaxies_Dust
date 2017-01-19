@@ -41,10 +41,10 @@ void post_process_spec_mags(struct GALAXY_OUTPUT *o)
 {
   int ll, nlum, ibin;
   double diskmass, bulgemass, icmmass, diskmetals, bulgemetals, icmmetals, previous_lum;
-  double time, age;
+  double /*time,*/ age;
   double Zg;
   //double Small_Age_bin_yr=1.e11, Small_Age_bin, bin_size;
-  double Small_Age_bin_yr=1.e6, Small_Age_bin, bin_size;
+  double /*Small_Age_bin_yr=1.e6,*/ Small_Age_bin, bin_size;
   int i_AgeBin, MaxBins=10000, N_AgeBin;
 
   struct SFH_BIN sfh_bins[SFH_NBIN];
@@ -75,10 +75,10 @@ void post_process_spec_mags(struct GALAXY_OUTPUT *o)
       double dObsYLumDisk=0., dObsYLumBulge=0., dObsYLumICL=0.;
       double dObsYLumDisk_forward=0., dObsYLumBulge_forward=0., dObsYLumICL_forward=0.;
 
-      double LumDiskDust=0., LumBulgeDust=0., LumICLDust=0.;
-      double ObsLumDiskDust=0., ObsLumBulgeDust=0., ObsLumICLDust=0.;
-      double dObsLumDiskDust=0., dObsLumBulgeDust=0., dObsLumICLDust=0.;
-      double dObsLumDiskDust_forward=0., dObsLumBulgeDust_forward=0., dObsLumICLDust_forward=0.;
+      double LumDiskDust=0., LumBulgeDust=0.;//, LumICLDust=0.; 
+      double ObsLumDiskDust=0., ObsLumBulgeDust=0.;//, ObsLumICLDust=0.;
+      double dObsLumDiskDust=0., dObsLumBulgeDust=0.;//, dObsLumICLDust=0.;
+      double dObsLumDiskDust_forward=0., dObsLumBulgeDust_forward=0.;//, dObsLumICLDust_forward=0.;
 
       previous_lum=0.;
       ibin = 0;

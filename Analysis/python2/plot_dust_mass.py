@@ -83,6 +83,7 @@ for loop in range(0,10):
 
 	Stellar_Mass = np.zeros(len(gals['Type']))
 	ColdGas = np.zeros(len(gals['Type']))
+	SFR = np.zeros(len(gals['Type']))
 	Metals = np.zeros(len(gals['Type']))
 	Metals_AGB = np.zeros(len(gals['Type']))
 	Metals_SNII = np.zeros(len(gals['Type']))
@@ -121,6 +122,7 @@ for loop in range(0,10):
 		for j in range(2,11):
 			Metals[i] += gals['ColdGas_elements'][i][j]
 
+		#print np.log10(Metals[i]), np.log10(New_Dust_Mass[i])
 				
 				
 				
@@ -138,7 +140,7 @@ for loop in range(0,10):
 		
 		Stellar_Mass[i] = gals['StellarMass'][i]*1.0E10/0.673
 		ColdGas[i] = gals['ColdGas'][i]*1.0E10/0.673
-
+		SFR[i] = gals['Sfr'][i]
 		
 		Metals_AGB  = gals['MetalsColdGas'][i][0]*1.0E10/0.673
 		Metals_SNII = gals['MetalsColdGas'][i][1]*1.0E10/0.673
@@ -149,11 +151,12 @@ for loop in range(0,10):
 		Dust_Mass_Condition = 0.0 
 		
 		
-		
+	print np.mean(SFR)
 		
 	#---------------------All NEW dust Plots
 
-	condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
+	#condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
+	condition = np.logical_and(np.logical_and(New_Dust_Mass>0, np.log10(SFR) > -3.0),Stellar_Mass>Stellar_Mass_Condition)
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])
@@ -170,8 +173,8 @@ for loop in range(0,10):
 		plt.ylabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=0)
 		plt.tick_params(axis='both', which='major', labelsize=10)
 		plt.tick_params(axis='both', which='minor', labelsize=8)
-		plt.text(6.2,-4,"N = "+str(sum(count)))
-		plt.text(10,-5,"z = "+str(loop)+" :New dust")
+		plt.text(6.2,-1,"N = "+str(sum(count)))
+		plt.text(10,2,"z = "+str(loop)+" :New dust")
 		if(loop == 0):
 			plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
 			plt.errorbar(Santini_SM_z0, Santini_DM_z0, yerr = (Santini_DMdownerr_z0, Santini_DMuperr_z0), color='r',label='Santini2014',fmt='o')
@@ -382,7 +385,7 @@ for loop in range(0,10):
 
 	#---------------------Metal Dust ratios
 
-	condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>0)
+	condition = np.logical_and(np.logical_and(Metals>0,New_Dust_Mass>0),Stellar_Mass>0)
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])
@@ -412,7 +415,7 @@ for loop in range(0,10):
 
 	#---------------------Gas Dust ratios
 
-	condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>0)
+	condition = np.logical_and(np.logical_and(ColdGas>0,New_Dust_Mass>0),Stellar_Mass>0)
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])

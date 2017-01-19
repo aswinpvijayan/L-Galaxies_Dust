@@ -1215,15 +1215,15 @@ void transfer_dust_mergers(int p, int q)
   Gal[q].DustISM = DustMass_add(Gal[q].DustISM, DustYield, -1.0);
   */
 
-	Gal[p].Dust_elements.Cb + Gal[q].Dust_elements.Cb;
-	Gal[p].Dust_elements.N  + Gal[q].Dust_elements.N;
-	Gal[p].Dust_elements.O  + Gal[q].Dust_elements.O;
-	Gal[p].Dust_elements.Ne + Gal[q].Dust_elements.Ne;
-	Gal[p].Dust_elements.Mg + Gal[q].Dust_elements.Mg;
-	Gal[p].Dust_elements.Si + Gal[q].Dust_elements.Si;
-	Gal[p].Dust_elements.S  + Gal[q].Dust_elements.S;
-	Gal[p].Dust_elements.Ca + Gal[q].Dust_elements.Ca;
-	Gal[p].Dust_elements.Fe + Gal[q].Dust_elements.Fe;
+	Gal[p].Dust_elements.Cb += Gal[q].Dust_elements.Cb;
+	Gal[p].Dust_elements.N  += Gal[q].Dust_elements.N;
+	Gal[p].Dust_elements.O  += Gal[q].Dust_elements.O;
+	Gal[p].Dust_elements.Ne += Gal[q].Dust_elements.Ne;
+	Gal[p].Dust_elements.Mg += Gal[q].Dust_elements.Mg;
+	Gal[p].Dust_elements.Si += Gal[q].Dust_elements.Si;
+	Gal[p].Dust_elements.S  += Gal[q].Dust_elements.S;
+	Gal[p].Dust_elements.Ca += Gal[q].Dust_elements.Ca;
+	Gal[p].Dust_elements.Fe += Gal[q].Dust_elements.Fe;
 	
 	Gal[q].Dust_elements.Cb = 0.0;
 	Gal[q].Dust_elements.N  = 0.0;
@@ -1283,8 +1283,8 @@ void mass_checks(char string[], int igal) {
 #endif
   
 #ifdef STAR_FORMATION_HISTORY
-  int i;
-  double sfh_sum;
+ // int i;
+ // double sfh_sum;
 #endif
 
   if(Gal[igal].ColdGas < 1.e-8)
@@ -1768,7 +1768,7 @@ void free_vector(double *v, long nl, long nh)
 
 void print_galaxy(char string[], int p, int halonr)
 {
-  int j;
+ // int j;
 /*	printf("%s Hnr=%d firstinFOF=%d prog=%d nestprog=%d Descendant=%d gal=%d Type=%d\n",
 			string, Gal[p].HaloNr, Halo[halonr].FirstHaloInFOFgroup, Halo[halonr].FirstProgenitor,
 			Halo[halonr].NextProgenitor, Halo[halonr].Descendant, p, Gal[p].Type);

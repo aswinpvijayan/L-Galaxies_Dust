@@ -36,3 +36,4 @@ Analysis/python2/graphs/
 *.o
 *.i
 *.png
+*.pyc

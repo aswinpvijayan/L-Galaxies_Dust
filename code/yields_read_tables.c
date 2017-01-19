@@ -564,7 +564,7 @@ void read_yield_tables(void)
 		//------------------------------------------
 			FILE *fd14;
 			char buf14[100];
-			int i14,j14;
+			int i14;
 			float m14;
 			static char *name14 = "SNIaYields.txt";
 

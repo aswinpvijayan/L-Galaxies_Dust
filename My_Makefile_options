@@ -99,7 +99,7 @@ OBJS  += ./code/model_yields.o
 OBJS  += ./code/yields_read_tables.o
 OBJS  += ./code/yields_elements.o
 OBJS  += ./code/yields_integrals.o
-OBJS  += ./code/yields_calc_SNe_rates.o
+####OBJS  += ./code/yields_calc_SNe_rates.o
 ifeq (INDIVIDUAL_ELEMENTS,$(findstring INDIVIDUAL_ELEMENTS,$(OPT)))
 #OPT  += -DMAINELEMENTS  #If on, then only H, He, O, Mg and Fe are tracked. If off, all elements are tracked (H,He,C,N,O,Ne,Mg,Si,S,Ca,Fe)
 endif
@@ -118,18 +118,19 @@ endif
 endif
 
 
-#OPT += -DDETAILED_DUST
-#OPT += -DDUST_AGB
-#OPT += -DDUST_SNII
-#OPT += -DDUST_SNIA
-#OPT += -DDUST_GROWTH
-#OPT += -DDUST_GROWTH_H2_FRACTION
-#OPT += -DFULL_DUST
-#OPT += -DDUST_DESTRUCTION
-#OBJS += ./code/model_dustyields.o
-#OBJS += ./code/dustyields_functions.o
-#OBJS += ./code/dustyields_integrals.o
-#OBJS += ./code/dustyields_read_tables.o
+OPT += -DDETAILED_DUST
+OPT += -DDUST_AGB
+OPT += -DDUST_SNII
+OPT += -DDUST_SNIA
+OPT += -DDUST_GROWTH
+OPT += -DDUST_GROWTH_H2_FRACTION
+####OPT += -DDUST_GROWTH_2
+OPT += -DFULL_DUST
+OPT += -DDUST_DESTRUCTION
+OBJS += ./code/model_dustyields.o
+OBJS += ./code/dustyields_functions.o
+OBJS += ./code/dustyields_integrals.o
+OBJS += ./code/dustyields_read_tables.o
 
 
 

@@ -192,7 +192,7 @@ void do_AGN_heating(double dt, int ngal)
 {
   double AGNrate, AGNheating, AGNaccreted, AGNcoeff, fraction, EDDrate, FreeFallRadius;
   double dist, HotGas, HotRadius, Rvir, Vvir, Mvir;
-  double LeftOverEnergy, CoolingGas, AGNAccretedFromCentral;
+  double LeftOverEnergy, CoolingGas;//, AGNAccretedFromCentral;
   int p, FoFCentralGal;
 
   if(AGNRadioModeModel == 0)
@@ -289,6 +289,7 @@ void do_AGN_heating(double dt, int ngal)
 
 	  if(AGNRadioModeModel == 0 && Gal[p].Type==1)
 	    {
+		  dist=separation_gal(p,FoFCentralGal);
 	      if(dist < Gal[FoFCentralGal].Rvir)
 		{
 		  if(AGNheating > (Gal[p].CoolingGas + Gal[FoFCentralGal].CoolingGas))

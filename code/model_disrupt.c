@@ -199,7 +199,8 @@ double peri_radius(int p, int centralgal)
 
   x = sqrt(b / a);
   x0 = 1000;
-  while(abs(x0 - x) >= 1.e-8)
+//  while(abs(x0 - x) >= 1.e-8) //Bug fix? Scott Jan 2017
+  while(fabs(x0 - x) >= 1.e-8) 
     {
       x0 = x;
       x = sqrt((log(x0) + b) / a);
@@ -219,9 +220,9 @@ double peri_radius(int p, int centralgal)
 /** @brief Calculates the half mass radius of satellite galaxies */
 double sat_radius(int p)
 {
-  double r, rd, rb, Mdisk, Sigma0, rmin, rmax, rbin, M;
-  double Mgas, Mbulge, rgd, Sigma0_g, rmi, rma, dr, totmass, Mvir, Rvir, tmprmax;
-  int N = 100., ii;
+  double r, rd, rb, Mdisk, /*Sigma0, rmin,*/ rmax, /*rbin,*/ M; 
+  double Mgas, Mbulge, rgd, /*Sigma0_g, rmi, rma,*/ dr, totmass;//, Mvir, Rvir, tmprmax;
+  int /*N = 100.,*/ ii;
   #define SAT_RADIUS_RMIN 5e-7
   #define SAT_RADIUS_N 100
 
