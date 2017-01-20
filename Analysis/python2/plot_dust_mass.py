@@ -119,6 +119,7 @@ for loop in range(0,10):
 			All_Dust_Mass[i] += gals['DustMassISM'][i][j]
  		for j in range(0,11):
 			New_Dust_Mass[i] += gals['Dust_elements'][i][j]  
+			print gals['Dust_elements'][i][j]
 		for j in range(2,11):
 			Metals[i] += gals['ColdGas_elements'][i][j]
 
@@ -292,14 +293,14 @@ for loop in range(0,10):
 		plt.xlim([6,12])
 		plt.ylim([-2,10.2])
 		plt.hexbin(log_Stellar_Mass,log_SNIa_Dust_Mass,gridsize=500,mincnt=1, label='Dust SNIa')
-		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust SNII')
+		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust SNIa')
 		plt.xlabel(r'log$_{10}$(Mstellar/M$_{\odot}$)', fontsize=14,labelpad=10)
 		plt.ylabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=0)
 		plt.tick_params(axis='both', which='major', labelsize=10)
 		plt.tick_params(axis='both', which='minor', labelsize=8)
 		#plt.legend(loc='lower right')
 		plt.text(6.2,4,"N = "+str(sum(count)))
-		plt.text(10,-5,"z = "+str(loop)+" :SNII dust")
+		plt.text(10,-5,"z = "+str(loop)+" :SNIa dust")
 		pylab.savefig('./graphs/stellar_SNIadust_z'+str(loop)+'.png', bbox_inches=0)
 		plt.close()
 	

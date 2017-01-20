@@ -247,7 +247,6 @@ void read_yield_tables(void)
             {
             	fscanf(fd8, "%f", &m8);
             	AGBYields[k8][i8][j8] = m8 * Chabrier_IMF(AGBMasses[j8]);
-            	//printf("%g\t%g\t%d\t%g\n",AGBMetallicities[k8],AGBMasses[j8],i8,m8);
             }
           }
     }
@@ -444,7 +443,6 @@ void read_yield_tables(void)
 	    {
 	      fscanf(fd13, "%f", &m13);
 	      SNIIYields[k13][i13][j13] = m13 * Chabrier_IMF(SNIIMasses[j13]);
-         //printf("%g\t%g\t%d\t%g\n",SNIIMetallicities[k13],SNIIMasses[j13],i13,m13);
 	      /*if (i13 == 4 && k13 >= SNII_Z_NUM-2) {SNIIYields[k13][i13][j13] = 4.0 * m13 * Chabrier_IMF(SNIIMasses[j13]);} //Just a test!: Quadruple the oxygen production at high Z.
 	      else {SNIIYields[k13][i13][j13] = m13 * Chabrier_IMF(SNIIMasses[j13]);}*/
 	      /*if (i13 == 3 && k13 >= SNII_Z_NUM-2) {SNIIYields[k13][i13][j13] = 1.5 * m13 * Chabrier_IMF(SNIIMasses[j13]);} //Just a test!: 1.5 x nitrogen production at high Z.
@@ -564,7 +562,7 @@ void read_yield_tables(void)
 		//------------------------------------------
 			FILE *fd14;
 			char buf14[100];
-			int i14;
+			int i14,j14;
 			float m14;
 			static char *name14 = "SNIaYields.txt";
 

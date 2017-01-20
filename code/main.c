@@ -843,27 +843,20 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 #ifdef DETAILED_METALS_AND_MASS_RETURN
       //DELAYED ENRICHMENT AND MASS RETURN + FEEDBACK: No fixed yield or recycling fraction anymore. FB synced with enrichment
       for (p = 0; p < ngal; p++) {
-        //elements_print("start",Gal[p].ColdGas_elements);
 		update_yields_and_return_mass(p, centralgal, deltaT/STEPS, nstep);
 #ifdef DETAILED_DUST
-       // elements_print("middle",Gal[p].ColdGas_elements);
 		update_dust_mass(p, centralgal, deltaT/STEPS, nstep);
-        //elements_print("Dust",Gal[p].Dust_elements);
-        //elements_print("Metals",Gal[p].ColdGas_elements);
 #endif
 		
-#ifdef DETAILED_DUST		
 #ifdef FEEDBACK_COUPLED_WITH_MASS_RETURN
     if(TotalMassReturnedToColdDiskGas>0.)
     	SN_feedback(p, centralgal, TotalMassReturnedToColdDiskGas, "ColdGas");
     if(TotalMassReturnedToHotGas>0.)
     	SN_feedback(p, centralgal, TotalMassReturnedToHotGas, "HotGas");
+#endif //Feedback
+	  
+	  } 
 #endif //FB_C_W_Mass_return
-#endif //DDdust
-		//#endif
-	  }
-#endif
-
     }/* end move forward in interval STEPS */
 
   for(p = 0; p < ngal; p++)

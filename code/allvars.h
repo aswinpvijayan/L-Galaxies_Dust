@@ -1106,6 +1106,9 @@ float AGBRate2[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
 #endif
 #endif
 
+double TotalMassReturnedToColdDiskGas;
+double TotalMassReturnedToHotGas;
+
 #endif //DETAILED_METALS_AND_MASS_RETURN
 
 #ifdef DETAILED_DUST
@@ -1129,10 +1132,6 @@ float SNIa_prevstep_Cold_Fe[SFH_NBIN];
 
 int Zi_saved;
 float Zi_disp_saved;
-
-double TotalMassReturnedToColdDiskGas;
-double TotalMassReturnedToHotGas;
-
 
 #endif //DETAILED_DUST
 

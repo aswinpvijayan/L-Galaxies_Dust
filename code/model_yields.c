@@ -50,9 +50,9 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 	double ICMSFR, step_width_times_ICMSFR, ICMSFR_physical_units, step_width_times_ICMSFR_physical_units, inverse_ICM_physical_units;
 	double Disk_total_metallicity, Bulge_total_metallicity, ICM_total_metallicity;
 	double NormMassEjecRateSumAllTypes;
-#ifndef DETAILED_DUST
-	double TotalMassReturnedToColdDiskGas, TotalMassReturnedToHotGas;
-#endif
+//#ifndef DETAILED_DUST // THIS WOULD LIMIT ITS SCOPE TO THIS CODE - IDIOT
+//	double TotalMassReturnedToColdDiskGas, TotalMassReturnedToHotGas;
+//#endif
 	int n; //Iterator used for loop over NOUT when updating MassWeightedAge
 	double AgeCorrectionDisk[NOUT];
 	double AgeCorrectionBulge[NOUT];
