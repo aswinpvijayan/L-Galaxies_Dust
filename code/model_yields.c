@@ -255,6 +255,7 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNIa_prevstep_Cold_Fe[i] += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10])));
+			//printf("NormSNIaYieldRate_actual[10] = %g\n",NormSNIaYieldRate_actual[10]);
 #endif //DDust
     //elements_print("2.3",Gal[p].ColdGas_elements);
 #endif //SNIATOHOT

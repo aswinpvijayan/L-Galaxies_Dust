@@ -74,6 +74,8 @@ for loop in range(0,10):
 	gals=cPickle.load(fin)
 	fin.close()
 
+	Type = np.zeros(len(gals['Type']))
+
 	AGB_Dust_Mass = np.zeros(len(gals['Type']))
 	SNII_Dust_Mass = np.zeros(len(gals['Type']))
 	SNIa_Dust_Mass = np.zeros(len(gals['Type']))
@@ -83,7 +85,9 @@ for loop in range(0,10):
 
 	Stellar_Mass = np.zeros(len(gals['Type']))
 	ColdGas = np.zeros(len(gals['Type']))
+	
 	SFR = np.zeros(len(gals['Type']))
+	sSFR = np.zeros(len(gals['Type']))
 	Metals = np.zeros(len(gals['Type']))
 	Metals_AGB = np.zeros(len(gals['Type']))
 	Metals_SNII = np.zeros(len(gals['Type']))
@@ -115,11 +119,12 @@ for loop in range(0,10):
 		SNII_Dust_Mass[i] = (gals['DustMassISM'][i][4]+gals['DustMassISM'][i][5]+gals['DustMassISM'][i][6]+gals['DustMassISM'][i][7])
 		SNIa_Dust_Mass[i] = (gals['DustMassISM'][i][8]+gals['DustMassISM'][i][9]+gals['DustMassISM'][i][10]+gals['DustMassISM'][i][11])
 		Growth_Dust_Mass[i] = (gals['DustMassISM'][i][12]+gals['DustMassISM'][i][13]+gals['DustMassISM'][i][14]+gals['DustMassISM'][i][15])
+		#print SNIa_Dust_Mass[i]
 		for j in range(0,16):
 			All_Dust_Mass[i] += gals['DustMassISM'][i][j]
  		for j in range(0,11):
 			New_Dust_Mass[i] += gals['Dust_elements'][i][j]  
-			print gals['Dust_elements'][i][j]
+			#print gals['Dust_elements'][i][j]
 		for j in range(2,11):
 			Metals[i] += gals['ColdGas_elements'][i][j]
 
@@ -142,6 +147,9 @@ for loop in range(0,10):
 		Stellar_Mass[i] = gals['StellarMass'][i]*1.0E10/0.673
 		ColdGas[i] = gals['ColdGas'][i]*1.0E10/0.673
 		SFR[i] = gals['Sfr'][i]
+		Type[i] = gals['Type'][i]
+		sSFR[i] = SFR[i] / Stellar_Mass[i]
+		#print sSFR[i]
 		
 		Metals_AGB  = gals['MetalsColdGas'][i][0]*1.0E10/0.673
 		Metals_SNII = gals['MetalsColdGas'][i][1]*1.0E10/0.673
@@ -152,12 +160,14 @@ for loop in range(0,10):
 		Dust_Mass_Condition = 0.0 
 		
 		
+		
 	print np.mean(SFR)
 		
 	#---------------------All NEW dust Plots
 
 	#condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
-	condition = np.logical_and(np.logical_and(New_Dust_Mass>0, np.log10(SFR) > -3.0),Stellar_Mass>Stellar_Mass_Condition)
+	#condition = np.logical_and(np.logical_and(New_Dust_Mass>0, np.log10(SFR) > -3.0),Stellar_Mass>Stellar_Mass_Condition)
+	condition = np.logical_and(sSFR > 0.0345E-9, np.logical_and(New_Dust_Mass > 0, Type == 0))
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])
@@ -403,7 +413,7 @@ for loop in range(0,10):
 		plt.hexbin(log_Stellar_Mass,Ratio,gridsize=500,mincnt=1, label='Dust All')
 		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust/Metal ratio')
 		plt.xlabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=10)
-		plt.ylabel(r'log$_{10}$(Mdust/Mmetals$)', fontsize=14,labelpad=0)
+		plt.ylabel(r'log$_{10}$(Mdust/Mmetals)', fontsize=14,labelpad=0)
 		plt.tick_params(axis='both', which='major', labelsize=10)
 		plt.tick_params(axis='both', which='minor', labelsize=8)
 		#plt.legend(loc='lower right')
@@ -433,7 +443,7 @@ for loop in range(0,10):
 		plt.hexbin(log_Stellar_Mass,Ratio,gridsize=500,mincnt=1, label='Dust All')
 		plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust/Metal ratio')
 		plt.xlabel(r'log$_{10}$(Mdust/M$_{\odot}$)', fontsize=14,labelpad=10)
-		plt.ylabel(r'log$_{10}$(Mdust/Mcoldgas$)', fontsize=14,labelpad=0)
+		plt.ylabel(r'log$_{10}$(Mdust/Mcoldgas)', fontsize=14,labelpad=0)
 		plt.tick_params(axis='both', which='major', labelsize=10)
 		plt.tick_params(axis='both', which='minor', labelsize=8)
 		#plt.legend(loc='lower right')

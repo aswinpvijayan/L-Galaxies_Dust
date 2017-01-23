@@ -37,3 +37,4 @@ Analysis/python2/graphs/
 *.i
 *.png
 *.pyc
+*.DS_Store

@@ -399,7 +399,9 @@ void update_from_feedback(int p, int centralgal, double reheated_mass, double ej
   double massremain;
   double fraction;
   int merger_centre;
+#ifdef DETAILED_DUST
   float fraction_sn_feedback;
+#endif	  
   //mass_checks("update_from_feedback #1",p);
 
   if(Gal[p].ColdGas > 0.)

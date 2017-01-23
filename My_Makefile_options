@@ -12,7 +12,7 @@ OPT += -DNOUT=34             # This sets the number of galaxy output times. IGNO
 OPT += -DUPDATETYPETWO       # This updates the positions of type 2 galaxies when the galaxies are written to file (requires aux files to be read)\
 
 # To run with different dark matter simulation
-#OPT += -DMRII      
+OPT += -DMRII      
 #OPT += -DCATERPILLAR
 
 # predefined some models (to be run with the corresponding input_***.par file)
