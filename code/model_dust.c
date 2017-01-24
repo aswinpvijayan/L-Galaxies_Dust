@@ -134,6 +134,53 @@ void dust_model(int p, int snap, int halonr)
         }
 #endif
 
+
+    	  
+#ifdef DETAILED_DUST
+#ifdef DETAILED_ATTENUATION
+		
+		float MW_attenuation = 0.45E-21; //mag cm^2 from Watson2011
+		
+		//HI Gas calculation
+		float K=4.926E-5;   // (units pc^4) / (M_solar ^2)    
+		float rmol=pow((K*pow((((Gal[p].GasDiskRadius*1E6)/Hubble_h)/3.0),-4)*(1E10 * (Gal[p].ColdGas/Hubble_h))*((1E10*Gal[p].ColdGas/Hubble_h)+0.4*(1E10*(Gal[p].DiskMass/Hubble_h)))),0.8);
+      	float rmolgal=pow((3.44*pow(rmol,-0.506)+4.82*pow(rmol,-1.054)),-1);
+		float HIMassNoh = (Gal[p].ColdGas_elements.H)/(1+rmolgal);   
+		float HIGas = (HIMassNoh /1E10)* Hubble_h;  // Units M_solar/h
+		
+		//HI Column density calculation
+		
+	    float NHI = HIGas / (M_PI * pow(Gal[p].GasDiskRadius * 0.94, 2));
+      	/* now convert from 10^10 M_sun/h / (Mpc/h)^2 to (2.1 10^21 atoms/cm^2) */
+      	NHI = NHI / 3252.37;	// 3252.37 = 10^(3.5122) ... ha ha ! 
+
+
+		//Dust and metallicities
+		float DTM, MTG; //dust to metal //metal to gas
+		
+		if ( (metal_elements_total(Gal[p].ColdGas_elements) > 0.0) && (Gal[p].ColdGas>0.0) ) {
+			DTM = metal_elements_total(Gal[p].Dust_elements) / metal_elements_total(Gal[p].ColdGas_elements);
+			MTG = metals_total(Gal[p].MetalsColdGas) / Gal[p].ColdGas;
+			Gal[p].Attenuation_Dust = -2.5*log10(DTM * MW_attenuation * NHI * pow(10,MTG));
+			}
+		else {
+			Gal[p].Attenuation_Dust = -99.;
+			}
+		
+		//printf("Atten = %g\n",Gal[p].Attenuation_Dust);
+
+
+#endif //DetailedAttenuation
+#endif //Detailed_Dust    	  
+    	  
+    	  
+    	  
+    	  
+
+    	  
+    	  
+    	  
+
 #ifdef OUTPUT_OBS_MAGS
 
       tauv = get_extinction(NMAG, Zg, 0) * nh;

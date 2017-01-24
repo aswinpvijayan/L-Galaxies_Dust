@@ -445,6 +445,9 @@ struct GALAXY_OUTPUT
 	struct DustMass DustISM;		//DustISM.AGB.SiC
 	struct DustMass DustCGM;		//DustISM.AGB.SiC
 	struct elements Dust_elements; 
+#ifdef DETAILED_ATTENUATION	
+	float Attenuation_Dust;
+#endif
 #endif
 
 
@@ -706,9 +709,11 @@ struct GALAXY			/* Galaxy data */
 
 #ifdef DETAILED_DUST
 	struct DustMass DustISM;		//DustISM.AGB.SiC
-	struct DustMass DustCGM;		//DustISM.AGB.SiC
-	
+	struct DustMass DustCGM;		//DustISM.AGB.SiC	
 	struct elements Dust_elements; 
+#ifdef DETAILED_ATTENUATION
+	float Attenuation_Dust;
+#endif
 #endif
 
 

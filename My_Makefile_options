@@ -12,7 +12,7 @@ OPT += -DNOUT=34             # This sets the number of galaxy output times. IGNO
 OPT += -DUPDATETYPETWO       # This updates the positions of type 2 galaxies when the galaxies are written to file (requires aux files to be read)\
 
 # To run with different dark matter simulation
-OPT += -DMRII      
+#OPT += -DMRII      
 #OPT += -DCATERPILLAR
 
 # predefined some models (to be run with the corresponding input_***.par file)
@@ -39,7 +39,7 @@ OBJS  += ./code/model_spectro_photometric.o
 
 ### POST PROCESS MAGS 
 ifeq (STAR_FORMATION_HISTORY,$(findstring STAR_FORMATION_HISTORY,$(OPT)))
-OPT += -DPOST_PROCESS_MAGS
+###OPT += -DPOST_PROCESS_MAGS
 ifeq (POST_PROCESS_MAGS,$(findstring POST_PROCESS_MAGS,$(OPT)))
 OBJS  += ./code/post_process_spec_mags.o
 endif
@@ -127,6 +127,7 @@ OPT += -DDUST_GROWTH_H2_FRACTION
 ###OPT += -DDUST_GROWTH_2
 OPT += -DFULL_DUST
 OPT += -DDUST_DESTRUCTION
+OPT += -DDETAILED_ATTENUATION
 OBJS += ./code/model_dustyields.o
 OBJS += ./code/dustyields_functions.o
 OBJS += ./code/dustyields_integrals.o

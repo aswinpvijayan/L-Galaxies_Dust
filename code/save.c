@@ -348,6 +348,9 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
  o->DustISM = g->DustISM;
  o->DustCGM = g->DustCGM;
  o->Dust_elements = g->Dust_elements;
+#ifdef DETAILED_ATTENUATION 
+ o->Attenuation_Dust = g->Attenuation_Dust;
+#endif
 #endif
 
   o->PrimordialAccretionRate = CORRECTDBFLOAT(g->PrimordialAccretionRate * UNITMASS_IN_G / UnitTime_in_s * SEC_PER_YEAR / SOLAR_MASS);
