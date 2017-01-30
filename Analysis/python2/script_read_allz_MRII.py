@@ -99,8 +99,8 @@ for i in range(0,16):
 
 
 	# Define which files you want to read in
-	firstfile = 5
-	lastfile = 5 #511
+	firstfile = 40
+	lastfile = 40 #511
 
 	# Define what properties you want to read in
 	props = snap_template.properties_used

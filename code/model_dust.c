@@ -139,7 +139,8 @@ void dust_model(int p, int snap, int halonr)
 #ifdef DETAILED_DUST
 #ifdef DETAILED_ATTENUATION
 		
-		float MW_attenuation = 0.45E-21; //mag cm^2 from Watson2011
+		float MW_attenuation = 0.45;//E-21; //mag cm^2 from Watson2011
+		float MW_DTM = 0.32; //Phil
 		
 		//HI Gas calculation
 		float K=4.926E-5;   // (units pc^4) / (M_solar ^2)    
@@ -153,6 +154,8 @@ void dust_model(int p, int snap, int halonr)
 	    float NHI = HIGas / (M_PI * pow(Gal[p].GasDiskRadius * 0.94, 2));
       	/* now convert from 10^10 M_sun/h / (Mpc/h)^2 to (2.1 10^21 atoms/cm^2) */
       	NHI = NHI / 3252.37;	// 3252.37 = 10^(3.5122) ... ha ha ! 
+      	
+      	//printf("%g\t%g\t%g\n",HIMassNoh,HIGas,Gal[p].ColdGas_elements.H);
 
 
 		//Dust and metallicities
@@ -160,16 +163,22 @@ void dust_model(int p, int snap, int halonr)
 		
 		if ( (metal_elements_total(Gal[p].ColdGas_elements) > 0.0) && (Gal[p].ColdGas>0.0) ) {
 			DTM = metal_elements_total(Gal[p].Dust_elements) / metal_elements_total(Gal[p].ColdGas_elements);
-			MTG = metals_total(Gal[p].MetalsColdGas) / Gal[p].ColdGas;
-			Gal[p].Attenuation_Dust = -2.5*log10(DTM * MW_attenuation * NHI * pow(10,MTG));
+			MTG = metal_elements_total(Gal[p].ColdGas_elements) / Gal[p].ColdGas_elements.H;
+			Gal[p].Attenuation_Dust = /*-2.5*log10( */(DTM/MW_DTM) * MW_attenuation * (NHI) * (MTG/0.02)/*)*/;
+			
+			//printf("Dust = %g\t Metals = %g\n",metal_elements_total(Gal[p].Dust_elements),metals_total(Gal[p].MetalsColdGas));
+			//printf("NewDust = %g\t(DTM/MW_DTM)=%g\t(NHI)=%g\t(MTG/0.02)=%g\n ",Gal[p].Attenuation_Dust,DTM/MW_DTM,NHI,MTG/0.02);
 			}
 		else {
-			Gal[p].Attenuation_Dust = -99.;
+			Gal[p].Attenuation_Dust = 0.0;
 			}
-		
-		//printf("Atten = %g\n",Gal[p].Attenuation_Dust);
-
-
+		/*
+		for(k = 0; k < NMAG; k++)
+        {
+			//printf("Lum = %g\t LumDust = %g\t NewLum = %g\n",-2.5*log10(Gal[p].Lum[k][snap]),-2.5*log10(Gal[p].LumDust[k][snap]),Gal[p].Attenuation_Dust);
+			//printf("Diff = %g\n",Gal[p].Lum[k][snap] - Gal[p].Attenuation_Dust);
+		}
+		*/
 #endif //DetailedAttenuation
 #endif //Detailed_Dust    	  
     	  

@@ -40,8 +40,8 @@ import pylab
 
 print "Redshift [Number of galaxies in each mass bin]"	
 
-for loop in range(0,10):
-#for loop in range(0,1):
+#for loop in range(0,10):
+for loop in range(0,1):
 
 	fin = open('../data/metals/lgal_z'+str(loop)+'.pkl','rb')
 	gals_metals=cPickle.load(fin)
@@ -151,7 +151,7 @@ for loop in range(0,10):
 
 	if(sum(count)>0):	
 		plt.xlim([7,12])
-		plt.ylim([7.5,10])
+		#plt.ylim([7.5,10])
 		plt.hexbin(log_Stellar_Mass_metals,log_metallicity_metals,gridsize=500,mincnt=1, label='Dust All')
 		plt.errorbar(SM_bins,Z_bins,yerr=(Z_std_err),color='r',label='Normal')
 		plt.errorbar(SM_bins2,Z_bins2,yerr=(Z_std_err2),color='g',label='Depleted')

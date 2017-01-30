@@ -57,7 +57,6 @@ struct_dtype = np.dtype([
 ('Mag',np.float32,40),
 ('MagBulge',np.float32,40),
 ('MassWeightAge',np.float32,1),
-('rbandWeightAge',np.float32,1),
 ('sfh_ibin',np.int32,1),
 ('sfh_numbins',np.int32,1),
 ('sfh_DiskMass',np.float32,20),
@@ -77,7 +76,8 @@ struct_dtype = np.dtype([
 ('EjectedMass_elements',np.float32,11),
 ('DustMassISM',np.float32,24),
 ('DustMassCGM',np.float32,24),
-('Dust_elements',np.float32,11)
+('Dust_elements',np.float32,11),
+('Attenuation_Dust',np.float32,1)
 ])
 
 properties_used = {}

@@ -67,8 +67,8 @@ Mancini_z, Mancini_SM, Mancini_SMerr, Mancini_DM, Mancini_DMerr = np.loadtxt('..
 
 print "Redshift [Number of galaxies in each mass bin]"	
 
-for loop in range(0,10):
-#for loop in range(0,1):
+#for loop in range(0,10):
+for loop in range(0,1):
 
 	fin = open('../data/lgal_z'+str(loop)+'.pkl','rb')
 	gals=cPickle.load(fin)
@@ -115,6 +115,7 @@ for loop in range(0,10):
 
 	for i in range(0,len(gals['Type'])):
 		#print gals['Type'][i]
+		#print gals['Attenuation_Dust'][i]
 		AGB_Dust_Mass[i] = (gals['DustMassISM'][i][0]+gals['DustMassISM'][i][1]+gals['DustMassISM'][i][2]+gals['DustMassISM'][i][3])
 		SNII_Dust_Mass[i] = (gals['DustMassISM'][i][4]+gals['DustMassISM'][i][5]+gals['DustMassISM'][i][6]+gals['DustMassISM'][i][7])
 		SNIa_Dust_Mass[i] = (gals['DustMassISM'][i][8]+gals['DustMassISM'][i][9]+gals['DustMassISM'][i][10]+gals['DustMassISM'][i][11])

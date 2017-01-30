@@ -57,7 +57,6 @@ struct_dtype = np.dtype([
 ('Mag',np.float32,40),
 ('MagBulge',np.float32,40),
 ('MassWeightAge',np.float32,1),
-('rbandWeightAge',np.float32,1),
 ('sfh_ibin',np.int32,1),
 ('sfh_numbins',np.int32,1),
 ('sfh_DiskMass',np.float32,20),
