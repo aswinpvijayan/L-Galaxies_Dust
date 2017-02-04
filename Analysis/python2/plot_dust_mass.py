@@ -67,8 +67,8 @@ Mancini_z, Mancini_SM, Mancini_SMerr, Mancini_DM, Mancini_DMerr = np.loadtxt('..
 
 print "Redshift [Number of galaxies in each mass bin]"	
 
-#for loop in range(0,10):
-for loop in range(0,1):
+for loop in range(0,10):
+#for loop in range(0,1):
 
 	fin = open('../data/lgal_z'+str(loop)+'.pkl','rb')
 	gals=cPickle.load(fin)
