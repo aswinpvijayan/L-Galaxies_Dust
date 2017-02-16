@@ -209,6 +209,15 @@ struct DustMass
 	}Destruction_SF;
 };
 
+struct DustRates
+{
+	float AGB;
+	float SNII;
+	float SNIA;
+	float GROW;
+	float DEST;
+};
+
 //struct DustMass DustISM;		//DustISM.AGB.SiC
 //struct DustMass DustICM;
 //struct DustMass DustCGM;	
@@ -443,7 +452,7 @@ struct GALAXY_OUTPUT
 
 #ifdef DETAILED_DUST
 	struct DustMass DustISM;		//DustISM.AGB.SiC
-	struct DustMass DustCGM;		//DustISM.AGB.SiC
+	struct DustRates DustISMRates;		
 	struct elements Dust_elements; 
 #ifdef DETAILED_ATTENUATION	
 	float Attenuation_Dust;
@@ -709,7 +718,7 @@ struct GALAXY			/* Galaxy data */
 
 #ifdef DETAILED_DUST
 	struct DustMass DustISM;		//DustISM.AGB.SiC
-	struct DustMass DustCGM;		//DustISM.AGB.SiC	
+	struct DustRates DustISMRates;		
 	struct elements Dust_elements; 
 #ifdef DETAILED_ATTENUATION
 	float Attenuation_Dust;

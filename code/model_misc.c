@@ -362,7 +362,12 @@ void init_galaxy(int p, int halonr)
 
 #ifdef DETAILED_DUST
 Gal[p].DustISM = DustMass_init();
-Gal[p].DustCGM = DustMass_init();
+
+Gal[p].DustISMRates.AGB = 0.0;
+Gal[p].DustISMRates.SNII = 0.0;
+Gal[p].DustISMRates.SNIA = 0.0;
+Gal[p].DustISMRates.GROW = 0.0;
+Gal[p].DustISMRates.DEST = 0.0;
 
 Gal[p].Dust_elements = elements_init();
 

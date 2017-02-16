@@ -125,7 +125,7 @@ for i in range(0,16):
 	props['ColdGas_elements'] = True
 	props['HotGas_elements'] = True
 	props['DustMassISM'] = True
-	props['DustMassCGM'] = True
+	props['DustRatesISM'] = True
 	props['Dust_elements'] = True
 	props['Attenuation_Dust'] = True
 

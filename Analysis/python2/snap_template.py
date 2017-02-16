@@ -75,7 +75,7 @@ struct_dtype = np.dtype([
 ('ICM_elements',np.float32,11),
 ('EjectedMass_elements',np.float32,11),
 ('DustMassISM',np.float32,24),
-('DustMassCGM',np.float32,24),
+('DustRatesISM',np.float32,5),
 ('Dust_elements',np.float32,11),
 ('Attenuation_Dust',np.float32,1)
 ])

@@ -129,15 +129,16 @@ for loop in range(0,1):
 	
 	
 	
-	condition = np.logical_and(np.logical_and(np.logical_and(O_Mass_metals>0,np.log10(SFR_metals)>-2.0),np.log10(SFR_metals)<1.6),np.logical_and(np.log10(Stellar_Mass_metals) > 8.5,np.log10(Stellar_Mass_metals) < 11.5))
-	
+	#condition = np.logical_and(np.logical_and(np.logical_and(O_Mass_metals>0,np.log10(SFR_metals)>-2.0),np.log10(SFR_metals)<1.6),np.logical_and(np.log10(Stellar_Mass_metals) > 8.5,np.log10(Stellar_Mass_metals) < 11.5))
+	condition = np.logical_and(O_Mass_metals>0.0, Stellar_Mass_metals > 0.0)
 	
 	log_Stellar_Mass_metals = np.log10(Stellar_Mass_metals[condition==1])
 	O_metals = O_Mass_metals[condition==1]
 	H_metals = H_Mass_metals[condition==1]
 	
-	condition = np.logical_and(np.logical_and(np.logical_and(O_Mass_dust>0,np.log10(SFR_dust)>-2.0),np.log10(SFR_dust)<1.6),np.logical_and(np.log10(Stellar_Mass_dust) > 8.5,np.log10(Stellar_Mass_dust) < 11.5))
-	
+	#condition = np.logical_and(np.logical_and(np.logical_and(O_Mass_dust>0,np.log10(SFR_dust)>-2.0),np.log10(SFR_dust)<1.6),np.logical_and(np.log10(Stellar_Mass_dust) > 8.5,np.log10(Stellar_Mass_dust) < 11.5))
+	condition = np.logical_and(O_Mass_dust>0.0, Stellar_Mass_dust > 0.0)
+
 	log_Stellar_Mass_dust = np.log10(Stellar_Mass_dust[condition==1])
 	O_dust = O_Mass_dust[condition==1]
 	H_dust = H_Mass_dust[condition==1]

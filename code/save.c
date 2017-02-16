@@ -346,7 +346,7 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
 
 #ifdef DETAILED_DUST
  o->DustISM = g->DustISM;
- o->DustCGM = g->DustCGM;
+ o->DustISMRates = g->DustISMRates;
  o->Dust_elements = g->Dust_elements;
 #ifdef DETAILED_ATTENUATION 
  o->Attenuation_Dust = g->Attenuation_Dust;
