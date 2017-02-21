@@ -45,6 +45,7 @@ import pylab
 #Name DustMass DMerror% SMass MHI MHIerror% 12+log(O/H) MH2,mw MH2,Z
 Remy_DM, Remy_DMerr, Remy_SM, Remy_MHI, Remy_MHIerr, Remy_Metals, Remy_H2mw, Remy_MH2z = np.loadtxt('../observations/Remy_Ruyer_2014_KINGFISH_z0.txt',unpack=True,comments='#')
 Remy_DM_err_actual = Remy_DM*(Remy_DMerr/100.0)
+Remy_Dust_Gas_Ratio = Remy_DM / (Remy_MHI + Remy_H2mw)
 
 
 #### Santini 2014 z=0,1,2
@@ -63,12 +64,17 @@ daCunha_z,daCunha_zuperr,daCunha_zdownerr,daCunha_SM,daCunha_SMuperr,daCunha_SMd
 Mancini_z, Mancini_SM, Mancini_SMerr, Mancini_DM, Mancini_DMerr = np.loadtxt('../observations/Mancini_2015_z6_z7.txt',unpack=True,comments='#')
 
 
+
+###Bourne2012
+
+Bourne_MEDZ,Bourne_MEDM,Bourne_MEDC,Bourne_MLIMITS_down,Bourne_MLIMITS_up,Bourne_MEDMSTAR,Bourne_MEDMSTARERR,Bourne_MEDMDUST,Bourne_MEDMDUSTERR,Bourne_MEDDMS,Bourne_MEDDMSERR,Bourne_NBIN = np.loadtxt('../observations/Bourne2012_z0.txt',unpack=True,comments='#')
+
 #print obs_DM
 
 print "Redshift [Number of galaxies in each mass bin]"	
 
-for loop in range(0,10):
-#for loop in range(0,1):
+#for loop in range(0,10):
+for loop in range(0,1):
 
 	fin = open('../data/lgal_z'+str(loop)+'.pkl','rb')
 	gals=cPickle.load(fin)
@@ -167,7 +173,7 @@ for loop in range(0,10):
 	#---------------------All NEW dust Plots
 
 	#condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
-	#condition = np.logical_and(np.logical_and(New_Dust_Mass>0, np.log10(SFR) > -3.0),Stellar_Mass>Stellar_Mass_Condition)
+	#condition = np.logical_and(np.logical_and(New_Dust_Mass>0, np.log10(SFR) > 0.0),Stellar_Mass>Stellar_Mass_Condition)
 	condition = np.logical_and(sSFR > 0.0345E-9, np.logical_and(New_Dust_Mass > 0, Type == 0))
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
@@ -186,10 +192,11 @@ for loop in range(0,10):
 		plt.tick_params(axis='both', which='major', labelsize=10)
 		plt.tick_params(axis='both', which='minor', labelsize=8)
 		plt.text(6.2,-1,"N = "+str(sum(count)))
-		plt.text(10,2,"z = "+str(loop)+" :New dust")
+		plt.text(10,2.5,"z = "+str(loop)+" :New dust")
 		if(loop == 0):
 			plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
 			plt.errorbar(Santini_SM_z0, Santini_DM_z0, yerr = (Santini_DMdownerr_z0, Santini_DMuperr_z0), color='r',label='Santini2014',fmt='o')
+			plt.errorbar(np.log10(Bourne_MEDMSTAR), np.log10(Bourne_MEDMDUST), yerr = np.log10(Bourne_MEDMDUSTERR/Bourne_MEDMDUST) , color='orange',label='Bourne2012',fmt='o')
 		if(loop == 1):
 			plt.errorbar(Santini_SM_z1, Santini_DM_z1, yerr = (Santini_DMdownerr_z1, Santini_DMuperr_z1), color='g',label='Santini2014',fmt='o')
 		if(loop == 2):
@@ -199,7 +206,6 @@ for loop in range(0,10):
 		if( (loop == 6) or (loop == 7) ):
 			plt.errorbar(Mancini_SM, Mancini_DM, yerr = Mancini_DMerr, xerr = Mancini_SMerr, color='g',label='Mancini2015',fmt='o')
 		plt.legend(loc='lower right')
-			
 		pylab.savefig('./graphs/stellar_Newdust_z'+str(loop)+'.png', bbox_inches=0)
 		plt.close()
 	
@@ -425,7 +431,7 @@ for loop in range(0,10):
 		plt.close()
 
 
-	#---------------------Gas Dust ratios
+	#---------------------Dust Gas ratios
 
 	condition = np.logical_and(np.logical_and(ColdGas>0,New_Dust_Mass>0),Stellar_Mass>0)
 	
@@ -450,10 +456,16 @@ for loop in range(0,10):
 		#plt.legend(loc='lower right')
 		plt.text(2,-7,"N = "+str(sum(count)))
 		plt.text(2,-5,"z = "+str(loop)+" :All dust")
-		
+		if(loop == 0):
+			#plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
+			plt.scatter(Remy_SM, np.log10(Remy_Dust_Gas_Ratio),color='g',label='RR2014',marker='o')
+			plt.legend(loc='lower right')
 		pylab.savefig('./graphs/stellar_dustgasratio_z'+str(loop)+'.png', bbox_inches=0)
 		plt.close()
-
+		
+		
+		
+		
 
 	#---------------------Dust mass functions
 
