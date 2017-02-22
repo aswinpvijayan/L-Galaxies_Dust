@@ -46,6 +46,9 @@ import pylab
 Remy_DM, Remy_DMerr, Remy_SM, Remy_MHI, Remy_MHIerr, Remy_Metals, Remy_H2mw, Remy_MH2z = np.loadtxt('../observations/Remy_Ruyer_2014_KINGFISH_z0.txt',unpack=True,comments='#')
 Remy_DM_err_actual = Remy_DM*(Remy_DMerr/100.0)
 Remy_Dust_Gas_Ratio = Remy_DM / (Remy_MHI + Remy_H2mw)
+Remy_Dust_Metal_Ratio = Remy_DM / (((10**(Remy_Metals - 8.69))*0.02)*(Remy_MHI + Remy_H2mw))
+
+#print Remy_SM, np.log10(Remy_Dust_Metal_Ratio), Remy_DM, (((10**(Remy_Metals - 8.69))*0.02)*(Remy_MHI + Remy_H2mw))
 
 
 #### Santini 2014 z=0,1,2
@@ -57,6 +60,12 @@ Santini_SM_z2, Santini_DM_z2, Santini_DMuperr_z2, Santini_DMdownerr_z2 = np.load
 #### daCunha 2015
 #Phot_z z+err z-err SM SM+err SM-err DM DM+err DM-err
 daCunha_z,daCunha_zuperr,daCunha_zdownerr,daCunha_SM,daCunha_SMuperr,daCunha_SMdownerr,daCunha_DM,daCunha_DMuperr,daCunha_DMdownerr = np.loadtxt('../observations/daCunha_2015_z_3_4_5.txt',unpack=True,comments='#')
+
+daCunha_z2,daCunha_zuperr_z2,daCunha_zdownerr_z2,daCunha_SM_z2,daCunha_SMuperr_z2,daCunha_SMdownerr_z2,daCunha_DM_z2,daCunha_DMuperr_z2,daCunha_DMdownerr_z2 = np.loadtxt('../observations/daCunha_2015_z_2.txt',unpack=True,comments='#')
+daCunha_z3,daCunha_zuperr_z3,daCunha_zdownerr_z3,daCunha_SM_z3,daCunha_SMuperr_z3,daCunha_SMdownerr_z3,daCunha_DM_z3,daCunha_DMuperr_z3,daCunha_DMdownerr_z3 = np.loadtxt('../observations/daCunha_2015_z_3.txt',unpack=True,comments='#')
+daCunha_z4,daCunha_zuperr_z4,daCunha_zdownerr_z4,daCunha_SM_z4,daCunha_SMuperr_z4,daCunha_SMdownerr_z4,daCunha_DM_z4,daCunha_DMuperr_z4,daCunha_DMdownerr_z4 = np.loadtxt('../observations/daCunha_2015_z_4.txt',unpack=True,comments='#')
+daCunha_z5,daCunha_zuperr_z5,daCunha_zdownerr_z5,daCunha_SM_z5,daCunha_SMuperr_z5,daCunha_SMdownerr_z5,daCunha_DM_z5,daCunha_DMuperr_z5,daCunha_DMdownerr_z5 = np.loadtxt('../observations/daCunha_2015_z_5.txt',unpack=True,comments='#')
+daCunha_z6,daCunha_zuperr_z6,daCunha_zdownerr_z6,daCunha_SM_z6,daCunha_SMuperr_z6,daCunha_SMdownerr_z6,daCunha_DM_z6,daCunha_DMuperr_z6,daCunha_DMdownerr_z6 = np.loadtxt('../observations/daCunha_2015_z_6.txt',unpack=True,comments='#')
 
 
 ####Mancini2015
@@ -162,8 +171,8 @@ for loop in range(0,1):
 		Metals_SNII = gals['MetalsColdGas'][i][1]*1.0E10/0.673
 		Metals_SNIA = gals['MetalsColdGas'][i][2]*1.0E10/0.673
 		
-		#Stellar_Mass_Condition = 1.0E9
-		Stellar_Mass_Condition = 0.0
+		Stellar_Mass_Condition = 1.0E9
+		#Stellar_Mass_Condition = 0.0
 		Dust_Mass_Condition = 0.0 
 		
 		
@@ -172,9 +181,9 @@ for loop in range(0,1):
 		
 	#---------------------All NEW dust Plots
 
-	#condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
+	condition = np.logical_and(New_Dust_Mass>0,Stellar_Mass>Stellar_Mass_Condition)
 	#condition = np.logical_and(np.logical_and(New_Dust_Mass>0, np.log10(SFR) > 0.0),Stellar_Mass>Stellar_Mass_Condition)
-	condition = np.logical_and(sSFR > 0.0345E-9, np.logical_and(New_Dust_Mass > 0, Type == 0))
+	#condition = np.logical_and(sSFR > 0.0345E-9, np.logical_and(New_Dust_Mass > 0, Type == 0))
 	
 	log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
 	log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])
@@ -201,8 +210,15 @@ for loop in range(0,1):
 			plt.errorbar(Santini_SM_z1, Santini_DM_z1, yerr = (Santini_DMdownerr_z1, Santini_DMuperr_z1), color='g',label='Santini2014',fmt='o')
 		if(loop == 2):
 			plt.errorbar(Santini_SM_z2, Santini_DM_z2, yerr = (Santini_DMdownerr_z2, Santini_DMuperr_z2), color='g',label='Santini2014',fmt='o')
-		if( (loop == 3) or (loop == 4) or (loop == 5) ):
-			plt.errorbar(daCunha_SM, daCunha_DM, yerr = (daCunha_DMdownerr, daCunha_DMuperr), color='g',label='daCunha2014',fmt='o')
+			plt.errorbar(daCunha_SM_z2, daCunha_DM_z2, yerr = (daCunha_DMdownerr_z2, daCunha_DMuperr_z2), color='g',label='daCunha2014',fmt='o')
+		if(loop == 3):
+			plt.errorbar(daCunha_SM_z3, daCunha_DM_z3, yerr = (daCunha_DMdownerr_z3, daCunha_DMuperr_z3), color='g',label='daCunha2014',fmt='o')
+		if(loop == 4):
+			plt.errorbar(daCunha_SM_z4, daCunha_DM_z4, yerr = (daCunha_DMdownerr_z4, daCunha_DMuperr_z4), color='g',label='daCunha2014',fmt='o')
+		if(loop == 5):
+			plt.errorbar(daCunha_SM_z5, daCunha_DM_z5, yerr = (daCunha_DMdownerr_z5, daCunha_DMuperr_z5), color='g',label='daCunha2014',fmt='o')
+		if(loop == 6):
+			plt.errorbar(daCunha_SM_z6, daCunha_DM_z6, yerr = (daCunha_DMdownerr_z6, daCunha_DMuperr_z6), color='g',label='daCunha2014',fmt='o')
 		if( (loop == 6) or (loop == 7) ):
 			plt.errorbar(Mancini_SM, Mancini_DM, yerr = Mancini_DMerr, xerr = Mancini_SMerr, color='g',label='Mancini2015',fmt='o')
 		plt.legend(loc='lower right')
@@ -426,6 +442,10 @@ for loop in range(0,1):
 		#plt.legend(loc='lower right')
 		plt.text(2,-7,"N = "+str(sum(count)))
 		plt.text(2,-5,"z = "+str(loop)+" :All dust")
+		
+		if(loop == 0):
+			plt.scatter(Remy_SM, (Remy_Dust_Metal_Ratio),color='g',label='RR2014',marker='o')
+			plt.legend(loc='lower right')
 		
 		pylab.savefig('./graphs/stellar_dustmetalratio_z'+str(loop)+'.png', bbox_inches=0)
 		plt.close()
