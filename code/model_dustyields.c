@@ -81,7 +81,7 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 //AGB ENRICHMENT FROM DISK STARS INTO COLD GAS:
 //*****************************************
 
-////elements_print("..",Gal[p].Dust_elements);
+//elements_print("..",Gal[p].Dust_elements);
 
 #ifdef DUST_AGB		
     if ( (Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.agb >0.0) ) {
@@ -657,7 +657,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 
 #endif
 
-
+	/*
 		if (Dust_Cb < Gal[p].ColdGas_elements.Cb) {
 			Gal[p].Dust_elements.Cb += Dust_Cb;
 			Gal[p].ColdGas_elements.Cb -= Dust_Cb;
@@ -696,11 +696,11 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 			Gal[p].Dust_elements.Fe += Dust_Fe;
 			Gal[p].ColdGas_elements.Fe -= Dust_Fe;
 		}
-
+*/
 
 		//////////////////--------------------------------------------------------------------------------------------------------------
 
-		/*
+		
 		Gal[p].Dust_elements.Cb += min(Gal[p].ColdGas_elements.Cb,Dust_Cb);
 		Gal[p].Dust_elements.N  += min(Gal[p].ColdGas_elements.N ,Dust_N);
 		Gal[p].Dust_elements.O  += min(Gal[p].ColdGas_elements.O ,Dust_O);
@@ -721,7 +721,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		Gal[p].ColdGas_elements.S  -= min(Gal[p].ColdGas_elements.S ,Dust_S);
 		Gal[p].ColdGas_elements.Ca -= min(Gal[p].ColdGas_elements.Ca,Dust_Ca);
 		Gal[p].ColdGas_elements.Fe -= min(Gal[p].ColdGas_elements.Fe,Dust_Fe);
-		*/
+		
 		
 		
 
@@ -738,13 +738,13 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		type2_ratio  = Gal[p].MetalsColdGas.type2/metals_total(Gal[p].MetalsColdGas);
 		type1a_ratio = Gal[p].MetalsColdGas.type1a/metals_total(Gal[p].MetalsColdGas);
 		
-		Gal[p].MetalsColdGas.agb    -= max(0.0,(agb_ratio    * Dust_Total)/(1.0E10/Hubble_h));
-		Gal[p].MetalsColdGas.type2  -= max(0.0,(type2_ratio  * Dust_Total)/(1.0E10/Hubble_h));
-		Gal[p].MetalsColdGas.type1a -= max(0.0,(type1a_ratio * Dust_Total)/(1.0E10/Hubble_h));
+		//Gal[p].MetalsColdGas.agb    -= max(0.0,(agb_ratio    * Dust_Total)/(1.0E10/Hubble_h));
+		//Gal[p].MetalsColdGas.type2  -= max(0.0,(type2_ratio  * Dust_Total)/(1.0E10/Hubble_h));
+		//Gal[p].MetalsColdGas.type1a -= max(0.0,(type1a_ratio * Dust_Total)/(1.0E10/Hubble_h));
 		
-		//Gal[p].MetalsColdGas.agb    -= min(Gal[p].MetalsColdGas.agb,(agb_ratio    * Dust_Total)/(1.0E10/Hubble_h));
-		//Gal[p].MetalsColdGas.type2  -= min(Gal[p].MetalsColdGas.type2,(type2_ratio  * Dust_Total)/(1.0E10/Hubble_h));
-		//Gal[p].MetalsColdGas.type1a -= min(Gal[p].MetalsColdGas.type1a,(type1a_ratio * Dust_Total)/(1.0E10/Hubble_h));
+		Gal[p].MetalsColdGas.agb    -= min(Gal[p].MetalsColdGas.agb,(agb_ratio    * Dust_Total)/(1.0E10/Hubble_h));
+		Gal[p].MetalsColdGas.type2  -= min(Gal[p].MetalsColdGas.type2,(type2_ratio  * Dust_Total)/(1.0E10/Hubble_h));
+		Gal[p].MetalsColdGas.type1a -= min(Gal[p].MetalsColdGas.type1a,(type1a_ratio * Dust_Total)/(1.0E10/Hubble_h));
 		
 		
 //elements_print("5 PostGrow Dust",Gal[p].Dust_elements);

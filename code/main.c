@@ -855,6 +855,7 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 		update_yields_and_return_mass(p, centralgal, deltaT/STEPS, nstep);
 #ifdef DETAILED_DUST
 		update_dust_mass(p, centralgal, deltaT/STEPS, nstep);
+		//printf("AGB = %g\t SNII = %g\t SNIA = %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
 #endif
 		
 #ifdef FEEDBACK_COUPLED_WITH_MASS_RETURN
