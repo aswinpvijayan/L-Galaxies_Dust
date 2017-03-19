@@ -15,7 +15,7 @@ datadir = '../../output/'
 sys.path.insert(0,datadir)
 
 # Template structure for L-Galaxies data
-import snap_template   # structure temple for data
+import snap_template_reduced   # structure temple for data
 import read_lgal       # function to read in data
 
 #-------------------------------------------------------------------------
@@ -103,7 +103,7 @@ for i in range(0,16):
 	lastfile = 40 #511
 
 	# Define what properties you want to read in
-	props = snap_template.properties_used
+	props = snap_template_reduced.properties_used
 
 	props['Type'] = True
 	props['ColdGas'] = True
@@ -124,8 +124,7 @@ for i in range(0,16):
 	props['BulgeMass_elements'] = True
 	props['ColdGas_elements'] = True
 	props['HotGas_elements'] = True
-	props['DustMassISM'] = True
-	props['DustRatesISM'] = True
+#	props['DustRatesISM'] = True
 	props['Dust_elements'] = True
 	props['Attenuation_Dust'] = True
 	props['Mag'] = True
@@ -150,7 +149,7 @@ for i in range(0,16):
 	# Read in galaxy output
 	(nTrees,nHalos,nTreeHalos,gals) = \
 		read_lgal.read_snap(datadir,file_prefix,firstfile,lastfile,\
-								props,snap_template.struct_dtype)
+								props,snap_template_reduced.struct_dtype)
 
 
 	import cPickle

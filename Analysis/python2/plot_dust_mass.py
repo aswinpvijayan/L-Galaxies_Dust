@@ -90,6 +90,7 @@ for loop in range(0,10):
 	fin.close()
 
 	Type = np.zeros(len(gals['Type']))
+	print Type
 
 	AGB_Dust_Mass = np.zeros(len(gals['Type']))
 	SNII_Dust_Mass = np.zeros(len(gals['Type']))
@@ -131,13 +132,13 @@ for loop in range(0,10):
 	for i in range(0,len(gals['Type'])):
 		#print gals['Type'][i]
 		#print gals['Attenuation_Dust'][i]
-		AGB_Dust_Mass[i] = (gals['DustMassISM'][i][0]+gals['DustMassISM'][i][1]+gals['DustMassISM'][i][2]+gals['DustMassISM'][i][3])
-		SNII_Dust_Mass[i] = (gals['DustMassISM'][i][4]+gals['DustMassISM'][i][5]+gals['DustMassISM'][i][6]+gals['DustMassISM'][i][7])
-		SNIa_Dust_Mass[i] = (gals['DustMassISM'][i][8]+gals['DustMassISM'][i][9]+gals['DustMassISM'][i][10]+gals['DustMassISM'][i][11])
-		Growth_Dust_Mass[i] = (gals['DustMassISM'][i][12]+gals['DustMassISM'][i][13]+gals['DustMassISM'][i][14]+gals['DustMassISM'][i][15])
+		#AGB_Dust_Mass[i] = (gals['DustMassISM'][i][0]+gals['DustMassISM'][i][1]+gals['DustMassISM'][i][2]+gals['DustMassISM'][i][3])
+		#SNII_Dust_Mass[i] = (gals['DustMassISM'][i][4]+gals['DustMassISM'][i][5]+gals['DustMassISM'][i][6]+gals['DustMassISM'][i][7])
+		#SNIa_Dust_Mass[i] = (gals['DustMassISM'][i][8]+gals['DustMassISM'][i][9]+gals['DustMassISM'][i][10]+gals['DustMassISM'][i][11])
+		#Growth_Dust_Mass[i] = (gals['DustMassISM'][i][12]+gals['DustMassISM'][i][13]+gals['DustMassISM'][i][14]+gals['DustMassISM'][i][15])
 		#print SNIa_Dust_Mass[i]
-		for j in range(0,16):
-			All_Dust_Mass[i] += gals['DustMassISM'][i][j]
+		#for j in range(0,16):
+		#	All_Dust_Mass[i] += gals['DustMassISM'][i][j]
  		for j in range(0,11):
 			New_Dust_Mass[i] += gals['Dust_elements'][i][j]  
 		for j in range(2,11):

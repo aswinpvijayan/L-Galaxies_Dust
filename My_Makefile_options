@@ -83,7 +83,7 @@ ifeq (CB07,$(findstring CB07,$(OPT)))
 OPT += -DNMAG=1221
 endif
 else #IF NOT DEFINED FULL_SPECTRA -> **** STANDARD RUN ****
-OPT += -DNMAG=40
+OPT += -DNMAG=2
 #OPT += -DNMAG=20  #GALTREE
 endif #FULL_SPECTRA
 
@@ -125,9 +125,11 @@ OPT += -DDUST_SNIA
 OPT += -DDUST_GROWTH
 OPT += -DDUST_GROWTH_H2_FRACTION
 OPT += -DDUST_GROWTH_2
-OPT += -DFULL_DUST
+##OPT += -DFULL_DUST
+OPT += -DFULL_DUST_RATES
 OPT += -DDUST_DESTRUCTION
 OPT += -DDETAILED_ATTENUATION
+OPT += -DREDUCED_OUTPUT
 OBJS += ./code/model_dustyields.o
 OBJS += ./code/dustyields_functions.o
 OBJS += ./code/dustyields_integrals.o

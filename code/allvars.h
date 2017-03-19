@@ -417,6 +417,7 @@ struct GALAXY_OUTPUT
 #endif
 
 #ifdef STAR_FORMATION_HISTORY
+#ifndef REDUCED_OUTPUT
   int sfh_ibin; //Index of highest bin currently in use
   int sfh_numbins; // number of non empty bins
   float sfh_DiskMass[SFH_NBIN];
@@ -434,13 +435,15 @@ struct GALAXY_OUTPUT
 #ifdef TRACK_BURST
   float sfh_BurstMass[SFH_NBIN]; // Mass formed in starbursts
 #endif
+#endif //REDUCED_OUTPUT
 #endif //STAR_FORMATION_HISTORY
 
 #ifdef INDIVIDUAL_ELEMENTS
+  #ifndef REDUCED_OUTPUT
   struct elements sfh_ElementsDiskMass[SFH_NBIN];
   struct elements sfh_ElementsBulgeMass[SFH_NBIN];
   struct elements sfh_ElementsICM[SFH_NBIN];
-
+  #endif //REDUCED_OUTPUT
   //float DiskMass_elements[ELEMENT_NUM];
   struct elements DiskMass_elements;
   struct elements BulgeMass_elements;
@@ -451,8 +454,12 @@ struct GALAXY_OUTPUT
 #endif //INDIVIDUAL_ELEMENTS
 
 #ifdef DETAILED_DUST
+	#ifdef FULL_DUST
 	struct DustMass DustISM;		//DustISM.AGB.SiC
+	#endif
+	#ifdef FULL_DUST_RATES
 	struct DustRates DustISMRates;		
+	#endif
 	struct elements Dust_elements; 
 #ifdef DETAILED_ATTENUATION	
 	float Attenuation_Dust;

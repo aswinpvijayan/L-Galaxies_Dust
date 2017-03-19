@@ -296,6 +296,7 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
  //STAR FORMATION HISTORIES / RATES
 
 #ifdef STAR_FORMATION_HISTORY
+#ifndef REDUCED_OUTPUT
   o->sfh_ibin=g->sfh_ibin;
   ibin=0;
   for (j=0;j<=o->sfh_ibin;j++) {
@@ -333,6 +334,7 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
 	  o->sfh_BurstMass[j]=0.;
 #endif
   }
+#endif //REDUCED_OUTPUT
 #endif //STAR_FORMATION_HISTORY
 
 #ifdef INDIVIDUAL_ELEMENTS
@@ -345,12 +347,16 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
 #endif
 
 #ifdef DETAILED_DUST
- o->DustISM = g->DustISM;
- o->DustISMRates = g->DustISMRates;
- o->Dust_elements = g->Dust_elements;
-#ifdef DETAILED_ATTENUATION 
- o->Attenuation_Dust = g->Attenuation_Dust;
-#endif
+	#ifdef FULL_DUST
+	o->DustISM = g->DustISM;
+ 	#endif
+ 	#ifdef FULL_DUST_RATES
+ 	o->DustISMRates = g->DustISMRates;
+ 	#endif
+ 	o->Dust_elements = g->Dust_elements;
+	#ifdef DETAILED_ATTENUATION 
+ 	o->Attenuation_Dust = g->Attenuation_Dust;
+	#endif
 #endif
 
   o->PrimordialAccretionRate = CORRECTDBFLOAT(g->PrimordialAccretionRate * UNITMASS_IN_G / UnitTime_in_s * SEC_PER_YEAR / SOLAR_MASS);
