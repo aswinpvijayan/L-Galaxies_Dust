@@ -81,8 +81,8 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 //AGB ENRICHMENT FROM DISK STARS INTO COLD GAS:
 //*****************************************
 
-//elements_print("..",Gal[p].Dust_elements);
-
+//elements_print("Dust",Gal[p].Dust_elements);
+//elements_print("CG",Gal[p].ColdGas_elements);
 #ifdef DUST_AGB		
     if ( (Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.agb >0.0) ) {
      	//pre-calculations to speed up the code
@@ -123,19 +123,17 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 #endif
 
 #ifdef FULL_DUST_RATES        
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[0]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[1]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[2]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[3]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[4]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[5]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[6]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[7]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[8]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[9]));
-        Gal[p].DustISMRates.AGB += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[10]));
-        
-        Gal[p].DustISMRates.AGB /= (dt * UnitTime_in_years);        
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[0])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[1])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[2])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[3])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[4])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[5])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[6])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[7])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[8])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[9])) /(UnitTime_in_years);
+        Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[10]))/(UnitTime_in_years);
 #endif				
 		//Calculate the amount of dust CREATED ----------------------------------------------------------------------
 		
@@ -230,7 +228,6 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep)
 		
 		//printf("2 Post AGB %g %g\n",Gal[p].ColdGas_elements.Cb,Gal[p].ColdGas_elements.Fe);
 //elements_print("2 PostAGB Dust",Gal[p].Dust_elements);
-
 } //if sfh_DM >0
     
 
@@ -276,12 +273,10 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		Gal[p].DustISM.SNII.Cb  += SNII_prevstep_Cold_Cb[i] * eta_SNII_Cb  * A_Cb_dust/A_Cb;	
 #endif
 #ifdef FULL_DUST_RATES
-		Gal[p].DustISMRates.SNII += SNII_prevstep_Cold_Si[i] * eta_SNII_Sil * A_Sil_dust/A_Si;
-		Gal[p].DustISMRates.SNII += SNII_prevstep_Cold_Fe[i] * eta_SNII_Fe  * A_Fe_dust/A_Fe;
-		Gal[p].DustISMRates.SNII += SNII_prevstep_Cold_Si[i] * eta_SNII_SiC * A_SiC_dust/A_Si;
-		Gal[p].DustISMRates.SNII += SNII_prevstep_Cold_Cb[i] * eta_SNII_Cb  * A_Cb_dust/A_Cb;	
-
-        Gal[p].DustISMRates.SNII /= (dt * UnitTime_in_years);
+		Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Si[i] * eta_SNII_Sil * A_Sil_dust/A_Si)/(dt * UnitTime_in_years);
+		Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Fe[i] * eta_SNII_Fe  * A_Fe_dust/A_Fe )/(dt * UnitTime_in_years);
+		Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Si[i] * eta_SNII_SiC * A_SiC_dust/A_Si)/(dt * UnitTime_in_years);
+		Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Cb[i] * eta_SNII_Cb  * A_Cb_dust/A_Cb) /(dt * UnitTime_in_years);	
 #endif
 
 		//Create dust--------------------------------------------------------------------------------
@@ -339,6 +334,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		if (Gal[p].ColdGas_elements.Fe < 0.0) {
 			Gal[p].ColdGas_elements.Fe = 0.0;
 			}
+	
 		
 //elements_print("3 PostSNII Dust",Gal[p].Dust_elements);
 
@@ -368,16 +364,22 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		Gal[p].DustISM.SNIa.Fe  += SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe;
 #endif
 #ifdef FULL_DUST_RATES		
-		Gal[p].DustISMRates.SNIA  += SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe;
-        Gal[p].DustISMRates.SNIA /= (dt * UnitTime_in_years);
+		Gal[p].DustISMRates.SNIA  += (SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe)/(dt * UnitTime_in_years);
 #endif	
+	
+	
+		if(Gal[p].MetalsColdGas.type1a<0.0){
+			printf("pre 1a %g %g %g\n",Dust_Iron,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
+		}
 	
 		Gal[p].Dust_elements.Fe += Dust_Iron * 1.0;
 		Gal[p].ColdGas_elements.Fe -= Dust_Iron * 1.0;
 	
 		Gal[p].MetalsColdGas.type1a -= Dust_Iron/(1.0e10/Hubble_h);
-//printf("post 1a %g %g %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
-		
+
+	//	if(Gal[p].MetalsColdGas.type1a<0.0){
+	//		printf("post 1a %g %g %g\n",Dust_Iron,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
+	//	}
 		//C and Fe failsafe ------
 		//if (Gal[p].ColdGas_elements.Cb < 0.0) {
 		//	Gal[p].ColdGas_elements.Cb = 0.0;
@@ -730,8 +732,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		Gal[p].DustISM.Growth.Fe += Dust_Total;
 #endif
 #ifdef FULL_DUST_RATES
-		Gal[p].DustISMRates.GROW += Dust_Total;
-        Gal[p].DustISMRates.GROW /= (dt * UnitTime_in_years);
+		Gal[p].DustISMRates.GROW += Dust_Total/(dt * UnitTime_in_years);
 #endif
 
 
@@ -820,8 +821,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		Gal[p].DustISM.Growth.Cb += Dust_Total;
 #endif
 #ifdef FULL_DUST_RATES		
-		Gal[p].DustISMRates.DEST += Dust_Total;
-        Gal[p].DustISMRates.DEST /= (dt * UnitTime_in_years);
+		Gal[p].DustISMRates.DEST += Dust_Total/(dt * UnitTime_in_years);
 #endif
 
 		//Remove dust from metallicity ------------------------------------------------------------------------
