@@ -370,7 +370,19 @@ Gal[p].DustISMRates.GROW = 0.0;
 Gal[p].DustISMRates.DEST = 0.0;
 
 Gal[p].Dust_elements = elements_init();
-
+/*
+Gal[p].Dust_elements.H = 1.0E3;
+Gal[p].Dust_elements.He = 1.0E3;
+Gal[p].Dust_elements.Cb = 1.0E3;
+Gal[p].Dust_elements.N = 1.0E3;
+Gal[p].Dust_elements.O = 1.0E3;
+Gal[p].Dust_elements.Ne = 1.0E3;
+Gal[p].Dust_elements.Mg = 1.0E3;
+Gal[p].Dust_elements.Si = 1.0E3;
+Gal[p].Dust_elements.S = 1.0E3;
+Gal[p].Dust_elements.Ca = 1.0E3;
+Gal[p].Dust_elements.Fe = 1.0E3;
+*/
 #endif //DDust
 
 }

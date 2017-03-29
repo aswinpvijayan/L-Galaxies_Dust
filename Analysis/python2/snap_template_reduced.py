@@ -53,9 +53,9 @@ struct_dtype = np.dtype([
 ('CosInclination',np.float32,1),
 ('DisruptOn',np.int32,1),
 ('MergeOn',np.int32,1),
-('MagDust',np.float32,40),
-('Mag',np.float32,40),
-('MagBulge',np.float32,40),
+('MagDust',np.float32,2),
+('Mag',np.float32,2),
+('MagBulge',np.float32,2),
 ('MassWeightAge',np.float32,1),
 ('DiskMass_elements',np.float32,11),
 ('BulgeMass_elements',np.float32,11),
@@ -63,7 +63,7 @@ struct_dtype = np.dtype([
 ('HotGas_elements',np.float32,11),
 ('ICM_elements',np.float32,11),
 ('EjectedMass_elements',np.float32,11),
-#('DustRatesISM',np.float32,5),
+('DustRatesISM',np.float32,5),
 ('Dust_elements',np.float32,11),
 ('Attenuation_Dust',np.float32,1)
 ])

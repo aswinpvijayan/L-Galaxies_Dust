@@ -33,67 +33,67 @@ for i in range(0,16):
 	if i==0:
 		snapshot=58
 		file_prefix = "SA_z0.00"
-		output_file = "../data/lgal_z0.pkl"
+		output_file = "../data/MR/lgal_z0.pkl"
 	elif i==1:
 		snapshot=38
 		file_prefix = "SA_z1.04"
-		output_file = "../data/lgal_z1.pkl"
+		output_file = "../data/MR/lgal_z1.pkl"
 	elif i==2:
 		snapshot=30
 		file_prefix = "SA_z2.07"
-		output_file = "../data/lgal_z2.pkl"
+		output_file = "../data/MR/lgal_z2.pkl"
 	elif i==3:
 		snapshot=25
 		file_prefix = "SA_z3.11"
-		output_file = "../data/lgal_z3.pkl"
+		output_file = "../data/MR/lgal_z3.pkl"
 	elif i==4:
 		snapshot=22
 		file_prefix = "SA_z3.95"
-		output_file = "../data/lgal_z4.pkl"
+		output_file = "../data/MR/lgal_z4.pkl"
 	elif i==5:
 		snapshot=19
 		file_prefix = "SA_z5.03"
-		output_file = "../data/lgal_z5.pkl"
+		output_file = "../data/MR/lgal_z5.pkl"
 	elif i==6:
 		snapshot=17
 		file_prefix = "SA_z5.92"
-		output_file = "../data/lgal_z6.pkl"
+		output_file = "../data/MR/lgal_z6.pkl"
 	elif i==7:
 		snapshot=15
 		file_prefix = "SA_z6.97"
-		output_file = "../data/lgal_z7.pkl"
+		output_file = "../data/MR/lgal_z7.pkl"
 	elif i==8:
 		snapshot=13
 		file_prefix = "SA_z8.22"
-		output_file = "../data/lgal_z8.pkl"
+		output_file = "../data/MR/lgal_z8.pkl"
 	elif i==9:
 		snapshot=12
 		file_prefix = "SA_z8.93"
-		output_file = "../data/lgal_z9.pkl"
+		output_file = "../data/MR/lgal_z9.pkl"
 	elif i==10:
 		snapshot=11
 		file_prefix = "SA_z9.72"
-		output_file = "../data/lgal_z10.pkl"
+		output_file = "../data/MR/lgal_z10.pkl"
 	elif i==11:
 		snapshot=10
 		file_prefix = "SA_z10.57"
-		output_file = "../data/lgal_z11.pkl"
+		output_file = "../data/MR/lgal_z11.pkl"
 	elif i==12:
 		snapshot=9
 		file_prefix = "SA_z11.51"
-		output_file = "../data/lgal_z12.pkl"
+		output_file = "../data/MR/lgal_z12.pkl"
 	elif i==13:
 		snapshot=8
 		file_prefix = "SA_z12.53"
-		output_file = "../data/lgal_z13.pkl"
+		output_file = "../data/MR/lgal_z13.pkl"
 	elif i==14:
 		snapshot=7
 		file_prefix = "SA_z13.66"
-		output_file = "../data/lgal_z14.pkl"
+		output_file = "../data/MR/lgal_z14.pkl"
 	elif i==15:
 		snapshot=6
 		file_prefix = "SA_z14.90"
-		output_file = "../data/lgal_z15.pkl"
+		output_file = "../data/MR/lgal_z15.pkl"
 		
 		
 
@@ -124,7 +124,7 @@ for i in range(0,16):
 	props['BulgeMass_elements'] = True
 	props['ColdGas_elements'] = True
 	props['HotGas_elements'] = True
-	props['DustMassISM'] = True
+	#props['DustMassISM'] = True
 	props['DustRatesISM'] = True
 	props['Dust_elements'] = True
 	props['Attenuation_Dust'] = True
