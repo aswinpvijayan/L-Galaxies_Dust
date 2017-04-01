@@ -38,3 +38,4 @@ Analysis/python2/graphs/
 *.png
 *.pyc
 *.DS_Store
+Analysis/python2/binned_data/
