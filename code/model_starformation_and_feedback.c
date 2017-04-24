@@ -459,7 +459,9 @@ void update_from_feedback(int p, int centralgal, double reheated_mass, double ej
 	  //transfer reheated_mass-massremain from galaxy to the type 0
 	  if (reheated_mass > massremain)
 	    if(Gal[p].ColdGas > 0.) //if the reheat to itself, left cold gas below limit do not reheat to central
+#ifdef DETAILED_DUST	     
 	      fraction_sn_feedback = (reheated_mass-massremain)/Gal[p].ColdGas;
+#endif	     
 	      transfer_gas(centralgal,"Hot",p,"Cold",(reheated_mass-massremain)/Gal[p].ColdGas,"update_from_feedback", __LINE__);
 #ifdef DETAILED_DUST		  
 		  transfer_dust_to_hot(p,fraction_sn_feedback);
