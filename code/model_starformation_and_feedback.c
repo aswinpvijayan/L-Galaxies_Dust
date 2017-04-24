@@ -451,7 +451,9 @@ void update_from_feedback(int p, int centralgal, double reheated_mass, double ej
 	    massremain=Gal[p].ColdGas-reheated_mass;
 
 	  //transfer massremain
+#ifdef DETAILED_DUST	  
 	  fraction_sn_feedback = massremain/Gal[p].ColdGas;
+#endif	  
 	  transfer_gas(Gal[p].CentralGal,"Hot",p,"Cold",massremain/Gal[p].ColdGas,"update_from_feedback", __LINE__);
 #ifdef DETAILED_DUST	  
 	  transfer_dust_to_hot(p, fraction_sn_feedback);
