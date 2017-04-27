@@ -69,10 +69,29 @@ import sys
 Remy_DM, Remy_DMerr, Remy_SM, Remy_MHI, Remy_MHIerr, Remy_Metals, Remy_H2mw, Remy_MH2z = np.loadtxt('../observations/Remy_Ruyer_2014_KINGFISH_z0.txt',unpack=True,comments='#')
 Remy_DM_err_actual = Remy_DM*(Remy_DMerr/100.0)
 Remy_Dust_Gas_Ratio = Remy_DM / (Remy_MHI + Remy_H2mw)
-Remy_Dust_Metal_Ratio = Remy_DM / (((10**(Remy_Metals - 8.69))*0.0134)*(Remy_MHI + Remy_H2mw))
+Remy_Dust_Metal_Ratio = Remy_DM / ((10**(Remy_Metals - 8.69 + 0.0134))*(Remy_MHI + Remy_H2mw))
 
-#print Remy_SM, np.log10(Remy_Dust_Metal_Ratio), Remy_DM, (((10**(Remy_Metals - 8.69))*0.02)*(Remy_MHI + Remy_H2mw))
 
+####RR2015 z=0
+
+RR_SM,RR_SMerr,RR_DM1,RR_DM1_up,RR_DM1_down,RR_DM2, RR_DM2_up, RR_DM2_down, RR_MHI, RR_MHI_err, RR_Oxygen, RR_MH2_MW, RR_MH2_Z 	= np.loadtxt('../observations/RR2015.txt',unpack=True,comments='#')
+
+RR_DTG1A = RR_DM1 - np.log10(RR_MHI + RR_MH2_Z)
+RR_DTG1B = RR_DM1 - np.log10(RR_MHI + RR_MH2_MW)
+RR_DTG2A = RR_DM2 - np.log10(RR_MHI + RR_MH2_Z)
+RR_DTG2B = RR_DM2 - np.log10(RR_MHI + RR_MH2_MW)
+
+RR_DTM1A = RR_DM1 - np.log10((10**(RR_Oxygen - 8.69 - 1.87289520164))*(RR_MHI + RR_MH2_Z))
+RR_DTM1B = RR_DM1 - np.log10((10**(RR_Oxygen - 8.69 - 1.87289520164))*(RR_MHI + RR_MH2_MW))
+RR_DTM2A = RR_DM2 - np.log10((10**(RR_Oxygen - 8.69 - 1.87289520164))*(RR_MHI + RR_MH2_Z))
+RR_DTM2B = RR_DM2 - np.log10((10**(RR_Oxygen - 8.69 - 1.87289520164))*(RR_MHI + RR_MH2_MW))
+
+#-1.87289520164
+#+ 0.0134
+print len(RR_SM),len(RR_DTM1A),len(RR_DTM1B),len(RR_DTM2A),len(RR_DTM2B)
+
+for i in range(0, len(RR_SM)):
+	print RR_SM[i],RR_DTM1A[i],RR_DTM1B[i],RR_DTM2A[i],RR_DTM2B[i]
 
 #### Santini 2014 z=0,1,2
 # SM DM DM+err DM-err
@@ -299,7 +318,7 @@ for loop in range(0,1):
         # Common sizes: (10, 7.5) and (12, 9)    
         #plt.figure(figsize=(12, 9))            
         fig = plt.figure(figsize=(9,6))
-        plt.xlim([8,12])
+        plt.xlim([6,12])
         plt.ylim([0,10.2])
         plt.hexbin(log_Stellar_Mass,log_New_Dust_Mass,gridsize=500,mincnt=1, label='L-Galaxies 2Dhist')
         plt.xlabel(r'log$_{10}$(M$_{*}$/M$_{\odot}$)', fontsize=18)
@@ -308,11 +327,13 @@ for loop in range(0,1):
         plt.tick_params(axis='both', which='minor', labelsize=12,width=2)
         #plt.text(7,1,"N = "+str(sum(count))+"\nz = "+str(loop))
         plt.text(9,1,"z = "+str(loop)+"\nN = "+str(sum(count)),fontsize=16)
-        #if(loop == 0):
-            #plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
+        if(loop == 0):
+            plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
             #plt.errorbar(np.log10(Bourne_MEDMSTAR), np.log10(Bourne_MEDMDUST), yerr = np.log10(Bourne_MEDMDUSTERR/Bourne_MEDMDUST) , color='orange',label='Bourne2012',fmt='o')
             #plt.errorbar(Ciesla_SM, Ciesla_DM, yerr = Ciesla_DMerr , color='r',label='Ciesla2014',fmt='o')
             #plt.errorbar(Santini_SM_z0, Santini_DM_z0, yerr = (Santini_DMdownerr_z0, Santini_DMuperr_z0), color='b',label='Santini2014',fmt='o')
+            plt.errorbar(RR_SM, RR_DM1, yerr = (RR_DM1_down, RR_DM1_up),color='b',label='RR2015-1',fmt='o')
+            plt.errorbar(RR_SM, RR_DM2, yerr = (RR_DM2_down, RR_DM2_up),color='r',label='RR2015-2',fmt='o')
         if(loop == 1):
             plt.errorbar(Santini_SM_z1, Santini_DM_z1, yerr = (Santini_DMdownerr_z1, Santini_DMuperr_z1), color='g',label='Santini2014',fmt='o')
         if(loop == 2):
@@ -371,7 +392,7 @@ for loop in range(0,1):
 
     if(sum(count)>0):    
         plt.xlim([6,12])
-        plt.ylim([-8,2])
+        plt.ylim([-3,2])
         plt.hexbin(log_Stellar_Mass,Ratio,gridsize=500,mincnt=1, label='Dust All')
         plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='r',label='Dust/Metal ratio')
         plt.xlabel(r'log$_{10}$(M_d/M$_{\odot}$)', fontsize=14)
@@ -383,8 +404,13 @@ for loop in range(0,1):
         plt.text(2,-5,"z = "+str(loop)+" :All dust")
         
         if(loop == 0):
-            plt.scatter(Remy_SM, (Remy_Dust_Metal_Ratio),color='g',label='RR2014',marker='o')
-            plt.legend(loc='lower right')
+            plt.scatter(Remy_SM, np.log10(Remy_Dust_Metal_Ratio),color='g',label='RR2014',marker='o')
+            plt.scatter(RR_SM, (RR_DTM1A), color='b',label='1A',marker='o')
+            plt.scatter(RR_SM, (RR_DTM1B), color='cyan',label='1B',marker='o')
+            plt.scatter(RR_SM, (RR_DTM2A), color='r',label='2A',marker='o')
+            plt.scatter(RR_SM, (RR_DTM2B), color='orange',label='2B',marker='o')
+            
+            plt.legend(loc='upper right')
         
         pylab.savefig('./graphs/stellar_dustmetalratio_z'+str(loop)+'_'+str(sys.argv[1])+'.png', bbox_inches=0)
         plt.close()
@@ -418,6 +444,11 @@ for loop in range(0,1):
         if(loop == 0):
             #plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
             plt.scatter(Remy_SM, np.log10(Remy_Dust_Gas_Ratio),color='g',label='RR2014',marker='o')
+            plt.scatter(RR_SM, RR_DTG1A, color='b',label='1A',marker='o') 
+            plt.scatter(RR_SM, RR_DTG1B, color='cyan',label='1B',marker='o') 
+            plt.scatter(RR_SM, RR_DTG2A, color='r',label='2A',marker='o') 
+            plt.scatter(RR_SM, RR_DTG2B, color='orange',label='2B',marker='o') 
+
             plt.legend(loc='lower right')
         pylab.savefig('./graphs/stellar_dustgasratio_z'+str(loop)+'_'+str(sys.argv[1])+'.png', bbox_inches=0)
         plt.close()
