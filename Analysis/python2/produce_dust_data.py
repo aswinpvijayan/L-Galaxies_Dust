@@ -135,8 +135,8 @@ Wiseman_z_z4, Wiseman_SM_z4, Wiseman_SMuperr_z4, Wiseman_SMdownerr_z4, Wiseman_S
 
 print "Redshift [Number of galaxies in each mass bin]"    
 
-#for loop in range(0,10):
-for loop in range(0,1):
+for loop in range(0,10):
+#for loop in range(0,1):
 
     #Read in L-Galaxies data
     fin = open('../data/'+str(sys.argv[1])+'/lgal_z'+str(loop)+'.pkl','rb')

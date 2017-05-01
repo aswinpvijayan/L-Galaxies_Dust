@@ -354,7 +354,7 @@ void reset_ejection_rates(int i, int sfh_ibin,
 double Chabrier_IMF_dust(double M);
 void read_dust_yield_tables();
 
-void update_dust_mass(int p, int centralgal, double dt, int nstep);
+void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr);
 int find_initial_metallicity_dust(int p, int sfh_bin, int table_type, int component_type);
 
 void init_integrated_dust_yields();
