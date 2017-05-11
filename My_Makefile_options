@@ -130,6 +130,7 @@ OPT += -DFULL_DUST_RATES
 OPT += -DDUST_DESTRUCTION
 OPT += -DDETAILED_ATTENUATION
 OPT += -DREDUCED_OUTPUT
+OPT += -DDUST_GROW_CO
 OBJS += ./code/model_dustyields.o
 OBJS += ./code/dustyields_functions.o
 OBJS += ./code/dustyields_integrals.o
