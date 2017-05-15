@@ -318,7 +318,7 @@ for loop in range(0,10):
         # Common sizes: (10, 7.5) and (12, 9)    
         #plt.figure(figsize=(12, 9))            
         fig = plt.figure(figsize=(9,6))
-        plt.xlim([6,12])
+        plt.xlim([8,12])
         plt.ylim([0,10.2])
         plt.hexbin(log_Stellar_Mass,log_New_Dust_Mass,gridsize=500,mincnt=1, label='L-Galaxies 2Dhist')
         plt.xlabel(r'log$_{10}$(M$_{*}$/M$_{\odot}$)', fontsize=18)
@@ -328,12 +328,11 @@ for loop in range(0,10):
         #plt.text(7,1,"N = "+str(sum(count))+"\nz = "+str(loop))
         plt.text(9,1,"z = "+str(loop)+"\nN = "+str(sum(count)),fontsize=16)
         if(loop == 0):
-            plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
-            #plt.errorbar(np.log10(Bourne_MEDMSTAR), np.log10(Bourne_MEDMDUST), yerr = np.log10(Bourne_MEDMDUSTERR/Bourne_MEDMDUST) , color='orange',label='Bourne2012',fmt='o')
-            #plt.errorbar(Ciesla_SM, Ciesla_DM, yerr = Ciesla_DMerr , color='r',label='Ciesla2014',fmt='o')
-            #plt.errorbar(Santini_SM_z0, Santini_DM_z0, yerr = (Santini_DMdownerr_z0, Santini_DMuperr_z0), color='b',label='Santini2014',fmt='o')
-            plt.errorbar(RR_SM, RR_DM1, yerr = (RR_DM1_down, RR_DM1_up),color='b',label='RR2015-1',fmt='o')
-            plt.errorbar(RR_SM, RR_DM2, yerr = (RR_DM2_down, RR_DM2_up),color='r',label='RR2015-2',fmt='o')
+            #plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
+            plt.errorbar(RR_SM, RR_DM1, yerr = (RR_DM1_down, RR_DM1_up),color='g',label='Remy-Ruyer2015',fmt='o')
+            plt.errorbar(np.log10(Bourne_MEDMSTAR), np.log10(Bourne_MEDMDUST), yerr = np.log10(Bourne_MEDMDUSTERR/Bourne_MEDMDUST) , color='orange',label='Bourne2012',fmt='o')
+            plt.errorbar(Ciesla_SM, Ciesla_DM, yerr = Ciesla_DMerr , color='r',label='Ciesla2014',fmt='o')
+            plt.errorbar(Santini_SM_z0, Santini_DM_z0, yerr = (Santini_DMdownerr_z0, Santini_DMuperr_z0), color='b',label='Santini2014',fmt='o')
         if(loop == 1):
             plt.errorbar(Santini_SM_z1, Santini_DM_z1, yerr = (Santini_DMdownerr_z1, Santini_DMuperr_z1), color='g',label='Santini2014',fmt='o')
         if(loop == 2):
@@ -384,7 +383,8 @@ for loop in range(0,10):
     log_Stellar_Mass = np.log10(Stellar_Mass[condition==1])
     log_New_Dust_Mass = np.log10(New_Dust_Mass[condition==1])
     log_Metals = np.log10(Metals[condition==1])
-    
+    log_Metals = np.log10(Metals[condition==1]+New_Dust_Mass[condition==1])
+
     Ratio = log_New_Dust_Mass - log_Metals
     
     SM_bins,Dust_bins,Dust_std_dev,Dust_std_err,count = fit_scatter(log_Stellar_Mass, Ratio, ret_n=True, ret_sterr=True, nbins=10)
