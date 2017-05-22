@@ -809,8 +809,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		//Dust_Ne = 0.0;
 		
 		
-		
-		
+		double Dust_Total_Grown = min(Dust_Cb,Gal[p].ColdGas_elements.Cb)+min(Dust_N,Gal[p].ColdGas_elements.N)+min(Dust_O,Gal[p].ColdGas_elements.O)+min(Dust_Ne,Gal[p].ColdGas_elements.Ne)+min(Dust_Mg,Gal[p].ColdGas_elements.Mg)+min(Dust_Si,Gal[p].ColdGas_elements.Si)+min(Dust_S,Gal[p].ColdGas_elements.S)+min(Dust_Ca,Gal[p].ColdGas_elements.Ca)+min(Dust_Fe,Gal[p].ColdGas_elements.Fe);
 
 		
 
@@ -844,10 +843,10 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		
 
 #ifdef FULL_DUST
-		Gal[p].DustISM.Growth.Fe += Dust_Total;
+		Gal[p].DustISM.Growth.Fe = Dust_Total_Grown;
 #endif
 #ifdef FULL_DUST_RATES
-		Gal[p].DustISMRates.GROW += Dust_Total/(dt * UnitTime_in_years);
+		Gal[p].DustISMRates.GROW = Dust_Total_Grown/(dt * UnitTime_in_years);
 #endif
 
 
@@ -880,12 +879,11 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
     if ( (Gal[p].sfh_DiskMass[i] > 0.0) && (metals_total(Gal[p].MetalsColdGas)>0.0) ) {//){// && (Gal[p].MetalsColdGas.type2>0.0) && (Gal[p].MetalsColdGas.agb>0.0) ) {
 		float t_des, M_cleared, f_SN;
 		float des_frac; 
-		M_cleared = 1000; //Msol
+		M_cleared = 1000.0; //Msol
 		f_SN = 0.36; //Dimensionless
 		DiskSFR = Gal[p].sfh_DiskMass[i]/Gal[p].sfh_dt[i];
 		float R_SN_IMF = 0.2545/19.87;
 		float R_SN = R_SN_IMF * DiskSFR * (1.0E10/Hubble_h) * (1/UnitTime_in_years);
-		
 		if(R_SN>0.0) {
 			//t_des = (Gal[p].ColdGas*(1.0e10/Hubble_h))/M_cleared * 15.14/(0.1233*f_SN) * (Hubble_h * UnitTime_in_years)/(DiskSFR*1.0e10);
 			t_des = (Gal[p].ColdGas*(1.0e10/Hubble_h))/(M_cleared * f_SN * R_SN);
@@ -895,8 +893,14 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 			t_des = 0.0;
 			des_frac = 0.0;
 		}				
+		
+		
+		float new_des_frac = (Gal[p].ColdGas*(1.0e10/Hubble_h))/(M_cleared * f_SN * (R_SN_IMF));
+		//printf("%g\n",new_des_frac);
+		
+		//printf("%g\t%g\n",(DiskSFR * (1.0E10/Hubble_h) * (1/UnitTime_in_years)*0.1),(elements_total(Gal[p].Dust_elements) / t_des));
 						
-		//printf("des_frac = %g\n",des_frac);
+		//printf("des_frac = %g\t 2 = %g\n",des_frac, des_frac2);
 	
 	
 			
@@ -913,8 +917,15 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		double Dust_Total = Dust_Cb+Dust_N+Dust_O+Dust_Ne+Dust_Mg+Dust_Si+Dust_S+Dust_Ca+Dust_Fe;
 		double Dust_Total2 = min(Dust_Cb,Gal[p].Dust_elements.Cb)+min(Dust_N,Gal[p].Dust_elements.N)+min(Dust_O,Gal[p].Dust_elements.O)+min(Dust_Ne,Gal[p].Dust_elements.Ne)+min(Dust_Mg,Gal[p].Dust_elements.Mg)+min(Dust_Si,Gal[p].Dust_elements.Si)+min(Dust_S,Gal[p].Dust_elements.S)+min(Dust_Ca,Gal[p].Dust_elements.Ca)+min(Dust_Fe,Gal[p].Dust_elements.Fe);
 		
-
-
+		
+		//printf("%g\n",des_frac);
+		//printf("%g\t%g\t%g\n",Dust_Total, DiskSFR * (1.0E10/Hubble_h) * (1/UnitTime_in_years), Gal[p].Sfr );
+		
+		/*
+		if(Dust_Total != Dust_Total2) {
+			printf("%g\t%g\n",Dust_Total, Dust_Total2);
+		}*/
+		
 		//add removed dust to metals---------------------------------------------------------
 		Gal[p].ColdGas_elements.Cb += min(Dust_Cb,Gal[p].Dust_elements.Cb);
 		Gal[p].ColdGas_elements.N  += min(Dust_N,Gal[p].Dust_elements.N);
@@ -940,10 +951,13 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 
 
 #ifdef FULL_DUST
-		Gal[p].DustISM.Growth.Cb += Dust_Total;
+		Gal[p].DustISM.Growth.Cb = Dust_Total2;
 #endif
 #ifdef FULL_DUST_RATES		
-		Gal[p].DustISMRates.DEST += Dust_Total/(dt * UnitTime_in_years);
+		Gal[p].DustISMRates.DEST = Dust_Total2/(dt * UnitTime_in_years);
+		//if(Gal[p].DustISMRates.DEST>Gal[p].Sfr){
+		//	printf("%g\t%g\t%g\n",Gal[p].DustISMRates.DEST,Gal[p].Sfr,DiskSFR * (1.0E10/Hubble_h) * (1/UnitTime_in_years));
+		//}
 #endif
 
 		//Remove dust from metallicity ------------------------------------------------------------------------
