@@ -414,14 +414,14 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 //elements_print("4 PostSNIA Dust",Gal[p].Dust_elements);
 }
 #endif //DUST_SNIA
-
+} //SFH
 //*****************************************
 //Growth of dust inside MC //maybe go last??			
 //*****************************************
 
 #ifdef DUST_GROWTH
-    if ( (Gal[p].sfh_DiskMass[i] > 0.0) && (metals_total(Gal[p].MetalsColdGas)>0.0) && (Gal[p].ColdGas > 0.00)) {//){// && (Gal[p].MetalsColdGas.type2>0.0) && (Gal[p].MetalsColdGas.agb>0.0) ) {
-
+    //if ( (Gal[p].sfh_DiskMass[i] > 0.0) && (metals_total(Gal[p].MetalsColdGas)>0.0) && (Gal[p].ColdGas > 0.00)) {//){// && (Gal[p].MetalsColdGas.type2>0.0) && (Gal[p].MetalsColdGas.agb>0.0) ) {
+    if ((metals_total(Gal[p].MetalsColdGas)>0.0) && (Gal[p].ColdGas > 0.00)) {//){// && (Gal[p].MetalsColdGas.type2>0.0) && (Gal[p].MetalsColdGas.agb>0.0) ) {
 
 
 		float t_acc_0, Z_sun, Z_coldgas, Z_fraction;
@@ -846,7 +846,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		Gal[p].DustISM.Growth.Fe = Dust_Total_Grown;
 #endif
 #ifdef FULL_DUST_RATES
-		Gal[p].DustISMRates.GROW = Dust_Total_Grown/(dt * UnitTime_in_years);
+		Gal[p].DustISMRates.GROW += Dust_Total_Grown/(dt * UnitTime_in_years);
 #endif
 
 
@@ -876,12 +876,13 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 //*****************************************
 
 #ifdef DUST_DESTRUCTION
-    if ( (Gal[p].sfh_DiskMass[i] > 0.0) && (metals_total(Gal[p].MetalsColdGas)>0.0) ) {//){// && (Gal[p].MetalsColdGas.type2>0.0) && (Gal[p].MetalsColdGas.agb>0.0) ) {
+    if ((metals_total(Gal[p].MetalsColdGas)>0.0) ) {//){// && (Gal[p].MetalsColdGas.type2>0.0) && (Gal[p].MetalsColdGas.agb>0.0) ) {
 		float t_des, M_cleared, f_SN;
 		float des_frac; 
 		M_cleared = 1000.0; //Msol
 		f_SN = 0.36; //Dimensionless
-		DiskSFR = Gal[p].sfh_DiskMass[i]/Gal[p].sfh_dt[i];
+		//DiskSFR = Gal[p].sfh_DiskMass[i]/Gal[p].sfh_dt[i];
+		DiskSFR = Gal[p].Sfr;
 		float R_SN_IMF = 0.2545/19.87;
 		float R_SN = R_SN_IMF * DiskSFR * (1.0E10/Hubble_h) * (1/UnitTime_in_years);
 		if(R_SN>0.0) {
@@ -954,7 +955,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		Gal[p].DustISM.Growth.Cb = Dust_Total2;
 #endif
 #ifdef FULL_DUST_RATES		
-		Gal[p].DustISMRates.DEST = Dust_Total2/(dt * UnitTime_in_years);
+		Gal[p].DustISMRates.DEST += Dust_Total2/(dt * UnitTime_in_years);
 		//if(Gal[p].DustISMRates.DEST>Gal[p].Sfr){
 		//	printf("%g\t%g\t%g\n",Gal[p].DustISMRates.DEST,Gal[p].Sfr,DiskSFR * (1.0E10/Hubble_h) * (1/UnitTime_in_years));
 		//}
@@ -978,7 +979,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 //} //if coldgas > 1.0e7
 //} //metals > 0.0
 	
-    } //for (i=0;i<=Gal[p].sfh_ibin;i++) //MAIN LOOP OVER SFH BINS
+    //} //for (i=0;i<=Gal[p].sfh_ibin;i++) //MAIN LOOP OVER SFH BINS
     			//AGB NEED to be inside SFH bin loop as it depends on current SFR
     			//SNII and Ia NEED to be inside SFH bin loop as it uses something from recipe_yields which
     			//depends on the SFH bin. 
