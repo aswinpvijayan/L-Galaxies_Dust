@@ -896,7 +896,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		}				
 		
 		
-		float new_des_frac = (Gal[p].ColdGas*(1.0e10/Hubble_h))/(M_cleared * f_SN * (R_SN_IMF));
+		//float new_des_frac = (Gal[p].ColdGas*(1.0e10/Hubble_h))/(M_cleared * f_SN * (R_SN_IMF));
 		//printf("%g\n",new_des_frac);
 		
 		//printf("%g\t%g\n",(DiskSFR * (1.0E10/Hubble_h) * (1/UnitTime_in_years)*0.1),(elements_total(Gal[p].Dust_elements) / t_des));

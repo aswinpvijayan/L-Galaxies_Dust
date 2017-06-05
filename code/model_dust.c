@@ -101,9 +101,11 @@ void dust_model(int p, int snap, int halonr)
     	  if(mu < 0.1 || mu > 1.0)
     		mu = -1.;
         }
-
+#ifdef DETAILED_DUST
+      Zg = (metals_total(Gal[p].MetalsColdGas)+elements_total(Gal[p].Dust_elements)/(1.0E10/Hubble_h))/Gal[p].ColdGas/0.02;
+#else      
       Zg = metals_total(Gal[p].MetalsColdGas)/Gal[p].ColdGas/0.02;
-
+#endif
 
 
 #ifdef OUTPUT_REST_MAGS
