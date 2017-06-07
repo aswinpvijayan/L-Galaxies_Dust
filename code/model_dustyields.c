@@ -169,7 +169,7 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		for (j=0; j<11; j++){
 		SumAGBDust += (step_width_times_DiskSFR * NormAGBDustYieldRate_actual[j]);
 		}			
-		Gal[p].MetalsColdGas.agb -= max(0.0,SumAGBDust);			
+		//Gal[p].MetalsColdGas.agb -= max(0.0,SumAGBDust);			
 //printf("post agb %g %g %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
 		
 		//Ferrosilite Mg2SiO4 ----------------------------------------
@@ -310,10 +310,10 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 
 		//Remove total dust created from metallicity-----------------------------------------------------------------
 
-		Gal[p].MetalsColdGas.type2 -= Dust_Silicates/(1.0e10/Hubble_h);
-		Gal[p].MetalsColdGas.type2 -= Dust_Iron/(1.0e10/Hubble_h);
-		Gal[p].MetalsColdGas.type2 -= Dust_SiC/(1.0e10/Hubble_h);
-		Gal[p].MetalsColdGas.type2 -= Dust_Carbon/(1.0e10/Hubble_h);
+		//Gal[p].MetalsColdGas.type2 -= Dust_Silicates/(1.0e10/Hubble_h);
+		//Gal[p].MetalsColdGas.type2 -= Dust_Iron/(1.0e10/Hubble_h);
+		//Gal[p].MetalsColdGas.type2 -= Dust_SiC/(1.0e10/Hubble_h);
+		//Gal[p].MetalsColdGas.type2 -= Dust_Carbon/(1.0e10/Hubble_h);
 //printf("post type2 %g %g %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
 
 		//SNII Silicates ---------------------------------------------------------------------
@@ -397,7 +397,7 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		Gal[p].Dust_elements.Fe += Dust_Iron * 1.0;
 		Gal[p].ColdGas_elements.Fe -= Dust_Iron * 1.0;
 	
-		Gal[p].MetalsColdGas.type1a -= Dust_Iron/(1.0e10/Hubble_h);
+		//Gal[p].MetalsColdGas.type1a -= Dust_Iron/(1.0e10/Hubble_h);
 
 	//	if(Gal[p].MetalsColdGas.type1a<0.0){
 	//		printf("post 1a %g %g %g\n",Dust_Iron,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
@@ -855,13 +855,10 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		type2_ratio  = Gal[p].MetalsColdGas.type2/metals_total(Gal[p].MetalsColdGas);
 		type1a_ratio = Gal[p].MetalsColdGas.type1a/metals_total(Gal[p].MetalsColdGas);
 		
-		//Gal[p].MetalsColdGas.agb    -= max(0.0,(agb_ratio    * Dust_Total)/(1.0E10/Hubble_h));
-		//Gal[p].MetalsColdGas.type2  -= max(0.0,(type2_ratio  * Dust_Total)/(1.0E10/Hubble_h));
-		//Gal[p].MetalsColdGas.type1a -= max(0.0,(type1a_ratio * Dust_Total)/(1.0E10/Hubble_h));
 		
-		Gal[p].MetalsColdGas.agb    -= min(Gal[p].MetalsColdGas.agb,(agb_ratio    * Dust_Total)/(1.0E10/Hubble_h));
-		Gal[p].MetalsColdGas.type2  -= min(Gal[p].MetalsColdGas.type2,(type2_ratio  * Dust_Total)/(1.0E10/Hubble_h));
-		Gal[p].MetalsColdGas.type1a -= min(Gal[p].MetalsColdGas.type1a,(type1a_ratio * Dust_Total)/(1.0E10/Hubble_h));
+		//Gal[p].MetalsColdGas.agb    -= min(Gal[p].MetalsColdGas.agb,(agb_ratio    * Dust_Total)/(1.0E10/Hubble_h));
+		//Gal[p].MetalsColdGas.type2  -= min(Gal[p].MetalsColdGas.type2,(type2_ratio  * Dust_Total)/(1.0E10/Hubble_h));
+		//Gal[p].MetalsColdGas.type1a -= min(Gal[p].MetalsColdGas.type1a,(type1a_ratio * Dust_Total)/(1.0E10/Hubble_h));
 		
 		
 //elements_print("5 PostGrow Dust",Gal[p].Dust_elements);
@@ -966,9 +963,9 @@ if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
 		type2_ratio  = Gal[p].MetalsColdGas.type2/metals_total(Gal[p].MetalsColdGas);
 		type1a_ratio = Gal[p].MetalsColdGas.type1a/metals_total(Gal[p].MetalsColdGas);
 		
-		Gal[p].MetalsColdGas.agb    += (agb_ratio    * Dust_Total2)/(1.0E10/Hubble_h);
-		Gal[p].MetalsColdGas.type2  += (type2_ratio  * Dust_Total2)/(1.0E10/Hubble_h);
-		Gal[p].MetalsColdGas.type1a += (type1a_ratio * Dust_Total2)/(1.0E10/Hubble_h);
+		//Gal[p].MetalsColdGas.agb    += (agb_ratio    * Dust_Total2)/(1.0E10/Hubble_h);
+		//Gal[p].MetalsColdGas.type2  += (type2_ratio  * Dust_Total2)/(1.0E10/Hubble_h);
+		//Gal[p].MetalsColdGas.type1a += (type1a_ratio * Dust_Total2)/(1.0E10/Hubble_h);
 		
 //printf("post dest %g %g %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
 		//printf("6 Post Dest %g %g\n",Gal[p].ColdGas_elements.Cb,Gal[p].ColdGas_elements.Fe);
