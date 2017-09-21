@@ -86,12 +86,14 @@ RR_DTM1B = RR_DM1 - np.log10((10**(RR_Oxygen - 8.69 - 1.87289520164))*(RR_MHI + 
 RR_DTM2A = RR_DM2 - np.log10((10**(RR_Oxygen - 8.69 - 1.87289520164))*(RR_MHI + RR_MH2_Z))
 RR_DTM2B = RR_DM2 - np.log10((10**(RR_Oxygen - 8.69 - 1.87289520164))*(RR_MHI + RR_MH2_MW))
 
-#-1.87289520164
-#+ 0.0134
-print len(RR_SM),len(RR_DTM1A),len(RR_DTM1B),len(RR_DTM2A),len(RR_DTM2B)
 
-for i in range(0, len(RR_SM)):
-	print RR_SM[i],RR_DTM1A[i],RR_DTM1B[i],RR_DTM2A[i],RR_DTM2B[i]
+RR_DTG1B_err = 10**RR_DTG1B * np.sqrt( (RR_DM1_up/RR_DM1)**2 + (RR_MHI_err/RR_MHI)**2 )
+log_RR_DTG1B_err =0.434* (np.log10(RR_DTG1B_err)/RR_DTG1B)
+
+RR_DTM1B_err = 10**RR_DTM1B * np.sqrt( (RR_DM1_up/RR_DM1)**2 + (RR_MHI_err/RR_MHI)**2 + + ((0.1*10**RR_Oxygen)/10**RR_Oxygen)**2)
+log_RR_DTM1B_err = 0.434* (np.log10(RR_DTM1B_err)/RR_DTM1B)
+
+
 
 #### Santini 2014 z=0,1,2
 # SM DM DM+err DM-err
@@ -135,8 +137,8 @@ Wiseman_z_z4, Wiseman_SM_z4, Wiseman_SMuperr_z4, Wiseman_SMdownerr_z4, Wiseman_S
 
 print "Redshift [Number of galaxies in each mass bin]"    
 
-for loop in range(0,10):
-#for loop in range(0,1):
+#for loop in range(0,10):
+for loop in range(0,1):
 
     #Read in L-Galaxies data
     fin = open('../data/'+str(sys.argv[1])+'/lgal_z'+str(loop)+'.pkl','rb')
@@ -349,8 +351,8 @@ for loop in range(0,10):
         if( (loop == 6) or (loop == 7) ):
             plt.errorbar(Mancini_SM, Mancini_DM, yerr = Mancini_DMerr, xerr = Mancini_SMerr, color='g',label='Mancini2015',fmt='o')
     
-        plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='k',label='L-Galaxies Mean',linewidth=2)
-        plt.errorbar(SM_bins,Dust_median,yerr=(Dust_mederr),color='b',label='L-Galaxies Median',linewidth=2)
+        #plt.errorbar(SM_bins,Dust_bins,yerr=(Dust_std_err),color='k',label='L-Galaxies Mean',linewidth=2)
+        plt.errorbar(SM_bins,Dust_median,yerr=(Dust_mederr),color='k',label='L-Galaxies Median',linewidth=2)
         
         plt.legend(loc='lower right')
         
@@ -404,12 +406,8 @@ for loop in range(0,10):
         plt.text(2,-5,"z = "+str(loop)+" :All dust")
         
         if(loop == 0):
-            plt.scatter(Remy_SM, np.log10(Remy_Dust_Metal_Ratio),color='g',label='RR2014',marker='o')
-            plt.scatter(RR_SM, (RR_DTM1A), color='b',label='1A',marker='o')
-            plt.scatter(RR_SM, (RR_DTM1B), color='cyan',label='1B',marker='o')
-            plt.scatter(RR_SM, (RR_DTM2A), color='r',label='2A',marker='o')
-            plt.scatter(RR_SM, (RR_DTM2B), color='orange',label='2B',marker='o')
-            
+            #plt.errorbar(RR_SM, RR_DTM1B,yerr=(log_RR_DTM1B_err), color='k',fmt='o')
+            plt.errorbar(RR_SM, RR_DTM1B,yerr=(0.75*RR_DTM1B), color='k',fmt='o')
             plt.legend(loc='upper right')
         
         pylab.savefig('./graphs/stellar_dustmetalratio_z'+str(loop)+'_'+str(sys.argv[1])+'.png', bbox_inches=0)
@@ -443,11 +441,12 @@ for loop in range(0,10):
         plt.text(2,-5,"z = "+str(loop)+" :All dust")
         if(loop == 0):
             #plt.errorbar(Remy_SM,np.log10(Remy_DM),yerr=np.log10(Remy_DM)*(Remy_DMerr/100.0),color='g',label='RemyRuyer2014',fmt='o')
-            plt.scatter(Remy_SM, np.log10(Remy_Dust_Gas_Ratio),color='g',label='RR2014',marker='o')
-            plt.scatter(RR_SM, RR_DTG1A, color='b',label='1A',marker='o') 
-            plt.scatter(RR_SM, RR_DTG1B, color='cyan',label='1B',marker='o') 
-            plt.scatter(RR_SM, RR_DTG2A, color='r',label='2A',marker='o') 
-            plt.scatter(RR_SM, RR_DTG2B, color='orange',label='2B',marker='o') 
+            #plt.scatter(Remy_SM, np.log10(Remy_Dust_Gas_Ratio),color='g',label='RR2014',marker='o')
+            plt.errorbar(RR_SM, RR_DTG1B,yerr=(log_RR_DTG1B_err), color='k',fmt='o')
+            #plt.errorbar(RR_SM, RR_DTG1B,yerr=(RR_DTG1B/2), color='k', fmt = 'o')
+            #plt.scatter(RR_SM, RR_DTG1B, color='cyan',label='1B',marker='o') 
+            #plt.scatter(RR_SM, RR_DTG2A, color='r',label='2A',marker='o') 
+            #plt.scatter(RR_SM, RR_DTG2B, color='orange',label='2B',marker='o') 
 
             plt.legend(loc='lower right')
         pylab.savefig('./graphs/stellar_dustgasratio_z'+str(loop)+'_'+str(sys.argv[1])+'.png', bbox_inches=0)

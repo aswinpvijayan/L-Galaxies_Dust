@@ -53,9 +53,9 @@ tmp = {LGalaxy $
 , CosInclination : 0.0 $ 
 , DisruptOn : 0L $ 
 , MergeOn : 0L $ 
-, MagDust : fltarr(40) $ 
-, Mag : fltarr(40) $ 
-, MagBulge : fltarr(40) $ 
+, MagDust : fltarr(2) $ 
+, Mag : fltarr(2) $ 
+, MagBulge : fltarr(2) $ 
 , MassWeightAge : 0.0 $ 
 , elements : struct $ 
 , elements : struct $ 
@@ -63,9 +63,7 @@ tmp = {LGalaxy $
 , elements : struct $ 
 , elements : struct $ 
 , elements : struct $ 
-, elements : struct $ 
-, elements : struct $ 
-, elements : struct $ 
+, DustRates : struct $ 
 , elements : struct $ 
 , Attenuation_Dust : 0.0 $ 
 }

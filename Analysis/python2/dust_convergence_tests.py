@@ -95,6 +95,8 @@ for loop in range(0,9):
 
 	plt.tick_params(axis='both', which='major', labelsize=12,width=2,length=6, direction='inout')
 	plt.tick_params(axis='both', which='minor', labelsize=12,width=2,length=6, direction='inout')
+	
+	plt.plot([9.0,9.0],[-1.0,11.0],linewidth=2,color='b')
 
 axes = fig.get_axes()
 

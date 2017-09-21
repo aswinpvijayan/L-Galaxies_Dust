@@ -130,8 +130,8 @@ for i in range(0,16):
 	props['Attenuation_Dust'] = True
 	props['Mag'] = True
 	props['MagDust'] = True
+	props['GasDiskRadius'] = True
 	# 
-
 	#-------------------------------------------------------------------------
 
 	# Working body of the program

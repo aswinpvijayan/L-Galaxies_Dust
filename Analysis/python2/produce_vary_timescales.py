@@ -403,13 +403,15 @@ for loop in range(0,10):
     plt.subplot(3,1,1)
     plt.xlim([8,12])
     plt.ylim([0,9.99])
+    #plt.xlabel(r'log$_{10}$(M$_{*}$/M$_{\odot}$)', fontsize=18)
+    plt.ylabel(r'log$_{10}$(M$_{\rm{d}}$/M$_{\odot}$)', fontsize=18)
     plt.hexbin(log_Stellar_Mass_4,log_New_Dust_Mass_4,gridsize=500,mincnt=1, label='L-Galaxies 2Dhist')
     plt.tick_params(axis='both', which='major', labelsize=12,width=2,length=6, labelleft ='on', labelbottom='off', direction='inout')
     plt.tick_params(axis='both', which='minor', labelsize=12,width=2,length=6, labelleft ='on', labelbottom='off', direction='inout')
     plt.tick_params(axis='both', which='major', labelsize=12,width=2)
     plt.tick_params(axis='both', which='minor', labelsize=12,width=2)
     #plt.text(9,1,"N = "+str(sum(count))+"\nz = "+str(loop))
-    plt.text(9,1,"z = "+str(loop)+"\n0.1 x Dust Destroyed",fontsize=16)
+    plt.text(8.1,1,"z = "+str(loop)+"\n0.1 x Dust Destroyed",fontsize=16)
     if(loop == 0):
         plt.errorbar(RR_SM, RR_DM1, yerr = (RR_DM1_down, RR_DM1_up),color='g',label='Remy-Ruyer2015',fmt='o')
         plt.errorbar(np.log10(Bourne_MEDMSTAR), np.log10(Bourne_MEDMDUST), yerr = np.log10(Bourne_MEDMDUSTERR/Bourne_MEDMDUST) , color='orange',label='Bourne2012',fmt='o')
@@ -442,13 +444,15 @@ for loop in range(0,10):
     plt.subplot(3,1,2)
     plt.xlim([8,12])
     plt.ylim([0,9.99])
+    #plt.xlabel(r'log$_{10}$(M$_{*}$/M$_{\odot}$)', fontsize=18)
+    plt.ylabel(r'log$_{10}$(M$_{\rm{d}}$/M$_{\odot}$)', fontsize=18)
     plt.hexbin(log_Stellar_Mass_1,log_New_Dust_Mass_1,gridsize=500,mincnt=1, label='L-Galaxies 2Dhist')
     plt.tick_params(axis='both', which='major', labelsize=12,width=2,length=6, labelleft ='on', labelbottom='off', direction='inout')
     plt.tick_params(axis='both', which='minor', labelsize=12,width=2,length=6, labelleft ='on', labelbottom='off', direction='inout')
     plt.tick_params(axis='both', which='major', labelsize=12,width=2)
     plt.tick_params(axis='both', which='minor', labelsize=12,width=2)
     #plt.text(9,1,"N = "+str(sum(count))+"\nz = "+str(loop))
-    plt.text(9,1,"z = "+str(loop)+"\n1 x Dust Destroyed",fontsize=16)
+    plt.text(8.1,1,"z = "+str(loop)+"\n1 x Dust Destroyed",fontsize=16)
     if(loop == 0):
         plt.errorbar(RR_SM, RR_DM1, yerr = (RR_DM1_down, RR_DM1_up),color='g',label='Remy-Ruyer2015',fmt='o')
         plt.errorbar(np.log10(Bourne_MEDMSTAR), np.log10(Bourne_MEDMDUST), yerr = np.log10(Bourne_MEDMDUSTERR/Bourne_MEDMDUST) , color='orange',label='Bourne2012',fmt='o')
@@ -481,13 +485,15 @@ for loop in range(0,10):
     plt.subplot(3,1,3)
     plt.xlim([8,12])
     plt.ylim([0,9.99])
+    plt.xlabel(r'log$_{10}$(M$_{*}$/M$_{\odot}$)', fontsize=18)
+    plt.ylabel(r'log$_{10}$(M$_{\rm{d}}$/M$_{\odot}$)', fontsize=18)
     plt.hexbin(log_Stellar_Mass_5,log_New_Dust_Mass_5,gridsize=500,mincnt=1, label='L-Galaxies 2Dhist')
     plt.tick_params(axis='both', which='major', labelsize=12,width=2,length=6, labelleft ='on', labelbottom='on', direction='inout')
     plt.tick_params(axis='both', which='minor', labelsize=12,width=2,length=6, labelleft ='on', labelbottom='on', direction='inout')
     plt.tick_params(axis='both', which='major', labelsize=12,width=2)
     plt.tick_params(axis='both', which='minor', labelsize=12,width=2)
     #plt.text(9,1,"N = "+str(sum(count))+"\nz = "+str(loop))
-    plt.text(9,1,"z = "+str(loop)+"\n10 x Dust Destroyed",fontsize=16)
+    plt.text(8.1,1,"z = "+str(loop)+"\n10 x Dust Destroyed",fontsize=16)
     if(loop == 0):
         plt.errorbar(RR_SM, RR_DM1, yerr = (RR_DM1_down, RR_DM1_up),color='g',label='Remy-Ruyer2015',fmt='o')
         plt.errorbar(np.log10(Bourne_MEDMSTAR), np.log10(Bourne_MEDMDUST), yerr = np.log10(Bourne_MEDMDUSTERR/Bourne_MEDMDUST) , color='orange',label='Bourne2012',fmt='o')
@@ -603,21 +609,21 @@ for loop in range(0,10):
                 plt.tick_params(axis='both', which='minor', labelsize=12,width=2,length=6, labelleft ='off', labelbottom='on', direction='inout')
                 plt.xlabel(r'log$_{10}$(M$_{*}$/M$_{\odot}$)', fontsize=18)
 
-            plt.hexbin(log_Stellar_Mass_1,log_New_Dust_Mass_1,gridsize=500,mincnt=1)
+            plt.hexbin(log_Stellar_Mass_1,log_New_Dust_Mass_1,gridsize=500,mincnt=1,label='Individual model galaxies')
             if plots==0:
                 plt.errorbar(RR_SM, RR_DM1, yerr = (RR_DM1_down, RR_DM1_up),color='g',label='Remy-Ruyer2015',fmt='o')
-                plt.legend(loc='lower right')
+                #plt.legend(loc='lower right')
             if plots==1:
                 plt.errorbar(np.log10(Bourne_MEDMSTAR), np.log10(Bourne_MEDMDUST), yerr = np.log10(Bourne_MEDMDUSTERR/Bourne_MEDMDUST) , color='orange',label='Bourne2012',fmt='o')
-                plt.legend(loc='lower right')
+                #plt.legend(loc='lower right')
             if plots==2:
                 plt.errorbar(Ciesla_SM, Ciesla_DM, yerr = Ciesla_DMerr , color='r',label='Ciesla2014',fmt='o')
-                plt.legend(loc='lower right')
+                #plt.legend(loc='lower right')
             if plots==3:
                 plt.errorbar(Santini_SM_z0, Santini_DM_z0, yerr = (Santini_DMdownerr_z0, Santini_DMuperr_z0), color='b',label='Santini2014',fmt='o')
-                plt.legend(loc='lower right')
+                #plt.legend(loc='lower right')
             plt.errorbar(SM_bins[0][loop],Dust_bins[0][loop],yerr=(Dust_std_err[0][loop]),color='k',label='L-Galaxies Mean',linewidth=2)
-        
+            plt.legend(loc='lower right')
 
         axes = fig.get_axes()
         for ax in axes:

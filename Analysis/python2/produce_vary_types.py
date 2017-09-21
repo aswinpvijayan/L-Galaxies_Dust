@@ -318,7 +318,7 @@ for loop in range(0,10):
     SM_bins[2][loop],Dust_bins[2][loop],Dust_std_dev[2][loop],Dust_std_err[2][loop],count[2][loop] = fit_scatter(log_Stellar_Mass_3, log_New_Dust_Mass_3, ret_n=True, ret_sterr=True, nbins=10)
     plt.subplot(3,2,2)
     plt.xlim([8,12])
-    plt.ylim([0,10.2])
+    plt.ylim([0,10])
     plt.hexbin(log_Stellar_Mass_3,log_New_Dust_Mass_3,gridsize=500,mincnt=1, label='L-Galaxies 2Dhist')
     #plt.xlabel(r'log$_{10}$(M$_{*}$/M$_{\odot}$)', fontsize=18)
     #plt.ylabel(r'log$_{10}$(M$_{\rm{d}}$/M$_{\odot}$)', fontsize=18)
@@ -392,7 +392,7 @@ for loop in range(0,10):
     SM_bins[4][loop],Dust_bins[4][loop],Dust_std_dev[4][loop],Dust_std_err[4][loop],count[4][loop] = fit_scatter(log_Stellar_Mass_5, log_New_Dust_Mass_5, ret_n=True, ret_sterr=True, nbins=10)
     plt.subplot(3,2,4)
     plt.xlim([8,12])
-    plt.ylim([0,10.2])
+    plt.ylim([0,10])
     plt.hexbin(log_Stellar_Mass_5,log_New_Dust_Mass_5,gridsize=500,mincnt=1, label='L-Galaxies 2Dhist')
     plt.xlabel(r'log$_{10}$(M$_{*}$/M$_{\odot}$)', fontsize=18)
     #plt.ylabel(r'log$_{10}$(M$_{\rm{d}}$/M$_{\odot}$)', fontsize=18)
@@ -466,7 +466,7 @@ for loop in range(0,10):
     SM_bins[0][loop],Dust_bins[0][loop],Dust_std_dev[0][loop],Dust_std_err[0][loop],count[0][loop] = fit_scatter(log_Stellar_Mass_1, log_New_Dust_Mass_1, ret_n=True, ret_sterr=True, nbins=10)
     plt.subplot(3,2,6)
     plt.xlim([8.01,12])
-    plt.ylim([0,10.2])
+    plt.ylim([0,10])
     plt.hexbin(log_Stellar_Mass_1,log_New_Dust_Mass_1,gridsize=500,mincnt=1, label='L-Galaxies 2Dhist')
     plt.xlabel(r'log$_{10}$(M$_{*}$/M$_{\odot}$)', fontsize=18)
     #plt.ylabel(r'log$_{10}$(M$_{\rm{d}}$/M$_{\odot}$)', fontsize=18)
@@ -558,13 +558,13 @@ for loop in range(0,9):
     
     if(loop ==8):
         plt.axis('off')
-        plt.errorbar([3,4],[3,4],yerr=[3,4],color='b',label='All',linewidth=2)
+        #plt.errorbar([3,4],[3,4],yerr=[3,4],color='b',label='All',linewidth=2)
         plt.errorbar([3,4],[3,4],yerr=[3,4],color='r',label='AGB',linewidth=2)
         plt.errorbar([3,4],[3,4],yerr=[3,4],color='r',linestyle='--',label='SNII',linewidth=2)
-        plt.errorbar([3,4],[3,4],yerr=[3,4],color='g',label='SNIA',linewidth=2)    
-        plt.errorbar([3,4],[3,4],yerr=[3,4],color='g',linestyle='--',label='MC Grown',linewidth=2)
-        plt.errorbar([3,4],[3,4],yerr=[3,4],color='orange',linestyle='--',label='No Destruction',linewidth=2)
-        plt.errorbar([3,4],[3,4],yerr=[3,4],color='k',label='Observations',fmt='o')
+        #plt.errorbar([3,4],[3,4],yerr=[3,4],color='g',label='SNIA',linewidth=2)    
+        #plt.errorbar([3,4],[3,4],yerr=[3,4],color='g',linestyle='--',label='MC Grown',linewidth=2)
+        #plt.errorbar([3,4],[3,4],yerr=[3,4],color='orange',linestyle='--',label='No Destruction',linewidth=2)
+        #plt.errorbar([3,4],[3,4],yerr=[3,4],color='k',label='Observations',fmt='o')
         plt.legend(loc='center')
     if(loop == 0):
         plt.errorbar(RR_SM, RR_DM1, yerr = (RR_DM1_down, RR_DM1_up),color='k',label='Remy-Ruyer2015',fmt='o')
@@ -587,12 +587,12 @@ for loop in range(0,9):
     if( (loop == 6) or (loop == 7) ):
         plt.errorbar(Mancini_SM, Mancini_DM, yerr = Mancini_DMerr, xerr = Mancini_SMerr, color='k',label='Mancini2015',fmt='o')
     if(loop !=8):
-        plt.errorbar(SM_bins[0][loop],Dust_bins[0][loop],yerr=(Dust_std_err[0][loop]),color='b',label='L-Galaxies Mean',linewidth=2)
+        #plt.errorbar(SM_bins[0][loop],Dust_bins[0][loop],yerr=(Dust_std_err[0][loop]),color='b',label='L-Galaxies Mean',linewidth=2)
         plt.errorbar(SM_bins[1][loop],Dust_bins[1][loop],yerr=(Dust_std_err[1][loop]),color='r',label='L-Galaxies Mean',linewidth=2)
         plt.errorbar(SM_bins[2][loop],Dust_bins[2][loop],yerr=(Dust_std_err[2][loop]),color='r',linestyle='--',label='L-Galaxies Mean',linewidth=2)
-        plt.errorbar(SM_bins[3][loop],Dust_bins[3][loop],yerr=(Dust_std_err[3][loop]),color='g',label='L-Galaxies Mean',linewidth=2)    
-        plt.errorbar(SM_bins[4][loop],Dust_bins[4][loop],yerr=(Dust_std_err[4][loop]),color='g',linestyle='--',label='L-Galaxies Mean',linewidth=2)
-        plt.errorbar(SM_bins[5][loop],Dust_bins[5][loop],yerr=(Dust_std_err[5][loop]),color='orange',linestyle='--',label='L-Galaxies Mean',linewidth=2)
+        #plt.errorbar(SM_bins[3][loop],Dust_bins[3][loop],yerr=(Dust_std_err[3][loop]),color='g',label='L-Galaxies Mean',linewidth=2)    
+        #plt.errorbar(SM_bins[4][loop],Dust_bins[4][loop],yerr=(Dust_std_err[4][loop]),color='g',linestyle='--',label='L-Galaxies Mean',linewidth=2)
+        #plt.errorbar(SM_bins[5][loop],Dust_bins[5][loop],yerr=(Dust_std_err[5][loop]),color='orange',linestyle='--',label='L-Galaxies Mean',linewidth=2)
 
 # plt.legend(loc='lower right')
 
