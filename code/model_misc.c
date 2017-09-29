@@ -1209,6 +1209,7 @@ void transfer_dust_from_starformation(int p, double fraction)
 	Gal[p].DiskMass_elements.Ca += fraction * Gal[p].Dust_elements.Ca;
 	Gal[p].DiskMass_elements.Fe += fraction * Gal[p].Dust_elements.Fe;
   
+	/*
 	Gal[p].Dust_elements.Cb -= fraction * Gal[p].Dust_elements.Cb;
 	Gal[p].Dust_elements.N  -= fraction * Gal[p].Dust_elements.N;
 	Gal[p].Dust_elements.O  -= fraction * Gal[p].Dust_elements.O;
@@ -1218,7 +1219,7 @@ void transfer_dust_from_starformation(int p, double fraction)
 	Gal[p].Dust_elements.S  -= fraction * Gal[p].Dust_elements.S;
 	Gal[p].Dust_elements.Ca -= fraction * Gal[p].Dust_elements.Ca;
 	Gal[p].Dust_elements.Fe -= fraction * Gal[p].Dust_elements.Fe;
-  
+  */
   return;
   }  
 
@@ -1258,6 +1259,7 @@ void transfer_dust_mergers(int p, int q)
 void transfer_dust_to_hot(int p, double fraction)
   {
 //  	printf("1fraction = %g\n",fraction);
+	/*
 	Gal[p].HotGas_elements.Cb += fraction * Gal[p].Dust_elements.Cb;
 	Gal[p].HotGas_elements.N  += fraction * Gal[p].Dust_elements.N;
 	Gal[p].HotGas_elements.O  += fraction * Gal[p].Dust_elements.O;
@@ -1267,7 +1269,7 @@ void transfer_dust_to_hot(int p, double fraction)
 	Gal[p].HotGas_elements.S  += fraction * Gal[p].Dust_elements.S;
 	Gal[p].HotGas_elements.Ca += fraction * Gal[p].Dust_elements.Ca;
 	Gal[p].HotGas_elements.Fe += fraction * Gal[p].Dust_elements.Fe;
-  
+  */
 	Gal[p].Dust_elements.Cb -= fraction * Gal[p].Dust_elements.Cb;
 	Gal[p].Dust_elements.N  -= fraction * Gal[p].Dust_elements.N;
 	Gal[p].Dust_elements.O  -= fraction * Gal[p].Dust_elements.O;
