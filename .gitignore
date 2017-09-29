@@ -24,7 +24,7 @@ input/hdf5_field_props.txt
 make_tarball.sh
 odin.bash
 odin_Halo_Model.bash
-output/SA*
+output/
 output/SFH_Bins
 quick_cosma.bash
 input/LegacyModels_inputs/*
