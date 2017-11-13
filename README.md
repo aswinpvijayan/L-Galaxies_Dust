@@ -1,100 +1,52 @@
-<<<<<<< HEAD
-# Project Title
+# L-Galaxies Dust
 
-One Paragraph of project description goes here
+This repo holds the implementation of the detailed dust model into the public released version of the Henriques2015 L-Galaxies model. This adds a model of dust production from AGB stars, supernovae as well as grain growth in molecular clouds. It also includes a model of dust destruction from supernovae shocks. 
 
-## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## Installing and Running the model
 
-### Prerequisites
+A step by step series of instructions to run this version of L-Galaxies on your system. 
 
-What things you need to install the software and how to install them
+* ```git clone https://github.com/scottclay/Lgalaxies_Dust.git```
 
+You will probably need to change the filepaths or obtain the following required treefiles etc. from elsewhere:
+
+* Input file 
+	* FirstFile
+	* LastFile
+	* CoolFunctionsDir
+	* SpecPhotDir
+	* SimulationDir
+	* OutputDir
+	
+* The following compiler options have been added to ```My_Makefile_options```
+	* ```OPT += -DDETAILED_DUST``` - Switch on dust model with default options
+	* ```OPT += -DDUST_AGB``` - Switch on AGB dust production (default on)
+	* ```OPT += -DDUST_SNII``` - Switch on SNII dust production (default on)
+	* ```OPT += -DDUST_SNIA``` - Switch on SNIA dust production (default on)
+	* ```OPT += -DDUST_GROWTH``` - Switch on grain growth dust production (default on)
+	* ```OPT += -DDUST_DESTRUCTION``` - Switch on dust destruction (default on)
+	* ```OPT += -DFULL_DUST_RATES``` - Output dust production/destruction rates (default on)
+	* ```OPT += -DREDUCED_OUTPUT``` - Shorten output (mainly cutting SFH bins)
+	* ```OBJS += ./code/model_dustyields.o ```
+	* ```OBJS += ./code/dustyields_functions.o```
+	* ```OBJS += ./code/dustyields_integrals.o```
+	* ```OBJS += ./code/dustyields_read_tables.o```
+
+To compile the model:
 ```
-Give examples
-```
-
-### Installing
-
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+make
 ```
 
-### And coding style tests
+To run the model locally on box 5 of MR   ```./L-Galaxies input.1```
 
-Explain what these tests test and why
+To run the model locally on box 40 of MRII ```./L-Galaxies input.1```
 
-```
-Give an example
-```
+To run the model on apollo for all MR at Sussex ```qsub batch_MR_apollo.sh``` 
 
-## Deployment
+To run the model on apollo for box 1 and 2 of MRII at Sussex ```qsub -l m_mem_free=220G batch_MRII_apollo1.sh``` 
 
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
-
-## L-Galaxies Dust
-
-## Instructions
-- Clone the repo
-  - Changes file xyz and directory locations 123
-- Compile the code (make)
-- Run the code (./L-Galaxies input_file)
-  - To run the model on apollo for all MR or 3-512 of MRII at Sussex (qsub batch_MR_apollo.sh or qsub batch_MRII_apollo2.sh) 
-  - To run the model on boxes 1 and 2 on MRII you need much more memory (qsub -l m_mem_free=220G batch_MRII_apollo1.sh)
+To run the model on apollo for box 3-512 of MRII at Sussex ```qsub batch_MRII_apollo2.sh``` 
 
 
+ 
