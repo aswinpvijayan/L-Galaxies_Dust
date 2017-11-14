@@ -2,8 +2,12 @@
  * model_dustyields.c
  *
  *  Created on: Oct2016
- *  Last modified: Sept 2017
+ *  Last modified: Nov 2017
  *      Author: scottclay
+ * 
+ *  Adds a model of dust production (via AGB stars, SNe remnants and grain growth
+ *  molecular clouds) and dust destruction (via SNe shock waves). 
+ *
  */
 
 #include <stdio.h>
@@ -28,9 +32,7 @@ double calc_dust_growth(double dt, float element, float dust_species, float MH2,
 	if (element > 0.0) {
 
 		double t_acc = (t_acc_0 * MH2) / element;
-		
-		//double t_acc = 15.0E6 * (0.02/ (element/MH2) ); //popping
-				
+						
 		double f_0 = (dust_species / element);
 		
 		double f_cond = pow((pow((f_0 * (1.0 + t_exchange/t_acc)),-2.0) + 1.0),-0.5);	
@@ -42,14 +44,6 @@ double calc_dust_growth(double dt, float element, float dust_species, float MH2,
 		else {
 			grown_dust = 0.0;
 		}
-/*		
-		if (dust_species>element) {
-			grown_dust = (1 - (dust_species/element)) * (f_mol * dust_species / t_acc);
-		}
-		else {
-			grown_dust = 0.0;
-		}
-*/ // Dwek 98
 	}
 			
 	else {
@@ -63,30 +57,15 @@ double calc_dust_growth(double dt, float element, float dust_species, float MH2,
 
 void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 {
-
-//elements_print("Sta Dust",Gal[p].Dust_elements);
-////elements_print("Sta ColdGas",Gal[p].ColdGas_elements);
-//printf("1 Start %g %g\n",Gal[p].ColdGas_elements.Cb,Gal[p].ColdGas_elements.Fe);
-//printf("1 %g %g %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
-
 	int Zi;
 	double timestep_width; //Width of current timestep in CODE UNITS
 	int TimeBin; //Bin in Yield arrays corresponding to current timestep
 	double Zi_disp, NormAGBDustYieldRate_actual[AGB_DUST_TYPE_NUM];
-	//double MassDiff;
 	double timet, sfh_time;
-	//double time_to_ts; //Time from high-z (upper) edge of SFH bin to middle of current timestep (used for massive SNII to hot) [in Myrs]
-	//double tcut; //Maximum lifetime of stars that have their ejected put straight into the HotGas [in Myrs]
 	double fwind; //Required for metal-rich wind implementation
 	double DiskSFR, step_width_times_DiskSFR, DiskSFR_physical_units, step_width_times_DiskSFR_physical_units, inverse_DiskMass_physical_units;
-	//double BulgeSFR, step_width_times_BulgeSFR, BulgeSFR_physical_units, step_width_times_BulgeSFR_physical_units, inverse_BulgeMass_physical_units;
-	//double ICMSFR, step_width_times_ICMSFR, ICMSFR_physical_units, step_width_times_ICMSFR_physical_units, inverse_ICM_physical_units;
 	double Disk_total_metallicity;//, Bulge_total_metallicity, ICM_total_metallicity;
-	//double NormMassEjecRateSumAllTypes;
 	double TotalMassReturnedToColdDiskGas, TotalMassReturnedToHotGas;
-	//int n; //Iterator used for loop over NOUT when updating MassWeightedAge
-	//double AgeCorrectionDisk[NOUT];
-	//double AgeCorrectionBulge[NOUT];
 	double SumAGBDust;
 	double agb_ratio, type2_ratio, type1a_ratio;
 
@@ -118,17 +97,12 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
     for (i=0;i<=Gal[p].sfh_ibin;i++) //LOOP OVER SFH BINS
     {
     	sfh_time=Gal[p].sfh_t[i]+(0.5*Gal[p].sfh_dt[i]);
-    	//time_to_ts = ((sfh_time+(0.5*Gal[p].sfh_dt[i])) - timet)*(UnitTime_in_years/Hubble_h)/1.0e6; //Time from high-z (upper) edge of SFH bin to middle of current timestep [in Myrs]
-    	//tcut = 2.0*((Gal[p].Rvir/Gal[p].Vvir)/0.0001); //Maximum lifetime of stars that have their ejected put straight into the HotGas [in Myrs]
 
-//if( (Gal[p].MetalsColdGas.agb > 0.0) && (Gal[p].MetalsColdGas.type2 > 0.0) && (Gal[p].MetalsColdGas.type1a > 0.0) ) { 
 
 //*****************************************
-//AGB ENRICHMENT FROM DISK STARS INTO COLD GAS:
+//DUST ENRICHMENT FROM AGB DISK STARS INTO COLD GAS:
 //*****************************************
 
-//elements_print("Dust",Gal[p].Dust_elements);
-//elements_print("CG",Gal[p].ColdGas_elements);
 #ifdef DUST_AGB		
     if ( (Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.agb >0.0) ) {
      	//pre-calculations to speed up the code
@@ -144,30 +118,12 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
     	
     	if (Zi_disp < 0.0) Zi_disp = 0.0; //Don't want to extrapolate yields down below lifetimeMetallicities[0]=0.0004. Instead, assume constant yield below this metallicity.
 
-			
-
  		//interpolates yields from lookup tables we produced in dust_yield_integrals.c
-	    for (k=0;k<AGB_DUST_TYPE_NUM;k++)	//add numdustypes to allvars =4		//these are what we need for each type of dust
+	    for (k=0;k<AGB_DUST_TYPE_NUM;k++)	
 	    {
-	    	//NormAGBDustYieldRate_actual[k] = NormAGBDustYieldRate[TimeBin][i][Zi][k] + ((NormAGBDustYieldRate[TimeBin][i][Zi+1][k] - NormAGBDustYieldRate[TimeBin][i][Zi][k])*Zi_disp);	    	
 	    	NormAGBDustYieldRate_actual[k] = NormAGBDustYieldRate[TimeBin][i][Zi_saved][k] + ((NormAGBDustYieldRate[TimeBin][i][Zi_saved+1][k] - NormAGBDustYieldRate[TimeBin][i][Zi_saved][k])*Zi_disp_saved);	    	
 	    }
 	    
-		/// (dt * UnitTime_in_years)					
-#ifdef FULL_DUST							
-		Gal[p].DustISM.AGB.Sil += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[0])); //M_forsterite
-		Gal[p].DustISM.AGB.Sil += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[1])); //M_fayalite
-		Gal[p].DustISM.AGB.Sil += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[2])); //M_enstatite
-		Gal[p].DustISM.AGB.Sil += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[3])); //M_ferrosilite
-		Gal[p].DustISM.AGB.Sil += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[4])); //M_quartz
-		Gal[p].DustISM.AGB.Fe  += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[5])); //M_iron
-		Gal[p].DustISM.AGB.Sil += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[6])); //S_quartz
-        Gal[p].DustISM.AGB.Fe  += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[7])); //S_iron
-		Gal[p].DustISM.AGB.SiC += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[8])); //C_SiC
-        Gal[p].DustISM.AGB.Fe  += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[9])); //C_iron
-        Gal[p].DustISM.AGB.Cb  += max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[10])); //C_carbon
-#endif
-
 #ifdef FULL_DUST_RATES        
         Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[0])) /(UnitTime_in_years);
         Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[1])) /(UnitTime_in_years);
@@ -182,6 +138,9 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
         Gal[p].DustISMRates.AGB += max(0.0,(DiskSFR_physical_units * NormAGBDustYieldRate_actual[10]))/(UnitTime_in_years);
 #endif				
 		//Calculate the amount of dust CREATED ----------------------------------------------------------------------
+		//These are calculated based on pre-code calculations in dustyield_integrals.c and then multiplied
+		//by the SFR here to get the amount of dust created for each specific type(quartz, iron, carbon etc.)
+		//and for 3 types of star (M,C,S). 
 		
 		double Dust_Forsterite  = max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[0])); //M_forsterite
 		double Dust_Fayalite    = max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[1])); //M_fayalite
@@ -196,110 +155,50 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		Dust_Iron		+= max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[7])); //S_iron
 		Dust_Iron		+= max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[9])); //C_iron
 		
-/*		
-		printf("AGB1 = %g\n",Dust_Forsterite);
-		printf("AGB2 = %g\n",Dust_Fayalite);
-		printf("AGB3 = %g\n",Dust_Enstatite);
-		printf("AGB4 = %g\n",Dust_Ferrosilite);
-		printf("AGB5 = %g\n",Dust_Quartz);
-		printf("AGB6 = %g\n",Dust_Iron);
-		printf("AGB7 = %g\n",Dust_SiC);
-		printf("AGB8 = %g\n",Dust_Carbon);
-*/		
 		
 		
-		
-		
-		//Remove total dust created from metallicity-----------------------------------------------------------------
-		SumAGBDust = 0.0;
-		for (j=0; j<11; j++){
-		SumAGBDust += (step_width_times_DiskSFR * NormAGBDustYieldRate_actual[j]);
-		}			
-		//Gal[p].MetalsColdGas.agb -= max(0.0,SumAGBDust);			
-//printf("post agb %g %g %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
+		//Conversion of dust species (i.e. Ferrosilite) into Actual elements to store
+		//in correct arrays (i.e. Ferrosilite -> Mg/Si/O)
+		//All the following conversions are done by mass fraction
 		
 		//Ferrosilite Mg2SiO4 ----------------------------------------
 		Gal[p].Dust_elements.Mg += Dust_Forsterite * 0.345504;
 		Gal[p].Dust_elements.Si += Dust_Forsterite * 0.199622;
 		Gal[p].Dust_elements.O  += Dust_Forsterite * 0.454874;
-		
-		//Gal[p].ColdGas_elements.Mg -= Dust_Forsterite * 0.345504;
-		//Gal[p].ColdGas_elements.Si -= Dust_Forsterite * 0.199622;
-		//Gal[p].ColdGas_elements.O  -= Dust_Forsterite * 0.454874;
-		
+				
 		//Fayalite Fe2SiO4 --------------------------------------------
 		Gal[p].Dust_elements.Fe += Dust_Fayalite * 0.548110;
 		Gal[p].Dust_elements.Si += Dust_Fayalite * 0.137827;
 		Gal[p].Dust_elements.O  += Dust_Fayalite * 0.314063;
-
-		//Gal[p].ColdGas_elements.Fe -= Dust_Fayalite * 0.548110;
-		//Gal[p].ColdGas_elements.Si -= Dust_Fayalite * 0.137827;
-		//Gal[p].ColdGas_elements.O  -= Dust_Fayalite * 0.314063;
 		
 		//Enstatite MgSi03 --------------------------------------------
 		Gal[p].Dust_elements.Mg += Dust_Enstatite * 0.243050;
 		Gal[p].Dust_elements.Si += Dust_Enstatite * 0.279768;
 		Gal[p].Dust_elements.O  += Dust_Enstatite * 0.478124;
 		
-		//Gal[p].ColdGas_elements.Mg -= Dust_Enstatite * 0.243050;
-		//Gal[p].ColdGas_elements.Si -= Dust_Enstatite * 0.279768;
-		//Gal[p].ColdGas_elements.O  -= Dust_Enstatite * 0.478124;
-		
 		//Ferrosilite Fe2Si206 ----------------------------------------
 		Gal[p].Dust_elements.Fe += Dust_Ferrosilite * 0.423297;
 		Gal[p].Dust_elements.Si += Dust_Ferrosilite * 0.212884;
 		Gal[p].Dust_elements.O  += Dust_Ferrosilite * 0.363819;
-
-		//Gal[p].ColdGas_elements.Fe -= Dust_Ferrosilite * 0.423297;
-		//Gal[p].ColdGas_elements.Si -= Dust_Ferrosilite * 0.212884;
-		//Gal[p].ColdGas_elements.O  -= Dust_Ferrosilite * 0.363819;
 		
 		//Quartz SiO4 -------------------------------------------------
 		Gal[p].Dust_elements.Si += Dust_Quartz * 0.305002;
 		Gal[p].Dust_elements.O  += Dust_Quartz * 0.694998;
 		
-		//Gal[p].ColdGas_elements.Si -= Dust_Quartz * 0.305002;
-		//Gal[p].ColdGas_elements.O  -= Dust_Quartz * 0.694998;
-		
 		//SiC SiC -----------------------------------------------------
 		Gal[p].Dust_elements.Si += Dust_SiC * 0.299547;
 		Gal[p].Dust_elements.Cb  += Dust_SiC * 0.700453;
 
-		//Gal[p].ColdGas_elements.Si -= Dust_SiC * 0.299547;
-		//Gal[p].ColdGas_elements.Cb  -= Dust_SiC * 0.700453;
-		
 		//Iron Fe -----------------------------------------------------
 		Gal[p].Dust_elements.Fe += Dust_Iron * 1.0;
-		//Gal[p].ColdGas_elements.Fe -= Dust_Iron * 1.0;
 		
 		//Carbon C ----------------------------------------------------
 		Gal[p].Dust_elements.Cb += Dust_Carbon * 1.0;
-		//Gal[p].ColdGas_elements.Cb -= Dust_Carbon * 1.0;
 		
-		
-		//C and Fe failsafe ------
-		//if (Gal[p].ColdGas_elements.Cb < 0.0) {
-		//	Gal[p].ColdGas_elements.Cb = 0.0;
-		//	}
-		
-		/*	
-		if (Gal[p].ColdGas_elements.Fe < 0.0) {
-			Gal[p].ColdGas_elements.Fe = 0.0;
-			}
-		*/
-		
-		//printf("2 Post AGB %g %g\n",Gal[p].ColdGas_elements.Cb,Gal[p].ColdGas_elements.Fe);
-//elements_print("2 PostAGB Dust",Gal[p].Dust_elements);
 } //if sfh_DM >0
     
 
 #endif //DUST_AGB
-
-//*****************************************
-//AGB ENRICHMENT FROM ICL STARS INTO HOT GAS:			
-//*****************************************
-//Not yet implemented
-
 
 //*****************************************
 //SNII dust enrichment 			
