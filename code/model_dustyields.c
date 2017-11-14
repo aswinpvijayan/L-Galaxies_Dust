@@ -269,57 +269,28 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 	
 	
 //*****************************************
-//SNIa dust enrichment 			
+//DUST ENRICHMENT FROM SNIA FROM DISK STARS INTO COLD GAS:
 //*****************************************
 
-	// SNIa only produces Iron dust
-	// ^^Need to check this! 
-	// THIS NEEDS MULTIPLYING BY THE SNIa RATE
-	// SEE ZHUKOVSKA PAPER
-	// TURN OFF FOR NOW
-	
 #ifdef DUST_SNIA		
 	if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type1a >0.0)) {
-		float eta_SNIa_Fe  = 0.005;
-		float A_Fe_dust  = 55.85;
-		float A_Fe = 55.85;
+		
+		//eta and A_x taken from Zhukovska2008
+		float eta_SNIa_Fe  = 0.005; //dust condensation eff.
+		float A_Fe_dust  = 55.85; //atomic weight
+		float A_Fe = 55.85; //atomic weight
 
 		double Dust_Iron = SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe;
 	
-#ifdef FULL_DUST
-		Gal[p].DustISM.SNIa.Fe  += SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe;
-#endif
 #ifdef FULL_DUST_RATES		
 		Gal[p].DustISMRates.SNIA  += (SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe)/(dt * UnitTime_in_years);
 #endif	
 	
-		//printf("SNIA = %g\n",Dust_Iron);
-
-		if(Gal[p].MetalsColdGas.type1a<0.0){
-			printf("pre 1a %g %g %g\n",Dust_Iron,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
-		}
-	
 		Gal[p].Dust_elements.Fe += Dust_Iron * 1.0;
-		//Gal[p].ColdGas_elements.Fe -= Dust_Iron * 1.0;
-	
-		//Gal[p].MetalsColdGas.type1a -= Dust_Iron/(1.0e10/Hubble_h);
-
-	//	if(Gal[p].MetalsColdGas.type1a<0.0){
-	//		printf("post 1a %g %g %g\n",Dust_Iron,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
-	//	}
-		//C and Fe failsafe ------
-		//if (Gal[p].ColdGas_elements.Cb < 0.0) {
-		//	Gal[p].ColdGas_elements.Cb = 0.0;
-		//	}
-			
-	//	if (Gal[p].ColdGas_elements.Fe < 0.0) {
-	//		Gal[p].ColdGas_elements.Fe = 0.0;
-	//		}
-
-//elements_print("4 PostSNIA Dust",Gal[p].Dust_elements);
-}
+	}//if sfh_DM >0
 #endif //DUST_SNIA
-} //SFH
+
+} //loop over SFH bins
 //*****************************************
 //Growth of dust inside MC //maybe go last??			
 //*****************************************
