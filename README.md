@@ -1,6 +1,6 @@
 # L-Galaxies Dust
 
-This repo holds the implementation of the detailed dust model into the public released version of the Henriques2015 L-Galaxies model. This adds a model of dust production from AGB stars, supernovae as well as grain growth in molecular clouds. It also includes a model of dust destruction from supernovae shocks. 
+This repo holds the implementation of the detailed dust model into the public released version of the Henriques2015 L-Galaxies model. This adds a model of dust production from AGB stars, supernovae as well as grain growth in molecular clouds. It also includes a model of dust destruction from supernovae shocks. Documentation of the public version of the code can be found at http://galformod.mpa-garching.mpg.de/public/LGalaxies/
 
 
 ## Installing and Running the model
