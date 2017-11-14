@@ -156,7 +156,7 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		Dust_Iron		+= max(0.0,(step_width_times_DiskSFR_physical_units * NormAGBDustYieldRate_actual[9])); //C_iron
 		
 		
-		
+		//Element Conversion -----------------------------------------------------------------------------------
 		//Conversion of dust species (i.e. Ferrosilite) into Actual elements to store
 		//in correct arrays (i.e. Ferrosilite -> Mg/Si/O)
 		//All the following conversions are done by mass fraction
@@ -195,119 +195,76 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		//Carbon C ----------------------------------------------------
 		Gal[p].Dust_elements.Cb += Dust_Carbon * 1.0;
 		
-} //if sfh_DM >0
+	} //if sfh_DM >0
     
 
 #endif //DUST_AGB
 
 //*****************************************
-//SNII dust enrichment 			
+//DUST ENRICHMENT FROM SNII FROM DISK STARS INTO COLD GAS:
 //*****************************************
 
-//printf("%g\t%g\n",DiskSFR,Gal[p].DustISMRates.AGB);
-
 #ifdef DUST_SNII
-if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
-		
-	float eta_SNII_Sil = 0.00035;
-	float eta_SNII_Fe  = 0.001;
-	float eta_SNII_SiC = 0.0003;
-	float eta_SNII_Cb  = 0.15;
+	if ((Gal[p].sfh_DiskMass[i] > 0.0) && (Gal[p].MetalsColdGas.type2 >0.0)) {
+	
+		//eta (dust condensation eff.) and the atomic weights A_x are taken from Zhukovska2008	
+		float eta_SNII_Sil = 0.00035;
+		float eta_SNII_Fe  = 0.001;
+		float eta_SNII_SiC = 0.0003;
+		float eta_SNII_Cb  = 0.15;
 
-	float A_Sil_dust = 121.41;
-	float A_Fe_dust  = 55.85;
-	float A_SiC_dust = 40.10; //SiC dust does not form in the ISM
-	float A_Cb_dust  = 12.01;
+		float A_Sil_dust = 121.41;
+		float A_Fe_dust  = 55.85;
+		float A_SiC_dust = 40.10; //SiC dust does not form in the ISM
+		float A_Cb_dust  = 12.01;
 
-	float A_Si = 28.0855;
-	float A_Cb = 12.01;
-	float A_Fe = 55.85;
+		float A_Si = 28.0855;
+		float A_Cb = 12.01;
+		float A_Fe = 55.85;
 
 	
-	//These look like rates...but the dt is taken care of in recipe_yields and 
-	//incorperated into SNII_prevstep........etc.
-	
-#ifdef FULL_DUST
-		Gal[p].DustISM.SNII.Sil += SNII_prevstep_Cold_Si[i] * eta_SNII_Sil * A_Sil_dust/A_Si;
-		Gal[p].DustISM.SNII.Fe  += SNII_prevstep_Cold_Fe[i] * eta_SNII_Fe  * A_Fe_dust/A_Fe;
-		Gal[p].DustISM.SNII.SiC += SNII_prevstep_Cold_Si[i] * eta_SNII_SiC * A_SiC_dust/A_Si;
-		Gal[p].DustISM.SNII.Cb  += SNII_prevstep_Cold_Cb[i] * eta_SNII_Cb  * A_Cb_dust/A_Cb;	
-#endif
-#ifdef FULL_DUST_RATES
-		Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Si[i] * eta_SNII_Sil * A_Sil_dust/A_Si)/(dt * UnitTime_in_years);
-		Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Fe[i] * eta_SNII_Fe  * A_Fe_dust/A_Fe )/(dt * UnitTime_in_years);
-		Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Si[i] * eta_SNII_SiC * A_SiC_dust/A_Si)/(dt * UnitTime_in_years);
-		Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Cb[i] * eta_SNII_Cb  * A_Cb_dust/A_Cb) /(dt * UnitTime_in_years);	
-#endif
+	#ifdef FULL_DUST_RATES
+			Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Si[i] * eta_SNII_Sil * A_Sil_dust/A_Si)/(dt * UnitTime_in_years);
+			Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Fe[i] * eta_SNII_Fe  * A_Fe_dust/A_Fe )/(dt * UnitTime_in_years);
+			Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Si[i] * eta_SNII_SiC * A_SiC_dust/A_Si)/(dt * UnitTime_in_years);
+			Gal[p].DustISMRates.SNII += (SNII_prevstep_Cold_Cb[i] * eta_SNII_Cb  * A_Cb_dust/A_Cb) /(dt * UnitTime_in_years);	
+	#endif
 
-		//Create dust--------------------------------------------------------------------------------
+			//Create dust (based on the prescription of Zhukovska2008)---------------------------
+			//SNII_prevstep_x is calculated in model_yields.c 
+			//It is the amount of a specific metal (i.e. Si) produced in the last timestep
 
-		double Dust_Silicates = SNII_prevstep_Cold_Si[i] * eta_SNII_Sil * A_Sil_dust/A_Si;
-		double Dust_Iron      = SNII_prevstep_Cold_Fe[i] * eta_SNII_Fe  * A_Fe_dust/A_Fe;
-		double Dust_SiC	      = SNII_prevstep_Cold_Si[i] * eta_SNII_SiC * A_SiC_dust/A_Si;
-		double Dust_Carbon    = SNII_prevstep_Cold_Cb[i] * eta_SNII_Cb  * A_Cb_dust/A_Cb;	
+			double Dust_Silicates = SNII_prevstep_Cold_Si[i] * eta_SNII_Sil * A_Sil_dust/A_Si;
+			double Dust_Iron      = SNII_prevstep_Cold_Fe[i] * eta_SNII_Fe  * A_Fe_dust/A_Fe;
+			double Dust_SiC	      = SNII_prevstep_Cold_Si[i] * eta_SNII_SiC * A_SiC_dust/A_Si;
+			double Dust_Carbon    = SNII_prevstep_Cold_Cb[i] * eta_SNII_Cb  * A_Cb_dust/A_Cb;	
 
-/*
-		printf("SNII1 = %g\n",Dust_Silicates);
-		printf("SNII2 = %g\n",Dust_Iron);
-		printf("SNII3 = %g\n",Dust_SiC);
-		printf("SNII4 = %g\n",Dust_Carbon);
-*/
+			//Element conversion -----------------------------------------------------------------
+			//Conversion of dust species (i.e. Silicates) into Actual elements to store
+			//in correct arrays (i.e. Silicates -> Mg/Si/Fe/O)
+			//All the following conversions are done by mass fraction
+
+			//SNII Silicates -------------------
 		
+			Gal[p].Dust_elements.Si += Dust_Silicates * 0.210432;
+			Gal[p].Dust_elements.Mg += Dust_Silicates * 0.091053;
+			Gal[p].Dust_elements.Fe += Dust_Silicates * 0.278948;
+			Gal[p].Dust_elements.O  += Dust_Silicates * 0.419567;
 
-		//Remove total dust created from metallicity-----------------------------------------------------------------
+			//SNII SiC --------------------------
 
-		//Gal[p].MetalsColdGas.type2 -= Dust_Silicates/(1.0e10/Hubble_h);
-		//Gal[p].MetalsColdGas.type2 -= Dust_Iron/(1.0e10/Hubble_h);
-		//Gal[p].MetalsColdGas.type2 -= Dust_SiC/(1.0e10/Hubble_h);
-		//Gal[p].MetalsColdGas.type2 -= Dust_Carbon/(1.0e10/Hubble_h);
-//printf("post type2 %g %g %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
+			Gal[p].Dust_elements.Si += Dust_SiC * 0.299547;
+			Gal[p].Dust_elements.Cb  += Dust_SiC * 0.700453;
 
-		//SNII Silicates ---------------------------------------------------------------------
-		
-		Gal[p].Dust_elements.Si += Dust_Silicates * 0.210432;
-		Gal[p].Dust_elements.Mg += Dust_Silicates * 0.091053;
-		Gal[p].Dust_elements.Fe += Dust_Silicates * 0.278948;
-		Gal[p].Dust_elements.O  += Dust_Silicates * 0.419567;
+			//SNII Fe -------------------------
 
-		//Gal[p].ColdGas_elements.Si -= Dust_Silicates * 0.210432;
-		//Gal[p].ColdGas_elements.Mg -= Dust_Silicates * 0.091053;
-		//Gal[p].ColdGas_elements.Fe -= Dust_Silicates * 0.278948;
-		//Gal[p].ColdGas_elements.O  -= Dust_Silicates * 0.419567;
-		
-		//SNII SiC ---------------------------------------------------------------------------
+			Gal[p].Dust_elements.Fe += Dust_Iron * 1.0;
 
-		Gal[p].Dust_elements.Si += Dust_SiC * 0.299547;
-		Gal[p].Dust_elements.Cb  += Dust_SiC * 0.700453;
+			//SNII Cb ------------------------
 
-		//Gal[p].ColdGas_elements.Si -= Dust_SiC * 0.299547;
-		//Gal[p].ColdGas_elements.Cb  -= Dust_SiC * 0.700453;
+			Gal[p].Dust_elements.Cb += Dust_Carbon * 1.0;
 
-		//SNII Fe ---------------------------------------------------------------------------
-
-		Gal[p].Dust_elements.Fe += Dust_Iron * 1.0;
-		//Gal[p].ColdGas_elements.Fe -= Dust_Iron * 1.0;
-
-		//SNII Cb ---------------------------------------------------------------------------
-
-		Gal[p].Dust_elements.Cb += Dust_Carbon * 1.0;
-		//Gal[p].ColdGas_elements.Cb -= Dust_Carbon * 1.0;
-		
-		
-				//C and Fe failsafe ------
-		//if (Gal[p].ColdGas_elements.Cb < 0.0) {
-		//	Gal[p].ColdGas_elements.Cb = 0.0;
-		//	}
-		
-		/*	
-		if (Gal[p].ColdGas_elements.Fe < 0.0) {
-			Gal[p].ColdGas_elements.Fe = 0.0;
-			}
-		*/
-		
-//elements_print("3 PostSNII Dust",Gal[p].Dust_elements);
-
-}
+	}//if sfh_DM >0
 #endif //DUST_SNII
 	
 	
