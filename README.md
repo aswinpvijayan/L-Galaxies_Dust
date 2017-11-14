@@ -33,10 +33,7 @@ You will probably need to change the filepaths or obtain the following required 
 	* ```OBJS += ./code/dustyields_integrals.o```
 	* ```OBJS += ./code/dustyields_read_tables.o```
 
-To compile the model:
-```
-make
-```
+To compile the model ```make```
 
 To run the model locally on box 5 of MR   ```./L-Galaxies input.1```
 
