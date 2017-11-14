@@ -11,7 +11,6 @@ go
 halo_model_odin.bash
 code/*.o
 code/*.i
-input/input_*
 input/Filter_Sloan.txt
 input/Guo_inputs/
 input/Hen13_inputs/
