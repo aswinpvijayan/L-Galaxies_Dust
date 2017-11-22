@@ -1,10 +1,12 @@
 /*
- * elements.c
+ * Created on: Oct2016
+ * Author: scottclay
  *
- *  Created on: 20.01.2012
- *      Author: robyates
- *
- *  Where individual chemical element history arrays are created and dealt with (like metals.c for metal history arrays)
+ * Various functions to help when coding with dust. 
+ * 
+ * Note (Nov2017) - Many of these functions are no longer in use! 
+ * Many of them contain references to dust structures that no longer exist. 
+ * So be careful!
  */
 
 
