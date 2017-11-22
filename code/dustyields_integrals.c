@@ -1,15 +1,17 @@
 /*
  * dustyields_integrals.c
  *
- * Similar to yields_integrals which does....
+ * A dust version of Robs yields_integrals/model_yields 
+ *
  * Pre-calculates the normalised ejecta rates at every timestep, assuming 1 Msun populations.
  * Multiply by SFR from SFH bins (and interpolate between default metallicities) to obtain
- * true ejecta rates (done in recipe_yields.c).
+ * true dust ejecta rates (done in model_dustyields.c).
+ *
  *
  * Created: Oct2016
  * Author: ScottClay
  *
- * Nov 2016 - Removed a lot of redundant code and changed integration limit to be 7.0 all the time, ignore Mi_upper stuff
+ * Nov 2017 - Cleaned up code and added comments
  *
  */
 
@@ -35,23 +37,6 @@ void init_integrated_dust_yields()
 					NormAGBDustYieldRate[ii][jj][kk][ll]=0.0;									
 }}}}}
 
-void print_integrated_dust_yields()
-{
-	int ii, jj, kk, ll;
-
-	for(ii=0;ii<STEPS*(LastDarkMatterSnapShot+1);ii++) {
-		for(jj=0;jj<SFH_NBIN;jj++) {
-			for(kk=0;kk<LIFETIME_Z_NUM;kk++) {
-				for(ll=0;ll<AGB_DUST_TYPE_NUM;ll++) {
-					//NormAGBDustYieldRate[ii][jj][kk][ll]=0.0;
-					//if(NormAGBDustYieldRate[ii][jj][kk][ll] < 0.0) {
-						printf("step = %d\t SFH bin = %d\t metallicity = %d\t dusttype = %d\n",ii,jj,kk,ll);
-						printf("NormAGBDustYieldRate[ii][jj][kk][ll] = %f \n", NormAGBDustYieldRate[ii][jj][kk][ll]);
-					//}
-}}}/*printf("Normalise dust yields\t%d\n",ii);*/}}
-
-
-
 void integrate_dust_yields()
 {
 	double previoustime, newtime, deltaT;
@@ -59,22 +44,16 @@ void integrate_dust_yields()
 	double timet;
 
 	int Mi_lower, Mi_upper,Zi_Dust;
-	int Mi_lower_AGB, Mi_upper_AGB;//, t_lower_lifetime, t_upper_lifetime;
+	int Mi_lower_AGB, Mi_upper_AGB;
 	int Mi_lower_Dust, Mi_upper_Dust;
 	int width_in_timesteps, mbmax; //Number of current timesteps that fit in any given SFH bin, and the number of mini bins considered for any given SFH bin (max. = 30, for memory considerations)
-	double dt, t_lower, t_upper;//, Mi_lower_actual, Mi_upper_actual;
-	//double AGBYields_lower_actual[AGB_DUST_TYPE_NUM], AGBYields_upper_actual[AGB_DUST_TYPE_NUM];
-	
+	double dt, t_lower, t_upper;	
 	
 	for(snap=0;snap<(LastDarkMatterSnapShot+1);snap++) //LOOP OVER SNAPSHOTS
 	{
 	    previoustime = NumToTime(snap); //Time to z=0 from start of current snapshot [in code units]
 	    newtime = NumToTime(snap+1); //Time to z=0 from end of current snapshot [in code units]
 	    deltaT = previoustime - newtime; //timestep
-		
-		//printf("snap = %d\t time to z=0 = %g\n",snap,previoustime* UnitTime_in_years/Hubble_h);
-		//printf("snap = %d\t actual time = %g\n",snap,(NumToTime(0)-previoustime)* UnitTime_in_years/Hubble_h);
-
 
 	    for(step=0;step<STEPS;step++) //LOOP OVER TIMESTEPS
 	    {
@@ -85,7 +64,6 @@ void integrate_dust_yields()
 	   	  	//New method: sub-dividing SFH bins into SFH_NMINIBIN number of 'mini bins': Can later choose inside code which mini bin the characteristic SF time is in:
 	        	width_in_timesteps = SFH_dt[snap][step][i]/dt; //Width of SFH bin in number of current timesteps [in code units] //NB: Typecasting a float to an integer here (width_in_timesteps is and integer).
 	        	if(width_in_timesteps < 1) width_in_timesteps = 1;
-	        	//if (width_in_timesteps > SFH_NMINIBIN) {mbmax = SFH_NMINIBIN;} else {mbmax = width_in_timesteps;}
 	        	mbmax = width_in_timesteps;
 	        	for (mb=1;mb<=mbmax;mb++) //LOOP OVER MINI BINS (New method)
 	        	{
@@ -102,8 +80,9 @@ void integrate_dust_yields()
 	        		//at this time
 	        		Mi_lower = find_initial_mass_dust(t_upper, Zi); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
 	        		Mi_upper = find_initial_mass_dust(t_lower, Zi); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
+					
 					//*****************************************
-					//AGB Winds (Disc and Bulge):
+					//AGB Dust Yields
 					//*****************************************
 					
 					//finds the metallicity in dust table that corresponds to metallicity bin in the lifetimes table 
@@ -115,40 +94,21 @@ void integrate_dust_yields()
 					Mi_lower_AGB = max_Mi_lower_dust(Mi_lower,4); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
 					Mi_upper_AGB = min_Mi_upper_dust(Mi_upper,4); //Mass bin (lifetime arrays) corresp. to lowest mass of star to 'die' in current timestep, from SFH bin i.
 
-					//if (Mi_lower_AGB <= Mi_upper_AGB)
-					//{
-					//Mi_lower_Dust = bin number for lowest mass to integrate from in Dust tables mass value
 					Mi_lower_Dust = find_agb_mass_bin_dust(lifetimeMasses[Mi_lower_AGB]);
 					Mi_upper_Dust = find_agb_mass_bin_dust(lifetimeMasses[Mi_upper_AGB]);
 
 					//Actual integration
 					int j;
 					for (j=Mi_lower_Dust;j<Mi_upper_Dust;j++)
-					//for (j=Mi_lower_Dust;j<AGB_DUST_MASS_NUM-1;j++)
-					//for (j=0;j<AGB_DUST_MASS_NUM-1;j++)
 					{       
 						int k;
 						for (k=0;k<AGB_DUST_TYPE_NUM;k++) { 
 							NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] += (AGBDustMasses[j+1]-AGBDustMasses[j]) * ((AGBDustCreated[Zi_Dust][j][k] + AGBDustCreated[Zi_Dust][j+1][k])/2.0);
-							//if (NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k] < 0.0) {
-							//	printf("0\t%d\t\t%f \t %f \t %f \t %f \t %f \n",j,NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k], AGBDustMasses[j+1], AGBDustMasses[j], AGBDustCreated[Zi_Dust][j][k], AGBDustCreated[Zi_Dust][j+1][k]);
-							//	}
-							
-						//	if (k==9) { //Cb dust
-						//	printf("%g\t%g\t%g\n",NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k],NormAGBYieldRate[(STEPS*snap)+step][i][Zi][2],NormAGBDustYieldRate[(STEPS*snap)+step][i][Zi][k]/NormAGBYieldRate[(STEPS*snap)+step][i][Zi][2]);
-						//	}		
-						
 							}
-					
-											
 					}	//for (j=Mi_lower_AGB;j<=Mi_upper_AGB;j++)
-					//} //if (Mi_lower_AGB <= Mi_upper_AGB)
-	        	    	
-
 	        	} //for (Zi=0;Zi<LIFETIME_Z_NUM;Zi++)
 	          } //for (j=0;j<=width_in_timesteps;j++) //MINI_BINS	
 	        } //for (i=0;i<=SFH_ibin_structure[(SFH_NBIN*snap)+step];i++)
-	        	
 	    } //for(step=0;step<STEPS;step++)
 	} //for(snap=0;snap<(LastDarkMatterSnapShot+1);snap++)
 	printf("Dust Yield integrals calculated.\n");
