@@ -3,6 +3,9 @@
  *
  *  Created on: Oct2016
  *      Author: scottclay
+ *
+ * Similar to Robs yields_read_tables
+ * Reads in the mass and metallicity dependent dust yield tables for use in the code
  */
 
 #include <stdio.h>
@@ -18,11 +21,6 @@
 
 void read_dust_yield_tables(void)
 {
-//Set as global variables in allvars.h
-//AGB_DUST_MASS_NUM = 27
-//AGB_DUST_METAL_NUM = 8
-//AGB_DUST_TYPE_NUM = 11
-
 	//------------------------------------------
 	//READ AGB MASS LIST:
 	//------------------------------------------
@@ -31,8 +29,6 @@ void read_dust_yield_tables(void)
 	int i1;
 	float m1;
 	static char *name1 = "Zhukovska_AGByields_Mass2.txt";
-	//float AGBDustMasses[AGB_DUST_MASS_NUM]; //Initial star masses [Msun] //now defined in allvars.h
-
 
 	sprintf(buf1, "./DustTables/%s", name1);
 
@@ -42,12 +38,10 @@ void read_dust_yield_tables(void)
           exit(0);
         }
 
-	//27 masses - set this as a global variable in allvars later
 	for(i1=0; i1<AGB_DUST_MASS_NUM; i1++)
         {
 	  fscanf(fd1, "%f", &m1);
 	  AGBDustMasses[i1] = m1;
-     //printf("%f\n", AGBDustMasses[i1]);
         }
 	fclose(fd1);
 	
@@ -59,7 +53,6 @@ void read_dust_yield_tables(void)
 	int i2;
 	float m2;
 	static char *name2 = "Zhukovska_AGByields_Metallicity3.txt";
-	//float AGBDustMetallicity[AGB_DUST_METAL_NUM]; //Initial star masses [Msun] //now defined in allvars.h
 
 	sprintf(buf2, "./DustTables/%s", name2);
 
@@ -69,12 +62,10 @@ void read_dust_yield_tables(void)
           exit(0);
         }
 
-	//8 metallicities - set this as a global variable in allvars later
 	for(i2=0; i2<AGB_DUST_METAL_NUM; i2++)
         {
 	  fscanf(fd2, "%f", &m2);
 	  AGBDustMetallicities[i2] = m2;
-      //printf("%f\n", AGBDustMetallicities[i2]);
         }
 	fclose(fd2);
 	
@@ -87,7 +78,6 @@ void read_dust_yield_tables(void)
 	int i3,j3,k3;
 	float m3;
 	static char *name3 = "Zhukovska_AGByields3.txt";
-	//float AGBDustCreated[AGB_DUST_METAL_NUM][AGB_DUST_MASS_NUM][AGB_DUST_TYPE_NUM]; //now defined in allvars.h
 
 	sprintf(buf3, "./DustTables/%s", name3);
 
@@ -105,8 +95,6 @@ void read_dust_yield_tables(void)
         			{
         			fscanf(fd3, "%f", &m3);
         			AGBDustCreated[i3][j3][k3] = m3 * Chabrier_IMF_dust(AGBDustMasses[j3]);
-        			//printf("%f\n", AGBDustCreated[i3][j3][k3]);
-        			//printf("%g\t%g\t%g\t%g\n",AGBDustMetallicities[i3],AGBDustMasses[j3],m3,AGBDustCreated[i3][j3][k3]);
 	        	}
 			}
 		}
