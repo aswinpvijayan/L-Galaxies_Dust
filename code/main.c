@@ -559,11 +559,13 @@ int join_galaxies_of_progenitors(int halonr, int ngalstart, int *cenngal)
 	  Gal[ngal].RadioAccretionRate=0.0;
 
 #ifdef DETAILED_DUST
+#ifdef FULL_DUST_RATES
       Gal[ngal].DustISMRates.AGB = 0.0;
 	  Gal[ngal].DustISMRates.SNII = 0.0;
 	  Gal[ngal].DustISMRates.SNIA = 0.0;
 	  Gal[ngal].DustISMRates.GROW = 0.0;
 	  Gal[ngal].DustISMRates.DEST = 0.0;
+#endif
 #endif	  
 	  
 #ifdef GALAXYTREE
