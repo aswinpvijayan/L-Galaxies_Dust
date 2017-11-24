@@ -849,25 +849,24 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 	    }
 	}//loop on all galaxies to detect mergers
 
+
 #ifdef DETAILED_METALS_AND_MASS_RETURN
-      //DELAYED ENRICHMENT AND MASS RETURN + FEEDBACK: No fixed yield or recycling fraction anymore. FB synced with enrichment
-      for (p = 0; p < ngal; p++) {
-		update_yields_and_return_mass(p, centralgal, deltaT/STEPS, nstep);
+		for (p = 0; p < ngal; p++) {
+			update_yields_and_return_mass(p, centralgal, deltaT/STEPS, nstep);
 #ifdef DETAILED_DUST
-		update_dust_mass(p, centralgal, deltaT/STEPS, nstep,halonr);
-		//printf("AGB = %g\t SNII = %g\t SNIA = %g\n",Gal[p].MetalsColdGas.agb,Gal[p].MetalsColdGas.type2,Gal[p].MetalsColdGas.type1a);
-#endif
-		
-#ifdef FEEDBACK_COUPLED_WITH_MASS_RETURN
-    if(TotalMassReturnedToColdDiskGas>0.)
-    	SN_feedback(p, centralgal, TotalMassReturnedToColdDiskGas, "ColdGas");
-    if(TotalMassReturnedToHotGas>0.)
-    	SN_feedback(p, centralgal, TotalMassReturnedToHotGas, "HotGas");
-#endif //Feedback
-	  
-	  } 
-#endif //FB_C_W_Mass_return
-    }/* end move forward in interval STEPS */
+			update_dust_mass(p, centralgal, deltaT/STEPS, nstep, halonr);
+#ifdef FEEDBACK_COUPLED_WITH_MASS_RETURN 
+//This takes place inside update_yields_and_return_mass if DETAILED_DUST is OFF
+    		if(TotalMassReturnedToColdDiskGas>0.)
+    			SN_feedback(p, centralgal, TotalMassReturnedToColdDiskGas, "ColdGas");
+    		if(TotalMassReturnedToHotGas>0.)
+    			SN_feedback(p, centralgal, TotalMassReturnedToHotGas, "HotGas");
+#endif //FEEDBACK_COUPLED_WITH_MASS_RETURN
+#endif //DETAILED_DUST
+	  	} // (p = 0; p < ngal; p++)
+#endif //DETAILED_METALS_AND_MASS_RETURN
+    }//(nstep = 0; nstep < STEPS; nstep++)
+
 
   for(p = 0; p < ngal; p++)
     {

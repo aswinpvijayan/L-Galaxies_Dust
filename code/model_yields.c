@@ -18,6 +18,11 @@
  *
  *  Created on: 18.11.2011
  *      Author: robyates
+ *
+ *
+ * NOTE: 
+
+
  */
 
 #include <stdio.h>
@@ -32,7 +37,6 @@
 
 void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 {
-    //elements_print("start",Gal[p].ColdGas_elements);
 	int Zi;
 	double timestep_width; //Width of current timestep in CODE UNITS
 	int TimeBin; //Bin in Yield arrays corresponding to current timestep
@@ -40,19 +44,14 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 #ifdef INDIVIDUAL_ELEMENTS
 	double NormSNIIYieldRate_actual[NUM_ELEMENTS], NormSNIaYieldRate_actual[NUM_ELEMENTS], NormAGBYieldRate_actual[NUM_ELEMENTS];
 #endif
-	//double MassDiff;
 	double timet, sfh_time;
-	//double time_to_ts; //Time from high-z (upper) edge of SFH bin to middle of current timestep (used for massive SNII to hot) [in Myrs]
-	//double tcut; //Maximum lifetime of stars that have their ejected put straight into the HotGas [in Myrs]
-	double /*ColdGasSurfaceDensity,*/ fwind, SNIIEjectaToHot; //Required for metal-rich wind implementation
+	double fwind, SNIIEjectaToHot; //Required for metal-rich wind implementation
 	double DiskSFR, step_width_times_DiskSFR, DiskSFR_physical_units, step_width_times_DiskSFR_physical_units, inverse_DiskMass_physical_units;
 	double BulgeSFR, step_width_times_BulgeSFR, BulgeSFR_physical_units, step_width_times_BulgeSFR_physical_units, inverse_BulgeMass_physical_units;
 	double ICMSFR, step_width_times_ICMSFR, ICMSFR_physical_units, step_width_times_ICMSFR_physical_units, inverse_ICM_physical_units;
 	double Disk_total_metallicity, Bulge_total_metallicity, ICM_total_metallicity;
 	double NormMassEjecRateSumAllTypes;
-//#ifndef DETAILED_DUST // THIS WOULD LIMIT ITS SCOPE TO THIS CODE - IDIOT
-//	double TotalMassReturnedToColdDiskGas, TotalMassReturnedToHotGas;
-//#endif
+
 	int n; //Iterator used for loop over NOUT when updating MassWeightedAge
 	double AgeCorrectionDisk[NOUT];
 	double AgeCorrectionBulge[NOUT];
@@ -85,14 +84,15 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     for (i=0;i<=Gal[p].sfh_ibin;i++) //LOOP OVER SFH BINS
     {
     	sfh_time=Gal[p].sfh_t[i]+(0.5*Gal[p].sfh_dt[i]);
-    	//time_to_ts = ((sfh_time+(0.5*Gal[p].sfh_dt[i])) - timet)*(UnitTime_in_years/Hubble_h)/1.0e6; //Time from high-z (upper) edge of SFH bin to middle of current timestep [in Myrs]
-    	//tcut = 2.0*((Gal[p].Rvir/Gal[p].Vvir)/0.0001); //Maximum lifetime of stars that have their ejected put straight into the HotGas [in Myrs]
+
 #ifdef DETAILED_DUST
+// These variables store the amount of metals produced by SNe in a timestep for use in
+// model_dustyields.c
 		SNII_prevstep_Cold_Si[i] = 0.0;
 		SNII_prevstep_Cold_Fe[i] = 0.0;
 		SNII_prevstep_Cold_Cb[i] = 0.0;
 		SNIa_prevstep_Cold_Fe[i] = 0.0;
-#endif //DDust
+#endif //DETAILED_DUST
 
 
     //*****************************************
@@ -123,17 +123,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	NormSNIIMetalEjecRate_actual = NormSNIIMetalEjecRate[TimeBin][i][Zi] + ((NormSNIIMetalEjecRate[TimeBin][i][Zi+1] - NormSNIIMetalEjecRate[TimeBin][i][Zi])*Zi_disp);
     	NormSNIaMetalEjecRate_actual = NormSNIaMetalEjecRate[TimeBin][i][Zi] + ((NormSNIaMetalEjecRate[TimeBin][i][Zi+1] - NormSNIaMetalEjecRate[TimeBin][i][Zi])*Zi_disp);
     	NormAGBMetalEjecRate_actual = NormAGBMetalEjecRate[TimeBin][i][Zi] + ((NormAGBMetalEjecRate[TimeBin][i][Zi+1] - NormAGBMetalEjecRate[TimeBin][i][Zi])*Zi_disp);
-/*
-		printf("Here %g %g %g %g\n"
-		,NormSNIIMassEjecRate_actual
-		,NormSNIaMassEjecRate_actual
-		,NormAGBMassEjecRate_actual 
-		,Zi_disp);
-		
-		printf("Disk_total_metallicity = %g\n",Disk_total_metallicity);
-		printf("%g %g %g\n",Gal[p].sfh_MetalsDiskMass[i].type2,Gal[p].sfh_MetalsDiskMass[i].type1a,Gal[p].sfh_MetalsDiskMass[i].agb);
-*/
-
 
 #ifdef INSTANTANEOUS_RECYCLE //to recover results from instantaneous recycling approximation
     	reset_ejection_rates(i, Gal[p].sfh_ibin,
@@ -144,7 +133,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 
     	//pre-calculations to speed up the code
      	NormMassEjecRateSumAllTypes = NormSNIIMassEjecRate_actual + NormSNIaMassEjecRate_actual + NormAGBMassEjecRate_actual;
-    //elements_print("1",Gal[p].ColdGas_elements);
 #ifdef INDIVIDUAL_ELEMENTS
     	int k;
 	    for (k=0;k<NUM_ELEMENTS;k++)
@@ -187,7 +175,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 #endif
 	    Gal[p].MetalsColdGas.agb += max(0.0, step_width_times_DiskSFR * (NormAGBMetalEjecRate_actual + (Disk_total_metallicity * NormAGBMassEjecRate_actual)));
 
-    //elements_print("2",Gal[p].ColdGas_elements);
 #ifdef INDIVIDUAL_ELEMENTS
 #ifdef PORTINARI
 #ifndef SNIATOHOT
@@ -197,25 +184,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].HotGas_elements.He += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.He += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[1] + NormAGBYieldRate_actual[1]) + (Gal[p].sfh_ElementsDiskMass[i].He*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    //elements_print("2.1",Gal[p].ColdGas_elements);
-    /*
-    
-			printf("%g %g %g %g %g %g %g %g %g %g\n"
-			,fwind
-    		,step_width_times_DiskSFR_physical_units
-    		,Gal[p].sfh_ElementsDiskMass[i].H 
-    		,NormSNIIMassEjecRate_actual
-    		,step_width_times_DiskSFR_physical_units
-    		,NormSNIaYieldRate_actual[0]
-    		,NormAGBYieldRate_actual[0]
-    		,Gal[p].sfh_ElementsDiskMass[i].H
-    		,inverse_DiskMass_physical_units
-    		,NormAGBMassEjecRate_actual);
-    
-    
-    */
-    
-    
 #ifndef MAINELEMENTS
     		Gal[p].HotGas_elements.Cb += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Cb += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
@@ -244,21 +212,18 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].HotGas_elements.Fe += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10] + NormAGBYieldRate_actual[10]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    //elements_print("2.2",Gal[p].ColdGas_elements);
 #else
     		Gal[p].HotGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIIYieldRate_actual[2] + NormSNIaYieldRate_actual[2] + NormAGBYieldRate_actual[2]) + (Gal[p].sfh_ElementsDiskMass[i].O*inverse_DiskMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
     		Gal[p].HotGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIIYieldRate_actual[3] + NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
     		Gal[p].HotGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIIYieldRate_actual[4] + NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
 #endif //MAINELEMENTS
-#ifdef DETAILED_DUST //Inside SNIA TO COLD!
+#ifdef DETAILED_DUST //SNIA TO COLD! //PORTINARI
 			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNIa_prevstep_Cold_Fe[i] += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10])));
-			//printf("NormSNIaYieldRate_actual[10] = %g\n",NormSNIaYieldRate_actual[10]);
-#endif //DDust
-    //elements_print("2.3",Gal[p].ColdGas_elements);
-#endif //SNIATOHOT
+#endif //DETAILED_DUST
+#endif //NOT SNIATOHOT
 #ifdef SNIATOHOT
     		Gal[p].HotGas_elements.H += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[0] + (Gal[p].sfh_ElementsDiskMass[i].H * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual)); //SN-II ejecta to HotGas in metal-rich wind (fwind)
     		Gal[p].HotGas_elements.H += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[0]); //SN-Ia ejecta to HotGas
@@ -319,15 +284,14 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
         	Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
         	Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
 #endif //MAINELEMENTS
-#ifdef DETAILED_DUST //Inside SNIA TO HOT!
+#ifdef DETAILED_DUST //SNIA TO HOT! //PORTINARI
 			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNIa_prevstep_Cold_Fe[i] += 0.0; //SNIA has gone to hot gas
-#endif //DDust
+#endif //DETAILED_DUST
 #endif //SNIATOHOT
 #endif //PORTINARI
-    //elements_print("3",Gal[p].ColdGas_elements);
 
 #ifdef CHIEFFI
 #ifndef SNIATOHOT
@@ -376,7 +340,7 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
     		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
 #endif //MAINELEMENTS
-#ifdef DETAILED_DUST //Inside SNIA TO COLD //CHIEFFI 
+#ifdef DETAILED_DUST //SNIA TO COLD //CHIEFFI 
 			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[7]);
 			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10]);
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
@@ -452,7 +416,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 #endif //SNIATOHOT
 #endif //CHIEFFI
 #endif //INDIVIDUAL_ELEMENTS
-    //elements_print("4",Gal[p].ColdGas_elements);
     	//UPDATE DISK MASS COMPONENTS:
     	/*ROB (13-02-13): All the mass/metals/elements in the stars that die in this timestep are lost from the stellar component.
     	//i.e. All the mass/metals/elements in the stars at birth are removed...
@@ -547,9 +510,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	Gal[p].MetalsHotGas.type1a += max(0.0, step_width_times_BulgeSFR * NormSNIaMetalEjecRate_actual);
     	Gal[p].MetalsHotGas.agb += max(0.0, step_width_times_BulgeSFR * (NormAGBMetalEjecRate_actual + (Bulge_total_metallicity * NormAGBMassEjecRate_actual)));
 
-    	/*if (p==0 && Gal[p].sfh_ICM[i] > 0.0) {printf("Bulge:\n");}
-    	if (p==0 && Gal[p].sfh_ICM[i] > 0.0) {printf("%.11f | %.11f %.11f %.11f\n", NormMassEjecRateSumAllTypes, NormSNIIMassEjecRate_actual, NormSNIaMassEjecRate_actual, NormAGBMassEjecRate_actual);}
-    	if (p==0 && Gal[p].sfh_ICM[i] > 0.0) {printf("%.11f | %.11f %.11f %.11f | %.11f\n", max(0.0, step_width_times_BulgeSFR * NormMassEjecRateSumAllTypes), max(0.0, step_width_times_BulgeSFR * (NormSNIIMetalEjecRate_actual + (Bulge_total_metallicity * NormSNIIMassEjecRate_actual))), max(0.0, step_width_times_BulgeSFR * NormSNIaMetalEjecRate_actual), max(0.0, step_width_times_BulgeSFR * (NormAGBMetalEjecRate_actual + (Bulge_total_metallicity * NormAGBMassEjecRate_actual))), max(0.0, step_width_times_BulgeSFR * NormSNIaMetalEjecRate_actual) + max(0.0, step_width_times_BulgeSFR * (NormAGBMetalEjecRate_actual + (Bulge_total_metallicity * NormAGBMassEjecRate_actual))));}*/
 #ifdef INDIVIDUAL_ELEMENTS
 #ifdef PORTINARI
     	Gal[p].HotGas_elements.H += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[0] + NormSNIaYieldRate_actual[0] + NormAGBYieldRate_actual[0]) + (Gal[p].sfh_ElementsBulgeMass[i].H*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
@@ -593,8 +553,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 #else //BULGE_TO_COLD
     	Gal[p].ColdGas += max(0.0, step_width_times_BulgeSFR * NormMassEjecRateSumAllTypes);
     	TotalMassReturnedToColdDiskGas += max(0.0, step_width_times_BulgeSFR * NormMassEjecRateSumAllTypes);
-    	//TotalMassReturnedToHotGas += 0.0;
-    	//printf("BulgeToCold = %f\n\n", step_width_times_BulgeSFR * NormMassEjecRateSumAllTypes);
 #ifdef PORTINARI
     	Gal[p].MetalsColdGas.type2 += max(0.0, step_width_times_BulgeSFR * (NormSNIIMetalEjecRate_actual + (Bulge_total_metallicity * NormSNIIMassEjecRate_actual)));
 #endif
@@ -739,10 +697,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	Gal[p].MetalsHotGas.type1a += max(0.0, step_width_times_ICMSFR * NormSNIaMetalEjecRate_actual);
     	Gal[p].MetalsHotGas.agb += max(0.0, step_width_times_ICMSFR * (NormAGBMetalEjecRate_actual + (ICM_total_metallicity * NormAGBMassEjecRate_actual)));
 
-    	/*if (p==0) {printf("ICL:\n");}
-    	if (p==0) {printf("%.11f | %.11f %.11f %.11f\n", NormMassEjecRateSumAllTypes, NormSNIIMassEjecRate_actual, NormSNIaMassEjecRate_actual, NormAGBMassEjecRate_actual);}
-    	if (p==0) {printf("%.11f | %.11f %.11f %.11f | %.11f\n\n", max(0.0, step_width_times_ICMSFR * NormMassEjecRateSumAllTypes), max(0.0, step_width_times_ICMSFR * (NormSNIIMetalEjecRate_actual + (ICM_total_metallicity * NormSNIIMassEjecRate_actual))), max(0.0, step_width_times_ICMSFR * NormSNIaMetalEjecRate_actual), max(0.0, step_width_times_ICMSFR * (NormAGBMetalEjecRate_actual + (ICM_total_metallicity * NormAGBMassEjecRate_actual))), max(0.0, step_width_times_ICMSFR * NormSNIaMetalEjecRate_actual) + max(0.0, step_width_times_ICMSFR * (NormAGBMetalEjecRate_actual + (ICM_total_metallicity * NormAGBMassEjecRate_actual))));}*/
-
 #ifdef INDIVIDUAL_ELEMENTS
 #ifdef PORTINARI
     	Gal[p].HotGas_elements.H += max(0.0, step_width_times_ICMSFR_physical_units * ((NormSNIIYieldRate_actual[0] + NormSNIaYieldRate_actual[0] + NormAGBYieldRate_actual[0]) + (Gal[p].sfh_ElementsICM[i].H*inverse_ICM_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
@@ -810,17 +764,18 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	Gal[p].ICM_elements.Fe -= max(0.0, step_width_times_ICMSFR_physical_units * ((Gal[p].sfh_ElementsICM[i].Fe*inverse_ICM_physical_units)*NormMassEjecRateSumAllTypes));
 #endif //INDIVIDUAL_ELEMENTS
 
-    	/*//Update ages:
-        for(n=0;n<NOUT;n++)
-        {
-        	AgeCorrectionICM[n] += max(0.0, (sfh_time-NumToTime(ListOutputSnaps[n]))*(step_width_times_ICMSFR * NormMassEjecRateSumAllTypes));
-        }*/
     } //if (Gal[p].sfh_ICM[i] > 0.0) //ICM
 
     } //for (i=0;i<=Gal[p].sfh_ibin;i++) //MAIN LOOP OVER SFH BINS
 
-    /*//CALL SN-FEEDBACK RECIPE: Sending total mass returned to ColdGas to calculate FB energy:
-    SN_feedback(p, centralgal, TotalMassReturnedToColdDiskGas);*/
+#ifndef DETAILED_DUST
+	// IF DETAILED_DUST is switched ON 
+	// SN-Feedback must be called AFTER BOTH model_yields AND model_dustyields
+	// and now appears inside main.c if this is the case! 
+
+    //CALL SN-FEEDBACK RECIPE: Sending total mass returned to ColdGas to calculate FB energy:
+    SN_feedback(p, centralgal, TotalMassReturnedToColdDiskGas);
+#endif     
 
     //Update Mass-weighted ages:
     for(n=0;n<NOUT;n++)
@@ -840,7 +795,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	Hotmetallicity[ii]=metals_total(Gal[p].MetalsHotGas)/Gal[p].HotGas/((float)RNUM);
     }
 #endif
-    //elements_print("6",Gal[p].ColdGas_elements);
 }
 
 int find_initial_metallicity(int p, int sfh_bin, int table_type, int component_type)
