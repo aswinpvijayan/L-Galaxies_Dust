@@ -416,11 +416,9 @@ void update_from_feedback(int p, int centralgal, double reheated_mass, double ej
 	  fraction_sn_feedback = ((float)reheated_mass)/Gal[p].ColdGas; 
 #endif
 	  transfer_gas(p,"Hot",p,"Cold",((float)reheated_mass)/Gal[p].ColdGas,"update_from_feedback", __LINE__);
-	  //printf("AA p = %d\treheat_mass = %g\tcoldgas = %g\n",p,((float)reheated_mass),Gal[p].ColdGas);
 #ifdef DETAILED_DUST
 	  transfer_dust_to_hot(p,fraction_sn_feedback);
 #endif	  
-	  //printf("BB p = %d\treheat_mass = %g\tcoldgas = %g\n",p,((float)reheated_mass),Gal[p].ColdGas);
 	}
       else if(Gal[p].Type <3)
 	{

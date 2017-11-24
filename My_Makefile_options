@@ -123,11 +123,10 @@ OPT += -DDUST_AGB
 OPT += -DDUST_SNII
 OPT += -DDUST_SNIA
 OPT += -DDUST_GROWTH
-#OPT += -DFULL_DUST_RATES
+OPT += -DFULL_DUST_RATES
 OPT += -DDUST_DESTRUCTION
 OPT += -DREDUCED_OUTPUT
 OBJS += ./code/model_dustyields.o
-OBJS += ./code/dustyields_functions.o
 OBJS += ./code/dustyields_integrals.o
 OBJS += ./code/dustyields_read_tables.o
 

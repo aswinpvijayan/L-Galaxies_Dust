@@ -361,29 +361,11 @@ void init_galaxy(int p, int halonr)
 #endif
 
 #ifdef DETAILED_DUST
-Gal[p].DustISM = DustMass_init();
-
-Gal[p].DustISMRates.AGB = 0.0;
-Gal[p].DustISMRates.SNII = 0.0;
-Gal[p].DustISMRates.SNIA = 0.0;
-Gal[p].DustISMRates.GROW = 0.0;
-Gal[p].DustISMRates.DEST = 0.0;
-
+// Initialise dust as an array of elements - no longer a structure of its own 
+// This assumes all dust is in the ISM. If you add/consider dust in the CGM/ICM etc. you
+// should create a new structure i.e. Gal[p].Dust_CGM_elements
 Gal[p].Dust_elements = elements_init();
-/*
-Gal[p].Dust_elements.H = 1.0E-10;
-Gal[p].Dust_elements.He= 1.0E-10;
-Gal[p].Dust_elements.Cb= 1.0E-10;
-Gal[p].Dust_elements.N = 1.0E-10;
-Gal[p].Dust_elements.O = 1.0E-10;
-Gal[p].Dust_elements.Ne= 1.0E-10;
-Gal[p].Dust_elements.Mg= 1.0E-10;
-Gal[p].Dust_elements.Si= 1.0E-10;
-Gal[p].Dust_elements.S = 1.0E-10;
-Gal[p].Dust_elements.Ca= 1.0E-10;
-Gal[p].Dust_elements.Fe= 1.0E-10;
-*/
-#endif //DDust
+#endif //DETAILED_DUST
 
 }
 
@@ -1198,18 +1180,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
 #ifdef DETAILED_DUST
 void transfer_dust_from_starformation(int p, double fraction)
   {  
-  //	printf("1fraction = %g\n",fraction);
-	Gal[p].DiskMass_elements.Cb += fraction * Gal[p].Dust_elements.Cb;
-	Gal[p].DiskMass_elements.N  += fraction * Gal[p].Dust_elements.N;
-	Gal[p].DiskMass_elements.O  += fraction * Gal[p].Dust_elements.O;
-	Gal[p].DiskMass_elements.Ne += fraction * Gal[p].Dust_elements.Ne;
-	Gal[p].DiskMass_elements.Mg += fraction * Gal[p].Dust_elements.Mg;
-	Gal[p].DiskMass_elements.Si += fraction * Gal[p].Dust_elements.Si;
-	Gal[p].DiskMass_elements.S  += fraction * Gal[p].Dust_elements.S;
-	Gal[p].DiskMass_elements.Ca += fraction * Gal[p].Dust_elements.Ca;
-	Gal[p].DiskMass_elements.Fe += fraction * Gal[p].Dust_elements.Fe;
-  
-	/*
+	//Don't need to transfer any dust -> disk metals as dust is considered
+	//part of metals. But we do need to destroy the correct amount of dust
 	Gal[p].Dust_elements.Cb -= fraction * Gal[p].Dust_elements.Cb;
 	Gal[p].Dust_elements.N  -= fraction * Gal[p].Dust_elements.N;
 	Gal[p].Dust_elements.O  -= fraction * Gal[p].Dust_elements.O;
@@ -1219,20 +1191,12 @@ void transfer_dust_from_starformation(int p, double fraction)
 	Gal[p].Dust_elements.S  -= fraction * Gal[p].Dust_elements.S;
 	Gal[p].Dust_elements.Ca -= fraction * Gal[p].Dust_elements.Ca;
 	Gal[p].Dust_elements.Fe -= fraction * Gal[p].Dust_elements.Fe;
-  */
+  
   return;
   }  
 
 void transfer_dust_mergers(int p, int q)
   {
-  /*	
-  struct DustMass DustYield;
-  DustYield= DustMass_init();
-  DustYield= DustMass_add(DustMass_init(),Gal[q].DustISM,1.0);
-  Gal[p].DustISM = DustMass_add(Gal[p].DustISM, DustYield, 1.0);
-  Gal[q].DustISM = DustMass_add(Gal[q].DustISM, DustYield, -1.0);
-  */
-
 	Gal[p].Dust_elements.Cb += Gal[q].Dust_elements.Cb;
 	Gal[p].Dust_elements.N  += Gal[q].Dust_elements.N;
 	Gal[p].Dust_elements.O  += Gal[q].Dust_elements.O;
@@ -1258,18 +1222,7 @@ void transfer_dust_mergers(int p, int q)
  
 void transfer_dust_to_hot(int p, double fraction)
   {
-//  	printf("1fraction = %g\n",fraction);
-	/*
-	Gal[p].HotGas_elements.Cb += fraction * Gal[p].Dust_elements.Cb;
-	Gal[p].HotGas_elements.N  += fraction * Gal[p].Dust_elements.N;
-	Gal[p].HotGas_elements.O  += fraction * Gal[p].Dust_elements.O;
-	Gal[p].HotGas_elements.Ne += fraction * Gal[p].Dust_elements.Ne;
-	Gal[p].HotGas_elements.Mg += fraction * Gal[p].Dust_elements.Mg;
-	Gal[p].HotGas_elements.Si += fraction * Gal[p].Dust_elements.Si;
-	Gal[p].HotGas_elements.S  += fraction * Gal[p].Dust_elements.S;
-	Gal[p].HotGas_elements.Ca += fraction * Gal[p].Dust_elements.Ca;
-	Gal[p].HotGas_elements.Fe += fraction * Gal[p].Dust_elements.Fe;
-  */
+  	//Dust is actually not transferred to hot phase - just destroy it
 	Gal[p].Dust_elements.Cb -= fraction * Gal[p].Dust_elements.Cb;
 	Gal[p].Dust_elements.N  -= fraction * Gal[p].Dust_elements.N;
 	Gal[p].Dust_elements.O  -= fraction * Gal[p].Dust_elements.O;
@@ -1283,9 +1236,7 @@ void transfer_dust_to_hot(int p, double fraction)
   return;
   }
   
-  
-  
-#endif //DDust
+#endif //DETAILED_DUST
 
 
 

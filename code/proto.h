@@ -368,23 +368,6 @@ int find_agb_mass_bin_dust(double masslimit);
 void find_actual_ejecta_limits_dust(int channel_type, double Mi_lower_actual, double Mi_upper_actual, int Mi_lower, int Mi_upper, int Zi, double* Yields_lower_actual, double* Yields_upper_actual);
 
 
-//in dust_functions.c
-struct DustMass DustMass_init();
-
-float DustMass_Total(struct DustMass dust);
-void Print_Dust(struct DustMass dust);
-float DustMass_Total_SiC(struct DustMass dust);
-float DustMass_Total_Sil(struct DustMass dust);
-float DustMass_Total_Cb(struct DustMass dust);
-float DustMass_Total_Fe(struct DustMass dust);
-float DustMass_AGB_Total(struct DustMass dust);
-float DustMass_SNII_Total(struct DustMass dust);
-float DustMass_SNIa_Total(struct DustMass dust);
-float DustMass_Growth_Total(struct DustMass dust);
-float DustMass_Destruction_Total(struct DustMass dust);
-float DustMass_Total_Created(struct DustMass dust);
-float DustMass_Total_Created_Minus_Destroy(struct DustMass dust);
-struct DustMass DustMass_add(struct DustMass dust1, struct DustMass dust2, float fraction);
 
 void transfer_dust_from_starformation(int p, double fraction);
 void transfer_dust_mergers(int p, int q);

@@ -162,53 +162,6 @@ struct elements
 #endif //DETAILED_METALS_AND_MASS_RETURN
 
 #ifdef DETAILED_DUST 			//Scott 15/11/2015
-
-struct DustMass
-{
-	struct AGB_dust
-	{
-		float SiC; 
-		float Sil;
-		float Cb;
-		float Fe;
-	}AGB;
-	struct SNII_dust
-	{
-		float SiC; 
-		float Sil;
-		float Cb;
-		float Fe;
-	}SNII;
-	struct SNIa_dust
-	{
-		float SiC; 
-		float Sil;
-		float Cb;
-		float Fe;
-	}SNIa;
-	struct Grown_dust
-	{
-		float SiC; 
-		float Sil;
-		float Cb;
-		float Fe;
-	}Growth;
-	struct Destruc_SNe
-	{
-		float SiC; 
-		float Sil;
-		float Cb;
-		float Fe;
-	}Destruction_SNe;
-	struct Destruc_SF
-	{
-		float SiC; 
-		float Sil;
-		float Cb;
-		float Fe;
-	}Destruction_SF;
-};
-
 struct DustRates
 {
 	float AGB;
@@ -217,11 +170,6 @@ struct DustRates
 	float GROW;
 	float DEST;
 };
-
-//struct DustMass DustISM;		//DustISM.AGB.SiC
-//struct DustMass DustICM;
-//struct DustMass DustCGM;	
-
 #endif //DETAILED_DUST
 
 
@@ -454,17 +402,11 @@ struct GALAXY_OUTPUT
 #endif //INDIVIDUAL_ELEMENTS
 
 #ifdef DETAILED_DUST
-	#ifdef FULL_DUST
-	struct DustMass DustISM;		//DustISM.AGB.SiC
-	#endif
 	#ifdef FULL_DUST_RATES
 	struct DustRates DustISMRates;		
 	#endif
-	struct elements Dust_elements; 
-#ifdef DETAILED_ATTENUATION	
-	float Attenuation_Dust;
-#endif
-#endif
+	struct elements Dust_elements; //Dust is now stored as an elements array
+#endif //DETAILED_DUST
 
 
 };
@@ -724,13 +666,9 @@ struct GALAXY			/* Galaxy data */
 #endif //INDIVIDUAL_ELEMENTS
 
 #ifdef DETAILED_DUST
-	struct DustMass DustISM;		//DustISM.AGB.SiC
 	struct DustRates DustISMRates;		
 	struct elements Dust_elements; 
-#ifdef DETAILED_ATTENUATION
-	float Attenuation_Dust;
-#endif
-#endif
+#endif //DETAILED_DUST
 
 
 
@@ -1133,24 +1071,25 @@ double TotalMassReturnedToHotGas;
 #endif //DETAILED_METALS_AND_MASS_RETURN
 
 #ifdef DETAILED_DUST
-#define AGB_DUST_MASS_NUM 28
-#define AGB_DUST_METAL_NUM 4//6
-#define AGB_DUST_TYPE_NUM 11
 
-#define SIL_SI_DUST_FRACTION 0.5
-#define SIL_MG_DUST_FRACTION 0.5
+// Numbers for reading in dust tables in dustyields_read_tables.c
+#define AGB_DUST_MASS_NUM 28
+#define AGB_DUST_METAL_NUM 4 
+#define AGB_DUST_TYPE_NUM 11
 
 float AGBDustMasses[AGB_DUST_MASS_NUM]; //Initial star masses [Msun]
 float AGBDustMetallicities[AGB_DUST_METAL_NUM]; //Initial star metallicities [Msun]
 float AGBDustCreated[AGB_DUST_METAL_NUM][AGB_DUST_MASS_NUM][AGB_DUST_TYPE_NUM]; //Total mass ejected [Msun]
 
-float NormAGBDustYieldRate[(STEPS*MAXSNAPS)][SFH_NBIN][LIFETIME_Z_NUM][AGB_DUST_TYPE_NUM]; //+10????????
+float NormAGBDustYieldRate[(STEPS*MAXSNAPS)][SFH_NBIN][LIFETIME_Z_NUM][AGB_DUST_TYPE_NUM]; 
 
+// Variables to hold amount of metals created in prev time step in model_yields.c
 float SNII_prevstep_Cold_Si[SFH_NBIN];
 float SNII_prevstep_Cold_Fe[SFH_NBIN];
 float SNII_prevstep_Cold_Cb[SFH_NBIN];
 float SNIa_prevstep_Cold_Fe[SFH_NBIN];
 
+// For storing metallicity in model_yields.c
 int Zi_saved;
 float Zi_disp_saved;
 
