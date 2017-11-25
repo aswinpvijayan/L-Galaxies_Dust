@@ -49,9 +49,9 @@ You will probably need to change the filepaths or obtain treefiles/coolfunctions
 
 To compile the model ```make```
 
-To run the model locally on box 5 of MR   ```./L-Galaxies input.1```
+To run the model locally on box 5 of MR   ```./L-Galaxies ./input/input_MR_W1_PLANCK_local.par```
 
-To run the model locally on box 40 of MRII ```./L-Galaxies input.2```
+To run the model locally on box 40 of MRII ```./L-Galaxies ./input/input_MRII_W1_PLANCK_local.par```
 
 To run the model on apollo for all MR at Sussex ```qsub batch_MR_apollo.sh``` 
 
