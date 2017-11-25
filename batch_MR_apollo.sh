@@ -31,7 +31,7 @@ umask 002
 #$ -N Clay17_Dust_MR
 # Name and location of the output file
 # SGE will only substitute certain variables here
-#$ -o /lustre/scratch/astro/sc558/output/dust/logs/$JOB_NAME_$TASK_ID.log
+#$ -o ./logs/$JOB_NAME_$TASK_ID.log
 
 # The parentheses here allow one to do algebra with shell variables
 i=$(($SGE_TASK_ID -1))
@@ -40,10 +40,10 @@ ff=$(($i))
 lf=$(($i))
 
 # Create personalised input parameter files
-echo FirstFile $ff | cat >  input_batch/input.500_$i
-echo LastFile $lf | cat >>  input_batch/input.500_$i
-echo MaxMemSize 8000 >> input_batch/input.500_$i
-cat input/input.500 >> input_batch/input.500_$i
+echo FirstFile $ff | cat >  input/input_batch/input.MR_$i
+echo LastFile $lf | cat >>  input/input_batch/input.MR_$i
+echo MaxMemSize 8000 >> input/input_batch/input.MR_$i
+cat input/input_MR_W1_PLANCK_apollo.par >> input/input_batch/input.MR_$i
 
 # Run jobs
-./L-Galaxies input_batch/input.500_$i
+./L-Galaxies input/input_batch/input.MR_$i
