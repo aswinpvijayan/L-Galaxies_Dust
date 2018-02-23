@@ -8,9 +8,9 @@ LastFile          5
 
 FileWithOutputRedshifts   ./input/desired_output_redshifts.txt
 McFile				      ./input/Mc.txt
-CoolFunctionsDir          ../Trees_Tables/CoolFunctions/
+CoolFunctionsDir          CoolFunctions/
 
-SpecPhotDir               ../Trees_Tables/SpecPhotTables/
+SpecPhotDir               SpecPhotTables/
 PhotPrefix                PLANCK_M05 ; WMAP7_BC03 ;WMAP7_CB07
 SpecPhotIMF               Chabrier ; Salpeter ; Kroupa 
 FileWithFilterNames       ./input/Filter_Names.txt
@@ -20,12 +20,12 @@ FileWithFilterNames       ./input/Filter_Names.txt
 %----- Simulation input/output files  ------------
 %-------------------------------------------------
 
-SimulationDir	        ../Trees_Tables/MR/
+SimulationDir	        MergerTrees/MR/
 
 LastDarkMatterSnapShot  63
 Hashbits                8    ;needed for Peano hilbert key output with the GALAXYTREE option
 
-OutputDir               ./output/
+OutputDir               output/
 
 MaxMemSize              3000 ; 70000 ; 100000 galtree
 
