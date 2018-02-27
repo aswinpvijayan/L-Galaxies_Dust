@@ -76,7 +76,23 @@ CREATE TABLE GALAXIES (
 ,  elements struct NOT NULL 
 ,  dustRates struct NOT NULL 
 ,  elements struct NOT NULL 
-,  attenuation_Dust REAL NOT NULL 
+,  gALAXY_OUTPUT_1 struct NOT NULL 
+,  gALAXY_OUTPUT_2 struct NOT NULL 
+,  gALAXY_OUTPUT_3 struct NOT NULL 
+,  gALAXY_OUTPUT_4 struct NOT NULL 
+,  gALAXY_OUTPUT_5 struct NOT NULL 
+,  gALAXY_OUTPUT_6 struct NOT NULL 
+,  gALAXY_OUTPUT_7 struct NOT NULL 
+,  gALAXY_OUTPUT_8 struct NOT NULL 
+,  gALAXY_OUTPUT_9 struct NOT NULL 
+,  gALAXY_OUTPUT_10 struct NOT NULL 
+,  gALAXY_OUTPUT_11 struct NOT NULL 
+,  gALAXY_OUTPUT_12 struct NOT NULL 
+,  gALAXY_OUTPUT_13 struct NOT NULL 
+,  gALAXY_OUTPUT_14 struct NOT NULL 
+,  gALAXY_OUTPUT_15 struct NOT NULL 
+,  gALAXY_OUTPUT_16 struct NOT NULL 
+,  gALAXY_OUTPUT_17 struct NOT NULL 
 )
 CREATE TABLE SFH_Times (
  snapnum INTEGER NOT NULL 

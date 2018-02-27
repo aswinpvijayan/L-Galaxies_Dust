@@ -63,7 +63,7 @@ struct LGalaxy {
    struct elements EjectedMass_elements;
   struct DustRates DustISMRates;
   struct elements Dust_elements;
-  float Attenuation_Dust;
+ struct GALAXY_OUTPUT galaxy_output_hdf5[17][1000];
 };
 struct MoMaFGalaxy {
   long long GalID;

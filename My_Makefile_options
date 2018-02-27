@@ -22,7 +22,15 @@ OPT += -DUPDATETYPETWO       # This updates the positions of type 2 galaxies whe
 
 # Debugging options
 #OPT += -DMASS_CHECKS         # Check for mass conservation at every stage of galaxy building
+#OPT += -DDEBUG
 
+OPT += -DHDF5_OUTPUT         # Output the data in HDF5 format
+ifeq (HDF5_OUTPUT,$(findstring HDF5_OUTPUT,$(OPT)))
+OBJS += ./code/io_hdf5.o
+OPT += -DNRECORDS_APP=1000 # Number of galaxies to append at a time
+OPT += -DCOMPRESS=0  # 1 to turn compression on and 0 to turn it off
+OPT += -DCHUNK_SIZE=1000 # size of chunk for hdf5 to output the data (optimised)
+endif
 
 # record star formation histories - used for post-process mags and detailed chemical enrichment
 OPT += -DSTAR_FORMATION_HISTORY

@@ -377,3 +377,11 @@ void transfer_dust_to_hot(int p, double fraction);
 
 void print_galaxy(char string[], int p, int halonr);
 
+#ifdef HDF5_OUTPUT
+void open_hdf5_file(int filenr);
+void write_input_table(char *name);
+void write_prop_table(void );
+void create_hdf5_table(int n);
+void hdf5_append_data(int n,struct GALAXY_OUTPUT * galaxy_output,int nrecords_app);
+void hdf5_close();
+#endif

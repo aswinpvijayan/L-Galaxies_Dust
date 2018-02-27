@@ -136,5 +136,5 @@ endif
 
 # Debugging options
 #OPT += -DMASS_CHECKS         # Check for mass conservation at every stage of galaxy building
-
+#OPT += -DDEBUG
 

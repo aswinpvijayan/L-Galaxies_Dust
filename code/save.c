@@ -63,43 +63,53 @@ void create_galaxy_files(int filenr)
 {
   // create output files - snapshot option
   int n, i;
+
+#ifdef HDF5_OUTPUT
+
+  open_hdf5_file(filenr);
+
+#else //HDF5_OUTPUT
+
+  // create output files - snapshot option
   char buf[1000];
 
-  for(n = 0; n < NOUT; n++)
-    {
-      for(i = 0; i < Ntrees; i++)
-    	TreeNgals[n][i] = 0;
+#endif //HDF5_OUTPUT
 
+  for(n = 0; n < NOUT; n++) {
+      for(i = 0; i < Ntrees; i++) TreeNgals[n][i] = 0;
+#ifdef HDF5_OUTPUT
+      create_hdf5_table(n);
+#else
       sprintf(buf, "%s/%s_z%1.2f_%d", OutputDir, FileNameGalaxies, ZZ[ListOutputSnaps[n]], filenr);
-      if(!(FdGalDumps[n] = fopen(buf, "w+")))
-        {
+      if(!(FdGalDumps[n] = fopen(buf, "w+"))) {
     	  char sbuf[1000];
     	  sprintf(sbuf, "can't open file `%s'\n", buf);
     	  terminate(sbuf);
-        }
-
-
+      }
       fseek(FdGalDumps[n], (2 + Ntrees) * sizeof(int), SEEK_SET);	/* skip the space for the header */
-
       TotGalaxies[n] = 0;
-    }
+#endif //HDF5_OUTPUT
+  }
 }
 
 void close_galaxy_files(void)
 {
   int n;
 
-  for(n = 0; n < NOUT; n++)
-    {
+#ifdef HDF5_OUTPUT
+  for(n=0;n < NOUT; n++)
+      hdf5_append_data(n,galaxy_output_hdf5[n],b[n]); // Output the final galaxies
+  hdf5_close();
+#else //HDF5_OUTPUT
+  for(n = 0; n < NOUT; n++) {
       fseek(FdGalDumps[n], 0, SEEK_SET);
       myfwrite(&Ntrees, sizeof(int), 1, FdGalDumps[n]);	//Number of trees
       myfwrite(&TotGalaxies[n], sizeof(int), 1, FdGalDumps[n]);	// total number of galaxies
       myfwrite(TreeNgals[n], sizeof(int), Ntrees, FdGalDumps[n]);	// Number of galaxies in each tree
       fclose(FdGalDumps[n]);
-    }
+  }
+#endif //HDF5_OUTPUT
 }
-
-
 
 
 /**@brief Saves the Galaxy_Output structure for all the galaxies in
@@ -120,11 +130,31 @@ void save_galaxy_append(int tree, int i, int n)
 {
   struct GALAXY_OUTPUT galaxy_output;
 
+#ifndef NORMALIZEDDB
   prepare_galaxy_for_output(n, &HaloGal[i], &galaxy_output);
-  myfwrite(&galaxy_output, sizeof(struct GALAXY_OUTPUT), 1, FdGalDumps[n]);
 
-  TotGalaxies[n]++;		//this will be written later
-  TreeNgals[n][tree]++;		//this will be written later (Number of galaxies in each tree)
+#ifdef HDF5_OUTPUT
+  if(b[n]<NRECORDS_APP ){
+      //printf("%d  %d \n",n,b[n]);
+      galaxy_output_hdf5[n][b[n]]=galaxy_output;
+      b[n]++;
+  }
+  else {
+      // Append the data to the HDF5 table if b[n]==NRECORDS_APP
+      hdf5_append_data(n,galaxy_output_hdf5[n],NRECORDS_APP);
+      b[n]=0;
+  }
+#else //HDF5_OUTPUT
+  myfwrite(&galaxy_output, sizeof(struct GALAXY_OUTPUT), 1, FdGalDumps[n]);
+#endif //HDF5_OUTPUT
+
+#endif //NORMALIZEDDB
+
+#ifndef HDF5_OUTPUT
+  //These will be written later:
+  TotGalaxies[n]++;      // Total number of galaxies	   
+  TreeNgals[n][tree]++;  // Number of galaxies in each tree
+#endif //HDF5_OUTPUT
 }
 
 

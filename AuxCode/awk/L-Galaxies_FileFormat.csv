@@ -62,4 +62,4 @@ elements,struct,4,1
 elements,struct,4,1
 DustRates,struct,4,1
 elements,struct,4,1
-Attenuation_Dust,float,4,1
+GALAXY_OUTPUT,struct,4,17
