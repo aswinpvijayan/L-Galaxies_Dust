@@ -72,6 +72,7 @@ int main(int argc, char **argv)
   int filenr, *FileToProcess, *TaskToProcess, nfiles;
   char buf[1000];
   time_t start, current;
+  inputFile = argv[1];
 
 
 #ifdef PARALLEL

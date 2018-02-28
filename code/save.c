@@ -65,14 +65,14 @@ void create_galaxy_files(int filenr)
   int n, i;
 
 #ifdef HDF5_OUTPUT
-
+  // Initialise HDF5 - strongly recommended
+  H5open();
+  // Check that using same run-time library as compiled with
+  //H5check_version();
+  // Then open the actual output file
   open_hdf5_file(filenr);
-
 #else //HDF5_OUTPUT
-
-  // create output files - snapshot option
   char buf[1000];
-
 #endif //HDF5_OUTPUT
 
   for(n = 0; n < NOUT; n++) {
@@ -97,6 +97,9 @@ void close_galaxy_files(void)
   int n;
 
 #ifdef HDF5_OUTPUT
+#ifdef DEBUG_HDF5
+  printf("Final HDF5_append\n");
+#endif
   for(n=0;n < NOUT; n++)
       hdf5_append_data(n,galaxy_output_hdf5[n],b[n]); // Output the final galaxies
   hdf5_close();

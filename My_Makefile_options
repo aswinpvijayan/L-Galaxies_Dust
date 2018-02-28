@@ -4,7 +4,6 @@
 # Options that control I/O
 OPT += -DOVERWRITE_OUTPUT    # overwrite output files if they exist (otherwise will quit without overwriting)
 OPT += -DNOUT=17             # This sets the number of galaxy output times. IGNORED IN GALAXYTREE MODE. VALUE CORRESPONDS TO NO. OF ROWS READ FROM desired_outputsnaps FILE
-#OPT += -DNOUT=1             # This sets the number of galaxy output times. IGNORED IN GALAXYTREE MODE. VALUE CORRESPONDS TO NO. OF ROWS READ FROM desired_outputsnaps FILE
 
 #OPT += -DPARALLEL
 #OPT += -DGALAXYTREE         # This will enable output of full galaxy merger trees, implicitly sets NOUT to maximum value
@@ -23,6 +22,7 @@ OPT += -DUPDATETYPETWO       # This updates the positions of type 2 galaxies whe
 # Debugging options
 #OPT += -DMASS_CHECKS         # Check for mass conservation at every stage of galaxy building
 #OPT += -DDEBUG
+#OPT += -DDEBUG_HDF5
 
 OPT += -DHDF5_OUTPUT         # Output the data in HDF5 format
 ifeq (HDF5_OUTPUT,$(findstring HDF5_OUTPUT,$(OPT)))

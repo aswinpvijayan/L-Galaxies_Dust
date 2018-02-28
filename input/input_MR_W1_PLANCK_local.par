@@ -7,7 +7,7 @@ FirstFile         5
 LastFile          5
 
 FileWithOutputRedshifts   ./input/desired_output_redshifts.txt
-McFile				      ./input/Mc.txt
+McFile			  ./input/Mc.txt
 CoolFunctionsDir          CoolFunctions/
 
 SpecPhotDir               SpecPhotTables/
