@@ -20,7 +20,9 @@
 #include <time.h>
 #include "allvars.h"
 #include "proto.h"
-
+#ifdef HDF5_OUTPUT
+#include "hdf5.h"
+#endif
 
 /**@file save.c
  * @brief Copies the relevant properties in Galaxy structure into
@@ -67,7 +69,7 @@ void create_galaxy_files(int filenr)
 #ifdef HDF5_OUTPUT
   // Initialise HDF5 - strongly recommended
   H5open();
-  // Check that using same run-time library as compiled with
+  // Check that using same run-time library as compiled with - fails on gcc
   //H5check_version();
   // Then open the actual output file
   open_hdf5_file(filenr);

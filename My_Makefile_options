@@ -125,6 +125,8 @@ OPT  += -DBIMODALDTD #Use the Mannucci et al. (2006) delay time distribution. ~H
 endif
 endif
 
+# There are no rings, but HDF5 references RNUM, so need to define it
+OPT += -DRNUM=0
 
 OPT += -DDETAILED_DUST
 OPT += -DDUST_AGB

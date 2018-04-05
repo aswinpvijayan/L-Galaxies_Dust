@@ -195,46 +195,45 @@ struct GALAXY_OUTPUT
 
 #ifdef STAR_FORMATION_HISTORY
 #ifndef REDUCED_OUTPUT
-  int sfh_ibin; //Index of highest bin currently in use
-  int sfh_numbins; // number of non empty bins
-  float sfh_DiskMass[SFH_NBIN];
-  float sfh_BulgeMass[SFH_NBIN];
-  float sfh_ICM[SFH_NBIN];
+  int sfh_ibin; // //Index of highest bin currently in use
+  int sfh_numbins; // // number of non empty bins
+  float sfh_DiskMass[SFH_NBIN]; // 10^10/h Msun // Initial? disk mass in SFH bins
+  float sfh_BulgeMass[SFH_NBIN]; // 10^10/h Msun // Initial? bulge mass in SFH bins
+  float sfh_ICM[SFH_NBIN]; // 10^10/h Msun // Initial? ICM mass in SFH bins
 #ifdef DETAILED_METALS_AND_MASS_RETURN
-  struct metals sfh_MetalsDiskMass[SFH_NBIN]; // Metals locked up in stars in disk.
-  struct metals sfh_MetalsBulgeMass[SFH_NBIN]; // Metals locked up in stars in bulge.
-  struct metals sfh_MetalsICM[SFH_NBIN]; // Metals locked up in stars in ICM.
+  struct metals sfh_MetalsDiskMass[SFH_NBIN]; // 10^10/h Msun // Initial? metals locked up in stars in disk.
+  struct metals sfh_MetalsBulgeMass[SFH_NBIN]; // 10^10/h Msun // Initial? metals locked up in stars in bulge.
+  struct metals sfh_MetalsICM[SFH_NBIN]; //10^10/h Msun // Initial? metals locked up in stars in ICM.
 #else
-  float sfh_MetalsDiskMass[SFH_NBIN]; // Metals locked up in stars in disk.
-  float sfh_MetalsBulgeMass[SFH_NBIN]; //Metals locked up in stars in bulge.
-  float sfh_MetalsICM[SFH_NBIN]; // Metals locked up in stars in ICM.
+  float sfh_MetalsDiskMass[SFH_NBIN]; // 10^10/h Msun // Initial? metals locked up in stars in disk.
+  float sfh_MetalsBulgeMass[SFH_NBIN]; // 10^10/h Msun // Initial? metals locked up in stars in bulge.
+  float sfh_MetalsICM[SFH_NBIN]; //10^10/h Msun // Initial? metals locked up in stars in ICM.
 #endif
 #ifdef TRACK_BURST
-  float sfh_BurstMass[SFH_NBIN]; // Mass formed in starbursts
+  float sfh_BurstMass[SFH_NBIN]; //10^10/h Msun // Initial? metals locked up in stars in ICM.mass formed in starburst.
 #endif
 #endif //REDUCED_OUTPUT
 #endif //STAR_FORMATION_HISTORY
 
 #ifdef INDIVIDUAL_ELEMENTS
   #ifndef REDUCED_OUTPUT
-  struct elements sfh_ElementsDiskMass[SFH_NBIN];
-  struct elements sfh_ElementsBulgeMass[SFH_NBIN];
-  struct elements sfh_ElementsICM[SFH_NBIN];
+  struct elements sfh_ElementsDiskMass[SFH_NBIN];  // ? // Initial mass of elements in disk
+  struct elements sfh_ElementsBulgeMass[SFH_NBIN]; // ? // Initial mass of elements in bulge
+  struct elements sfh_ElementsICM[SFH_NBIN]; // ? // Initial mass of elements in ICM
   #endif //REDUCED_OUTPUT
-  //float DiskMass_elements[ELEMENT_NUM];
-  struct elements DiskMass_elements;
-  struct elements BulgeMass_elements;
-  struct elements ColdGas_elements;
-  struct elements HotGas_elements;
-  struct elements ICM_elements;
-  struct elements EjectedMass_elements;
+  struct elements DiskMass_elements; // ? // Mass of elements in disk
+  struct elements BulgeMass_elements; // ? // Mass of elements in bulge
+  struct elements ColdGas_elements; // ? // Mass of elements in cold gas
+  struct elements HotGas_elements; // ? // Mass of elements in hot gas
+  struct elements ICM_elements; // ? // Mass of elements in ICM
+  struct elements EjectedMass_elements; // ? // Mass of elements in ejected gas
 #endif //INDIVIDUAL_ELEMENTS
 
 #ifdef DETAILED_DUST
-	#ifdef FULL_DUST_RATES
-	struct DustRates DustISMRates;		
-	#endif
-	struct elements Dust_elements; //Dust is now stored as an elements array
+#ifdef FULL_DUST_RATES
+  struct DustRates DustISMRates; // ? // Rates of creation and destruction of dust
+#endif
+  struct elements Dust_elements; // ? // Mass of elements locked up in dust (in ColdGas)
 #endif //DETAILED_DUST
 
 
