@@ -121,7 +121,7 @@
 
 #endif //STAR_FORMATION_HISTORY
 
-#include "H_metals.h"
+#include "h_metals.h"
 #include "h_galaxy_output.h"
 
 struct galaxy_tree_data
