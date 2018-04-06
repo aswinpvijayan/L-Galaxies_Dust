@@ -364,7 +364,7 @@ void init_galaxy(int p, int halonr)
 // Initialise dust as an array of elements - no longer a structure of its own 
 // This assumes all dust is in the ISM. If you add/consider dust in the CGM/ICM etc. you
 // should create a new structure i.e. Gal[p].Dust_CGM_elements
-Gal[p].Dust_elements = elements_init();
+Gal[p].DustISMElements = elements_init();
 #endif //DETAILED_DUST
 
 }
@@ -1182,40 +1182,40 @@ void transfer_dust_from_starformation(int p, double fraction)
   {  
 	//Don't need to transfer any dust -> disk metals as dust is considered
 	//part of metals. But we do need to destroy the correct amount of dust
-	Gal[p].Dust_elements.Cb -= fraction * Gal[p].Dust_elements.Cb;
-	Gal[p].Dust_elements.N  -= fraction * Gal[p].Dust_elements.N;
-	Gal[p].Dust_elements.O  -= fraction * Gal[p].Dust_elements.O;
-	Gal[p].Dust_elements.Ne -= fraction * Gal[p].Dust_elements.Ne;
-	Gal[p].Dust_elements.Mg -= fraction * Gal[p].Dust_elements.Mg;
-	Gal[p].Dust_elements.Si -= fraction * Gal[p].Dust_elements.Si;
-	Gal[p].Dust_elements.S  -= fraction * Gal[p].Dust_elements.S;
-	Gal[p].Dust_elements.Ca -= fraction * Gal[p].Dust_elements.Ca;
-	Gal[p].Dust_elements.Fe -= fraction * Gal[p].Dust_elements.Fe;
+	Gal[p].DustISMElements.Cb -= fraction * Gal[p].DustISMElements.Cb;
+	Gal[p].DustISMElements.N  -= fraction * Gal[p].DustISMElements.N;
+	Gal[p].DustISMElements.O  -= fraction * Gal[p].DustISMElements.O;
+	Gal[p].DustISMElements.Ne -= fraction * Gal[p].DustISMElements.Ne;
+	Gal[p].DustISMElements.Mg -= fraction * Gal[p].DustISMElements.Mg;
+	Gal[p].DustISMElements.Si -= fraction * Gal[p].DustISMElements.Si;
+	Gal[p].DustISMElements.S  -= fraction * Gal[p].DustISMElements.S;
+	Gal[p].DustISMElements.Ca -= fraction * Gal[p].DustISMElements.Ca;
+	Gal[p].DustISMElements.Fe -= fraction * Gal[p].DustISMElements.Fe;
   
   return;
   }  
 
 void transfer_dust_mergers(int p, int q)
   {
-	Gal[p].Dust_elements.Cb += Gal[q].Dust_elements.Cb;
-	Gal[p].Dust_elements.N  += Gal[q].Dust_elements.N;
-	Gal[p].Dust_elements.O  += Gal[q].Dust_elements.O;
-	Gal[p].Dust_elements.Ne += Gal[q].Dust_elements.Ne;
-	Gal[p].Dust_elements.Mg += Gal[q].Dust_elements.Mg;
-	Gal[p].Dust_elements.Si += Gal[q].Dust_elements.Si;
-	Gal[p].Dust_elements.S  += Gal[q].Dust_elements.S;
-	Gal[p].Dust_elements.Ca += Gal[q].Dust_elements.Ca;
-	Gal[p].Dust_elements.Fe += Gal[q].Dust_elements.Fe;
+	Gal[p].DustISMElements.Cb += Gal[q].DustISMElements.Cb;
+	Gal[p].DustISMElements.N  += Gal[q].DustISMElements.N;
+	Gal[p].DustISMElements.O  += Gal[q].DustISMElements.O;
+	Gal[p].DustISMElements.Ne += Gal[q].DustISMElements.Ne;
+	Gal[p].DustISMElements.Mg += Gal[q].DustISMElements.Mg;
+	Gal[p].DustISMElements.Si += Gal[q].DustISMElements.Si;
+	Gal[p].DustISMElements.S  += Gal[q].DustISMElements.S;
+	Gal[p].DustISMElements.Ca += Gal[q].DustISMElements.Ca;
+	Gal[p].DustISMElements.Fe += Gal[q].DustISMElements.Fe;
 	
-	Gal[q].Dust_elements.Cb = 0.0;
-	Gal[q].Dust_elements.N  = 0.0;
-	Gal[q].Dust_elements.O  = 0.0;
-	Gal[q].Dust_elements.Ne = 0.0;
-	Gal[q].Dust_elements.Mg = 0.0;
-	Gal[q].Dust_elements.Si = 0.0;
-	Gal[q].Dust_elements.S  = 0.0;
-	Gal[q].Dust_elements.Ca = 0.0;
-	Gal[q].Dust_elements.Fe = 0.0;
+	Gal[q].DustISMElements.Cb = 0.0;
+	Gal[q].DustISMElements.N  = 0.0;
+	Gal[q].DustISMElements.O  = 0.0;
+	Gal[q].DustISMElements.Ne = 0.0;
+	Gal[q].DustISMElements.Mg = 0.0;
+	Gal[q].DustISMElements.Si = 0.0;
+	Gal[q].DustISMElements.S  = 0.0;
+	Gal[q].DustISMElements.Ca = 0.0;
+	Gal[q].DustISMElements.Fe = 0.0;
 
   return;
   }
@@ -1223,15 +1223,15 @@ void transfer_dust_mergers(int p, int q)
 void transfer_dust_to_hot(int p, double fraction)
   {
   	//Dust is actually not transferred to hot phase - just destroy it
-	Gal[p].Dust_elements.Cb -= fraction * Gal[p].Dust_elements.Cb;
-	Gal[p].Dust_elements.N  -= fraction * Gal[p].Dust_elements.N;
-	Gal[p].Dust_elements.O  -= fraction * Gal[p].Dust_elements.O;
-	Gal[p].Dust_elements.Ne -= fraction * Gal[p].Dust_elements.Ne;
-	Gal[p].Dust_elements.Mg -= fraction * Gal[p].Dust_elements.Mg;
-	Gal[p].Dust_elements.Si -= fraction * Gal[p].Dust_elements.Si;
-	Gal[p].Dust_elements.S  -= fraction * Gal[p].Dust_elements.S;
-	Gal[p].Dust_elements.Ca -= fraction * Gal[p].Dust_elements.Ca;
-	Gal[p].Dust_elements.Fe -= fraction * Gal[p].Dust_elements.Fe;
+	Gal[p].DustISMElements.Cb -= fraction * Gal[p].DustISMElements.Cb;
+	Gal[p].DustISMElements.N  -= fraction * Gal[p].DustISMElements.N;
+	Gal[p].DustISMElements.O  -= fraction * Gal[p].DustISMElements.O;
+	Gal[p].DustISMElements.Ne -= fraction * Gal[p].DustISMElements.Ne;
+	Gal[p].DustISMElements.Mg -= fraction * Gal[p].DustISMElements.Mg;
+	Gal[p].DustISMElements.Si -= fraction * Gal[p].DustISMElements.Si;
+	Gal[p].DustISMElements.S  -= fraction * Gal[p].DustISMElements.S;
+	Gal[p].DustISMElements.Ca -= fraction * Gal[p].DustISMElements.Ca;
+	Gal[p].DustISMElements.Fe -= fraction * Gal[p].DustISMElements.Fe;
   
   return;
   }

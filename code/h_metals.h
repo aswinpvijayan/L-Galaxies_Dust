@@ -39,13 +39,15 @@ struct elements
 #endif //DETAILED_METALS_AND_MASS_RETURN
 
 #ifdef DETAILED_DUST 			//Scott 15/11/2015
+#ifdef FULL_DUST_RATES
 #define NDUST 5 // Needed for HDF5 table creation - should match struct below
 struct DustRates
 {
-	float AGB;
-	float SNII;
-	float SNIA;
-	float GROW;
-	float DEST;
+  float AGB;
+  float SNII;
+  float SNIA;
+  float GROW;
+  float DEST;
 };
+#endif //FULL_DUST_RATES
 #endif //DETAILED_DUST

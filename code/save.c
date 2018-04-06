@@ -331,7 +331,7 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
  //STAR FORMATION HISTORIES / RATES
 
 #ifdef STAR_FORMATION_HISTORY
-#ifndef REDUCED_OUTPUT //Detailed_Dust option to cut the SFH from the output
+#ifndef REDUCED_OUTPUT 
   o->sfh_ibin=g->sfh_ibin;
   ibin=0;
   for (j=0;j<=o->sfh_ibin;j++) {
@@ -382,10 +382,10 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
 #endif
 
 #ifdef DETAILED_DUST
- 	#ifdef FULL_DUST_RATES
- 	o->DustISMRates = g->DustISMRates;
- 	#endif
- 	o->Dust_elements = g->Dust_elements;
+#ifdef FULL_DUST_RATES
+  o->DustISMRates = g->DustISMRates;
+#endif
+  o->DustISMElements = g->DustISMElements;
 #endif
 
   o->PrimordialAccretionRate = CORRECTDBFLOAT(g->PrimordialAccretionRate * UNITMASS_IN_G / UnitTime_in_s * SEC_PER_YEAR / SOLAR_MASS);
