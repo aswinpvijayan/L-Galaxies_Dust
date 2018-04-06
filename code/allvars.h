@@ -330,7 +330,7 @@ struct GALAXY			/* Galaxy data */
 #ifdef FULL_DUST_RATES
 	struct DustRates DustISMRates;		
 #endif
-	struct elements DustISMElements; 
+	struct elements DustISM_elements; 
 #endif //DETAILED_DUST
 
 } *Gal, *HaloGal;

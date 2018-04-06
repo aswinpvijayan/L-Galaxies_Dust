@@ -159,38 +159,38 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		//All the following conversions are done by mass fraction
 		
 		//Ferrosilite Mg2SiO4 ----------------------------------------
-		Gal[p].DustISMElements.Mg += Dust_Forsterite * 0.345504;
-		Gal[p].DustISMElements.Si += Dust_Forsterite * 0.199622;
-		Gal[p].DustISMElements.O  += Dust_Forsterite * 0.454874;
+		Gal[p].DustISM_elements.Mg += Dust_Forsterite * 0.345504;
+		Gal[p].DustISM_elements.Si += Dust_Forsterite * 0.199622;
+		Gal[p].DustISM_elements.O  += Dust_Forsterite * 0.454874;
 				
 		//Fayalite Fe2SiO4 --------------------------------------------
-		Gal[p].DustISMElements.Fe += Dust_Fayalite * 0.548110;
-		Gal[p].DustISMElements.Si += Dust_Fayalite * 0.137827;
-		Gal[p].DustISMElements.O  += Dust_Fayalite * 0.314063;
+		Gal[p].DustISM_elements.Fe += Dust_Fayalite * 0.548110;
+		Gal[p].DustISM_elements.Si += Dust_Fayalite * 0.137827;
+		Gal[p].DustISM_elements.O  += Dust_Fayalite * 0.314063;
 		
 		//Enstatite MgSi03 --------------------------------------------
-		Gal[p].DustISMElements.Mg += Dust_Enstatite * 0.243050;
-		Gal[p].DustISMElements.Si += Dust_Enstatite * 0.279768;
-		Gal[p].DustISMElements.O  += Dust_Enstatite * 0.478124;
+		Gal[p].DustISM_elements.Mg += Dust_Enstatite * 0.243050;
+		Gal[p].DustISM_elements.Si += Dust_Enstatite * 0.279768;
+		Gal[p].DustISM_elements.O  += Dust_Enstatite * 0.478124;
 		
 		//Ferrosilite Fe2Si206 ----------------------------------------
-		Gal[p].DustISMElements.Fe += Dust_Ferrosilite * 0.423297;
-		Gal[p].DustISMElements.Si += Dust_Ferrosilite * 0.212884;
-		Gal[p].DustISMElements.O  += Dust_Ferrosilite * 0.363819;
+		Gal[p].DustISM_elements.Fe += Dust_Ferrosilite * 0.423297;
+		Gal[p].DustISM_elements.Si += Dust_Ferrosilite * 0.212884;
+		Gal[p].DustISM_elements.O  += Dust_Ferrosilite * 0.363819;
 		
 		//Quartz SiO4 -------------------------------------------------
-		Gal[p].DustISMElements.Si += Dust_Quartz * 0.305002;
-		Gal[p].DustISMElements.O  += Dust_Quartz * 0.694998;
+		Gal[p].DustISM_elements.Si += Dust_Quartz * 0.305002;
+		Gal[p].DustISM_elements.O  += Dust_Quartz * 0.694998;
 		
 		//SiC SiC -----------------------------------------------------
-		Gal[p].DustISMElements.Si += Dust_SiC * 0.299547;
-		Gal[p].DustISMElements.Cb  += Dust_SiC * 0.700453;
+		Gal[p].DustISM_elements.Si += Dust_SiC * 0.299547;
+		Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.700453;
 
 		//Iron Fe -----------------------------------------------------
-		Gal[p].DustISMElements.Fe += Dust_Iron * 1.0;
+		Gal[p].DustISM_elements.Fe += Dust_Iron * 1.0;
 		
 		//Carbon C ----------------------------------------------------
-		Gal[p].DustISMElements.Cb += Dust_Carbon * 1.0;
+		Gal[p].DustISM_elements.Cb += Dust_Carbon * 1.0;
 		
 	} //if sfh_DM >0
     
@@ -243,23 +243,23 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 
 			//SNII Silicates -------------------
 		
-			Gal[p].DustISMElements.Si += Dust_Silicates * 0.210432;
-			Gal[p].DustISMElements.Mg += Dust_Silicates * 0.091053;
-			Gal[p].DustISMElements.Fe += Dust_Silicates * 0.278948;
-			Gal[p].DustISMElements.O  += Dust_Silicates * 0.419567;
+			Gal[p].DustISM_elements.Si += Dust_Silicates * 0.210432;
+			Gal[p].DustISM_elements.Mg += Dust_Silicates * 0.091053;
+			Gal[p].DustISM_elements.Fe += Dust_Silicates * 0.278948;
+			Gal[p].DustISM_elements.O  += Dust_Silicates * 0.419567;
 
 			//SNII SiC --------------------------
 
-			Gal[p].DustISMElements.Si += Dust_SiC * 0.299547;
-			Gal[p].DustISMElements.Cb  += Dust_SiC * 0.700453;
+			Gal[p].DustISM_elements.Si += Dust_SiC * 0.299547;
+			Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.700453;
 
 			//SNII Fe -------------------------
 
-			Gal[p].DustISMElements.Fe += Dust_Iron * 1.0;
+			Gal[p].DustISM_elements.Fe += Dust_Iron * 1.0;
 
 			//SNII Cb ------------------------
 
-			Gal[p].DustISMElements.Cb += Dust_Carbon * 1.0;
+			Gal[p].DustISM_elements.Cb += Dust_Carbon * 1.0;
 
 	}//if sfh_DM >0
 #endif //DUST_SNII
@@ -283,7 +283,7 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		Gal[p].DustISMRates.SNIA  += (SNIa_prevstep_Cold_Fe[i] * eta_SNIa_Fe  * A_Fe_dust/A_Fe)/(dt * UnitTime_in_years);
 #endif	
 	
-		Gal[p].DustISMElements.Fe += Dust_Iron * 1.0;
+		Gal[p].DustISM_elements.Fe += Dust_Iron * 1.0;
 	}//if sfh_DM >0
 #endif //DUST_SNIA
 
@@ -334,15 +334,15 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		double Dust_Total,Dust_Cb,Dust_N,Dust_O,Dust_Ne,Dust_Mg,Dust_Si,Dust_S,Dust_Ca,Dust_Fe;
 		if (Gal[p].ColdGas > 0.0) {
 			// H2MassNoh2 || Gal[p].ColdGas*1.0E10/Hubble_h	
-			Dust_Cb = calc_dust_growth(dt, Gal[p].ColdGas_elements.Cb, Gal[p].DustISMElements.Cb, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_O  = calc_dust_growth(dt, Gal[p].ColdGas_elements.O,  Gal[p].DustISMElements.O,  H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_N  = calc_dust_growth(dt, Gal[p].ColdGas_elements.N,  Gal[p].DustISMElements.N,  H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Ne = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ne, Gal[p].DustISMElements.Ne, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Mg = calc_dust_growth(dt, Gal[p].ColdGas_elements.Mg, Gal[p].DustISMElements.Mg, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Si = calc_dust_growth(dt, Gal[p].ColdGas_elements.Si, Gal[p].DustISMElements.Si, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_S  = calc_dust_growth(dt, Gal[p].ColdGas_elements.S,  Gal[p].DustISMElements.S,  H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Ca = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ca, Gal[p].DustISMElements.Ca, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Fe = calc_dust_growth(dt, Gal[p].ColdGas_elements.Fe, Gal[p].DustISMElements.Fe, H2MassNoh2, t_exchange_eff,f_mol);
+			Dust_Cb = calc_dust_growth(dt, Gal[p].ColdGas_elements.Cb, Gal[p].DustISM_elements.Cb, H2MassNoh2, t_exchange_eff,f_mol);
+			Dust_O  = calc_dust_growth(dt, Gal[p].ColdGas_elements.O,  Gal[p].DustISM_elements.O,  H2MassNoh2, t_exchange_eff,f_mol);
+			Dust_N  = calc_dust_growth(dt, Gal[p].ColdGas_elements.N,  Gal[p].DustISM_elements.N,  H2MassNoh2, t_exchange_eff,f_mol);
+			Dust_Ne = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ne, Gal[p].DustISM_elements.Ne, H2MassNoh2, t_exchange_eff,f_mol);
+			Dust_Mg = calc_dust_growth(dt, Gal[p].ColdGas_elements.Mg, Gal[p].DustISM_elements.Mg, H2MassNoh2, t_exchange_eff,f_mol);
+			Dust_Si = calc_dust_growth(dt, Gal[p].ColdGas_elements.Si, Gal[p].DustISM_elements.Si, H2MassNoh2, t_exchange_eff,f_mol);
+			Dust_S  = calc_dust_growth(dt, Gal[p].ColdGas_elements.S,  Gal[p].DustISM_elements.S,  H2MassNoh2, t_exchange_eff,f_mol);
+			Dust_Ca = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ca, Gal[p].DustISM_elements.Ca, H2MassNoh2, t_exchange_eff,f_mol);
+			Dust_Fe = calc_dust_growth(dt, Gal[p].ColdGas_elements.Fe, Gal[p].DustISM_elements.Fe, H2MassNoh2, t_exchange_eff,f_mol);
 
 		}
 		else {
@@ -364,15 +364,15 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		
 		//Add created dust to correct arrays------------------------------------------------------------------------------------
 
-		Gal[p].DustISMElements.Cb += min(Gal[p].ColdGas_elements.Cb,Dust_Cb);
-		Gal[p].DustISMElements.N  += min(Gal[p].ColdGas_elements.N ,Dust_N );
-		Gal[p].DustISMElements.O  += min(Gal[p].ColdGas_elements.O ,Dust_O );
-		Gal[p].DustISMElements.Ne += min(Gal[p].ColdGas_elements.Ne,Dust_Ne);
-		Gal[p].DustISMElements.Mg += min(Gal[p].ColdGas_elements.Mg,Dust_Mg);
-		Gal[p].DustISMElements.Si += min(Gal[p].ColdGas_elements.Si,Dust_Si);
-		Gal[p].DustISMElements.S  += min(Gal[p].ColdGas_elements.S ,Dust_S );
-		Gal[p].DustISMElements.Ca += min(Gal[p].ColdGas_elements.Ca,Dust_Ca);
-		Gal[p].DustISMElements.Fe += min(Gal[p].ColdGas_elements.Fe,Dust_Fe);
+		Gal[p].DustISM_elements.Cb += min(Gal[p].ColdGas_elements.Cb,Dust_Cb);
+		Gal[p].DustISM_elements.N  += min(Gal[p].ColdGas_elements.N ,Dust_N );
+		Gal[p].DustISM_elements.O  += min(Gal[p].ColdGas_elements.O ,Dust_O );
+		Gal[p].DustISM_elements.Ne += min(Gal[p].ColdGas_elements.Ne,Dust_Ne);
+		Gal[p].DustISM_elements.Mg += min(Gal[p].ColdGas_elements.Mg,Dust_Mg);
+		Gal[p].DustISM_elements.Si += min(Gal[p].ColdGas_elements.Si,Dust_Si);
+		Gal[p].DustISM_elements.S  += min(Gal[p].ColdGas_elements.S ,Dust_S );
+		Gal[p].DustISM_elements.Ca += min(Gal[p].ColdGas_elements.Ca,Dust_Ca);
+		Gal[p].DustISM_elements.Fe += min(Gal[p].ColdGas_elements.Fe,Dust_Fe);
 		
 #ifdef FULL_DUST_RATES
 		Gal[p].DustISMRates.GROW += Dust_Total/(dt * UnitTime_in_years);
@@ -407,29 +407,29 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		}				
 		
 		//Calculate destroyed dust ---------------------------------------------------------------------------
-		double Dust_Cb =(Gal[p].DustISMElements.Cb * des_frac);
-		double Dust_N  =(Gal[p].DustISMElements.N  * des_frac);
-		double Dust_O  =(Gal[p].DustISMElements.O  * des_frac);
-		double Dust_Ne =(Gal[p].DustISMElements.Ne * des_frac);
-		double Dust_Mg =(Gal[p].DustISMElements.Mg * des_frac);
-		double Dust_Si =(Gal[p].DustISMElements.Si * des_frac);
-		double Dust_S  =(Gal[p].DustISMElements.S  * des_frac);
-		double Dust_Ca =(Gal[p].DustISMElements.Ca * des_frac);
-		double Dust_Fe =(Gal[p].DustISMElements.Fe * des_frac);
+		double Dust_Cb =(Gal[p].DustISM_elements.Cb * des_frac);
+		double Dust_N  =(Gal[p].DustISM_elements.N  * des_frac);
+		double Dust_O  =(Gal[p].DustISM_elements.O  * des_frac);
+		double Dust_Ne =(Gal[p].DustISM_elements.Ne * des_frac);
+		double Dust_Mg =(Gal[p].DustISM_elements.Mg * des_frac);
+		double Dust_Si =(Gal[p].DustISM_elements.Si * des_frac);
+		double Dust_S  =(Gal[p].DustISM_elements.S  * des_frac);
+		double Dust_Ca =(Gal[p].DustISM_elements.Ca * des_frac);
+		double Dust_Fe =(Gal[p].DustISM_elements.Fe * des_frac);
 		double Dust_Total = Dust_Cb+Dust_N+Dust_O+Dust_Ne+Dust_Mg+Dust_Si+Dust_S+Dust_Ca+Dust_Fe;
-		//double Dust_Total2 = min(Dust_Cb,Gal[p].DustISMElements.Cb)+min(Dust_N,Gal[p].DustISMElements.N)+min(Dust_O,Gal[p].DustISMElements.O)+min(Dust_Ne,Gal[p].DustISMElements.Ne)+min(Dust_Mg,Gal[p].DustISMElements.Mg)+min(Dust_Si,Gal[p].DustISMElements.Si)+min(Dust_S,Gal[p].DustISMElements.S)+min(Dust_Ca,Gal[p].DustISMElements.Ca)+min(Dust_Fe,Gal[p].DustISMElements.Fe);
+		//double Dust_Total2 = min(Dust_Cb,Gal[p].DustISM_elements.Cb)+min(Dust_N,Gal[p].DustISM_elements.N)+min(Dust_O,Gal[p].DustISM_elements.O)+min(Dust_Ne,Gal[p].DustISM_elements.Ne)+min(Dust_Mg,Gal[p].DustISM_elements.Mg)+min(Dust_Si,Gal[p].DustISM_elements.Si)+min(Dust_S,Gal[p].DustISM_elements.S)+min(Dust_Ca,Gal[p].DustISM_elements.Ca)+min(Dust_Fe,Gal[p].DustISM_elements.Fe);
 		
 		//Remove destroyed dust to array---------------------------------------------------------------
 		
-		Gal[p].DustISMElements.Cb -= min(Dust_Cb,Gal[p].DustISMElements.Cb);
-		Gal[p].DustISMElements.N  -= min(Dust_N,Gal[p].DustISMElements.N);
-		Gal[p].DustISMElements.O  -= min(Dust_O,Gal[p].DustISMElements.O);
-		Gal[p].DustISMElements.Ne -= min(Dust_Ne,Gal[p].DustISMElements.Ne);
-		Gal[p].DustISMElements.Mg -= min(Dust_Mg,Gal[p].DustISMElements.Mg);
-		Gal[p].DustISMElements.Si -= min(Dust_Si,Gal[p].DustISMElements.Si);
-		Gal[p].DustISMElements.S  -= min(Dust_S,Gal[p].DustISMElements.S); 
-		Gal[p].DustISMElements.Ca -= min(Dust_Ca,Gal[p].DustISMElements.Ca);
-		Gal[p].DustISMElements.Fe -= min(Dust_Fe,Gal[p].DustISMElements.Fe);
+		Gal[p].DustISM_elements.Cb -= min(Dust_Cb,Gal[p].DustISM_elements.Cb);
+		Gal[p].DustISM_elements.N  -= min(Dust_N,Gal[p].DustISM_elements.N);
+		Gal[p].DustISM_elements.O  -= min(Dust_O,Gal[p].DustISM_elements.O);
+		Gal[p].DustISM_elements.Ne -= min(Dust_Ne,Gal[p].DustISM_elements.Ne);
+		Gal[p].DustISM_elements.Mg -= min(Dust_Mg,Gal[p].DustISM_elements.Mg);
+		Gal[p].DustISM_elements.Si -= min(Dust_Si,Gal[p].DustISM_elements.Si);
+		Gal[p].DustISM_elements.S  -= min(Dust_S,Gal[p].DustISM_elements.S); 
+		Gal[p].DustISM_elements.Ca -= min(Dust_Ca,Gal[p].DustISM_elements.Ca);
+		Gal[p].DustISM_elements.Fe -= min(Dust_Fe,Gal[p].DustISM_elements.Fe);
 		
 #ifdef FULL_DUST_RATES		
 		Gal[p].DustISMRates.DEST += Dust_Total/(dt * UnitTime_in_years);
