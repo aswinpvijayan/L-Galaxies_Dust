@@ -207,8 +207,8 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		Gal[p].DustISM_elements.O  += Dust_Quartz * 0.694998;
 		
 		//SiC SiC -----------------------------------------------------
-		Gal[p].DustISM_elements.Si += Dust_SiC * 0.299547;
-		Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.700453;
+		Gal[p].DustISM_elements.Si += Dust_SiC * 0.700453;
+		Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.299547;
 
 		//Iron Fe -----------------------------------------------------
 		Gal[p].DustISM_elements.Fe += Dust_Iron * 1.0;
@@ -274,8 +274,8 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 
 			//SNII SiC --------------------------
 
-			Gal[p].DustISM_elements.Si += Dust_SiC * 0.299547;
-			Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.700453;
+			Gal[p].DustISM_elements.Si += Dust_SiC * 0.700453;
+			Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.299547;
 
 			//SNII Fe -------------------------
 
