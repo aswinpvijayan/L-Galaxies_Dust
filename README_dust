@@ -24,7 +24,7 @@ In allvars.h : struct galaxy
 #ifdef FULL_DUST_RATES
 	struct DustRates DustISMRates;		
 #endif
-	struct elements Dust_elements; 
+	struct elements DustISM_elements; 
 #endif //DETAILED_DUST
 
 In h_metals.h: 
@@ -39,3 +39,10 @@ struct DustRates
   float DEST;
 };
 #endif //FULL_DUST_RATES
+
+** Dust growth
+
+Dust growth is based on the implementation in PSG16 but is a bit of a kludge.
+There are many approximations in there that don't seem to have the correct
+limits and I suspect that it only works if the accretion timescale within clouds
+is much less than the exchange timescale of clouds with the diffuse ISM.

@@ -19,40 +19,64 @@
 #include "allvars.h"
 #include "proto.h"
 
-
-
-
 #ifdef DETAILED_DUST
 
+#ifdef DUST_GROWTH_SCOTT
 double calc_dust_growth(double dt, float element, float dust_species, float MH2, float t_exchange_eff, float f_mol) {
-	double grown_dust;
-	double t_acc_0 = 0.20E6;//0.2E6;
-	double t_exchange = 20E6;
+    double grown_dust;
+    double t_acc_0 = DUST_TACC0;
+    double t_exchange = DUST_TEXCH;
 
-	if (element > 0.0) {
-
-		double t_acc = (t_acc_0 * MH2) / element;
-						
-		double f_0 = (dust_species / element);
-		
-		double f_cond = pow((pow((f_0 * (1.0 + t_exchange/t_acc)),-2.0) + 1.0),-0.5);	
-			
-
-		if ( (f_cond * element) > dust_species ) {
-			grown_dust = (dt/(t_exchange_eff/UnitTime_in_years)) * ( (f_cond * element) - dust_species);
-		}
-		else {
-			grown_dust = 0.0;
-		}
+/* This partially implements PSG17.
+ * There are some dubious approximations made in that paper.
+ * Our implmentation here is even worse as it assumes a fixed density for the molecular gas
+ * (or maybe not actually as Popping's model is completely arbitrary). */
+    if (element > 0.0) {
+	double t_acc = (t_acc_0 * MH2) / element;
+	double f_0 = (dust_species / element);
+	double f_cond = pow((pow((f_0 * (1.0 + t_exchange/t_acc)),-2.0) + 1.0),-0.5);		
+	if ( (f_cond * element) > dust_species ) {
+	    grown_dust = (dt/(t_exchange_eff/UnitTime_in_years)) * ( (f_cond * element) - dust_species);
 	}
-			
 	else {
-		grown_dust = 0.0;
+	    grown_dust = 0.0;
 	}
-	return grown_dust;
+    }			
+    else {
+	grown_dust = 0.0;
+    }
+    return grown_dust;
 
 }
+# else
+double calc_dust_growth(double dt, float element, float dust_element, float coldgas, float f_mol) {
+    double grown_dust;
+    double t_acc_0 = DUST_TACC0;
+    double t_exchange = DUST_TEXCH;
 
+/* This partially implements PSG17.
+ * There are some dubious approximations made in that paper.
+ * Our implmentation here is even worse as it assumes a fixed density for the molecular gas
+ * (or maybe not actually as Popping's model is completely arbitrary). */
+    if (element > 0.0) {
+	double t_acc = t_acc_0 * coldgas / element;
+	double f_cond0 = dust_element / element;
+	double f_cond = pow((pow((f_cond0 * (1.0 + t_exchange/t_acc)),-2.0) + 1.0),-0.5);
+	double delta_dust = f_cond * element - dust_element;
+	if ( delta_dust > 0 )
+	    // Moderate by effective exchange time
+	    // Note: efficiency saving if move this renormalisation outside the element loop!
+	    grown_dust = (dt*UnitTime_in_years/t_exchange) * (f_mol/(1-f_mol)) * delta_dust;
+	else
+	    grown_dust = 0.0;
+    }			
+    else
+	grown_dust = 0.0;
+
+    return grown_dust;
+
+}
+#endif
 
 void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 {
@@ -325,7 +349,7 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		float t_exchange, t_exchange_eff;
 		float f_mol;
 		
-		t_exchange = 20E6; //Exchange timescale
+		t_exchange = DUST_TEXCH; //Exchange timescale
 		f_mol = H2Gas2/Gal[p].ColdGas; //Molecular gas fraction 
 		t_exchange_eff = t_exchange * ((1 - f_mol)/f_mol); //Effective exchange timescale
 
@@ -333,34 +357,44 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		// Calculate amount of dust grown of each element --------------------------------------------------------------------
 		double Dust_Total,Dust_Cb,Dust_N,Dust_O,Dust_Ne,Dust_Mg,Dust_Si,Dust_S,Dust_Ca,Dust_Fe;
 		if (Gal[p].ColdGas > 0.0) {
-			// H2MassNoh2 || Gal[p].ColdGas*1.0E10/Hubble_h	
-			Dust_Cb = calc_dust_growth(dt, Gal[p].ColdGas_elements.Cb, Gal[p].DustISM_elements.Cb, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_O  = calc_dust_growth(dt, Gal[p].ColdGas_elements.O,  Gal[p].DustISM_elements.O,  H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_N  = calc_dust_growth(dt, Gal[p].ColdGas_elements.N,  Gal[p].DustISM_elements.N,  H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Ne = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ne, Gal[p].DustISM_elements.Ne, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Mg = calc_dust_growth(dt, Gal[p].ColdGas_elements.Mg, Gal[p].DustISM_elements.Mg, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Si = calc_dust_growth(dt, Gal[p].ColdGas_elements.Si, Gal[p].DustISM_elements.Si, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_S  = calc_dust_growth(dt, Gal[p].ColdGas_elements.S,  Gal[p].DustISM_elements.S,  H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Ca = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ca, Gal[p].DustISM_elements.Ca, H2MassNoh2, t_exchange_eff,f_mol);
-			Dust_Fe = calc_dust_growth(dt, Gal[p].ColdGas_elements.Fe, Gal[p].DustISM_elements.Fe, H2MassNoh2, t_exchange_eff,f_mol);
-
+#ifdef DUST_GROWTH_SCOTT
+		    // H2MassNoh2 || Gal[p].ColdGas*1.0E10/Hubble_h	
+		    Dust_Cb = calc_dust_growth(dt, Gal[p].ColdGas_elements.Cb, Gal[p].DustISM_elements.Cb, H2MassNoh2, t_exchange_eff,f_mol);
+		    Dust_O  = calc_dust_growth(dt, Gal[p].ColdGas_elements.O,  Gal[p].DustISM_elements.O,  H2MassNoh2, t_exchange_eff,f_mol);
+		    Dust_N  = calc_dust_growth(dt, Gal[p].ColdGas_elements.N,  Gal[p].DustISM_elements.N,  H2MassNoh2, t_exchange_eff,f_mol);
+		    Dust_Ne = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ne, Gal[p].DustISM_elements.Ne, H2MassNoh2, t_exchange_eff,f_mol);
+		    Dust_Mg = calc_dust_growth(dt, Gal[p].ColdGas_elements.Mg, Gal[p].DustISM_elements.Mg, H2MassNoh2, t_exchange_eff,f_mol);
+		    Dust_Si = calc_dust_growth(dt, Gal[p].ColdGas_elements.Si, Gal[p].DustISM_elements.Si, H2MassNoh2, t_exchange_eff,f_mol);
+		    Dust_S  = calc_dust_growth(dt, Gal[p].ColdGas_elements.S,  Gal[p].DustISM_elements.S,  H2MassNoh2, t_exchange_eff,f_mol);
+		    Dust_Ca = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ca, Gal[p].DustISM_elements.Ca, H2MassNoh2, t_exchange_eff,f_mol);
+		    Dust_Fe = calc_dust_growth(dt, Gal[p].ColdGas_elements.Fe, Gal[p].DustISM_elements.Fe, H2MassNoh2, t_exchange_eff,f_mol);
+#else
+		    // The following units conversion should be given by parameters, but for now hard-wire in
+		    double gas = Gal[p].ColdGas*1e10/Hubble_h;
+		    Dust_Cb = calc_dust_growth(dt, Gal[p].ColdGas_elements.Cb, Gal[p].DustISM_elements.Cb, gas, f_mol);
+		    Dust_O  = calc_dust_growth(dt, Gal[p].ColdGas_elements.O,  Gal[p].DustISM_elements.O,  gas, f_mol);
+		    Dust_N  = calc_dust_growth(dt, Gal[p].ColdGas_elements.N,  Gal[p].DustISM_elements.N,  gas, f_mol);
+		    Dust_Ne = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ne, Gal[p].DustISM_elements.Ne, gas, f_mol);
+		    Dust_Mg = calc_dust_growth(dt, Gal[p].ColdGas_elements.Mg, Gal[p].DustISM_elements.Mg, gas, f_mol);
+		    Dust_Si = calc_dust_growth(dt, Gal[p].ColdGas_elements.Si, Gal[p].DustISM_elements.Si, gas, f_mol);
+		    Dust_S  = calc_dust_growth(dt, Gal[p].ColdGas_elements.S,  Gal[p].DustISM_elements.S,  gas, f_mol);
+		    Dust_Ca = calc_dust_growth(dt, Gal[p].ColdGas_elements.Ca, Gal[p].DustISM_elements.Ca, gas, f_mol);
+		    Dust_Fe = calc_dust_growth(dt, Gal[p].ColdGas_elements.Fe, Gal[p].DustISM_elements.Fe, gas, f_mol);
+#endif
 		}
 		else {
-			Dust_Cb = 0.0;
-			Dust_N = 0.0;
-			Dust_O = 0.0;
-			Dust_Ne = 0.0;
-			Dust_Mg = 0.0;
-			Dust_Si = 0.0;
-			Dust_S = 0.0;
-			Dust_Ca = 0.0;
-			Dust_Fe = 0.0;
+		    Dust_Cb = 0.0;
+		    Dust_N = 0.0;
+		    Dust_O = 0.0;
+		    Dust_Ne = 0.0;
+		    Dust_Mg = 0.0;
+		    Dust_Si = 0.0;
+		    Dust_S = 0.0;
+		    Dust_Ca = 0.0;
+		    Dust_Fe = 0.0;
 		}
 		
 		Dust_Total = Dust_Cb + Dust_N + Dust_O + Dust_Ne + Dust_Mg + Dust_Si + Dust_S + Dust_Ca + Dust_Fe;
-		
-		
-		//double Dust_Total_Grown = min(Dust_Cb,Gal[p].ColdGas_elements.Cb)+min(Dust_N,Gal[p].ColdGas_elements.N)+min(Dust_O,Gal[p].ColdGas_elements.O)+min(Dust_Ne,Gal[p].ColdGas_elements.Ne)+min(Dust_Mg,Gal[p].ColdGas_elements.Mg)+min(Dust_Si,Gal[p].ColdGas_elements.Si)+min(Dust_S,Gal[p].ColdGas_elements.S)+min(Dust_Ca,Gal[p].ColdGas_elements.Ca)+min(Dust_Fe,Gal[p].ColdGas_elements.Fe);
 		
 		//Add created dust to correct arrays------------------------------------------------------------------------------------
 

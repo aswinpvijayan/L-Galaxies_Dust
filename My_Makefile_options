@@ -129,16 +129,22 @@ endif
 OPT += -DRNUM=0
 
 OPT += -DDETAILED_DUST
+ifeq (DETAILED_DUST,$(findstring DETAILED_DUST,$(OPT)))
+# Growth rate parameters in years
+OPT += -DDUST_TACC0=0.20E6
+OPT += -DDUST_TEXCH=20.0E6
+# Options to switch on various dust production/growth/destruction processes
 OPT += -DDUST_AGB
 OPT += -DDUST_SNII
 OPT += -DDUST_SNIA
 OPT += -DDUST_GROWTH
-OPT += -DFULL_DUST_RATES
+OPT += -DDUST_GROWTH_SCOTT #Use Scott's dust growth recipe
 OPT += -DDUST_DESTRUCTION
+# Remember instantaneous production/growth/destruction rates
+OPT += -DFULL_DUST_RATES
+# The following is nothing to do with dust but does help to reduce the output file size.
 OPT += -DREDUCED_OUTPUT
 OBJS += ./code/model_dustyields.o
 OBJS += ./code/dustyields_integrals.o
 OBJS += ./code/dustyields_read_tables.o
-
-
-
+endif
