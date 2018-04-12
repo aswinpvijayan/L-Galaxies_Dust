@@ -171,8 +171,16 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 		Gal[p].DustColdGas_elements.O  += Dust_Quartz * 0.694998;
 		
 		//SiC SiC -----------------------------------------------------
+<<<<<<< HEAD
 		Gal[p].DustColdGas_elements.Si += Dust_SiC * 0.700453;
 		Gal[p].DustColdGas_elements.Cb += Dust_SiC * 0.299547;
+||||||| merged common ancestors
+		Gal[p].DustISM_elements.Si += Dust_SiC * 0.299547;
+		Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.700453;
+=======
+		Gal[p].DustISM_elements.Si += Dust_SiC * 0.700453;
+		Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.299547;
+>>>>>>> 53f679666f3dfb4ba8e2696cfcbafb4a1e8b145c
 
 		//Iron Fe -----------------------------------------------------
 		Gal[p].DustColdGas_elements.Fe += Dust_Iron * 1.0;
@@ -238,8 +246,16 @@ void update_dust_mass(int p, int centralgal, double dt, int nstep, int halonr)
 
 			//SNII SiC --------------------------
 
+<<<<<<< HEAD
+			Gal[p].DustColdGas_elements.Si += Dust_SiC * 0.299547;
+			Gal[p].DustColdGas_elements.Cb  += Dust_SiC * 0.700453;
+||||||| merged common ancestors
+			Gal[p].DustISM_elements.Si += Dust_SiC * 0.299547;
+			Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.700453;
+=======
 			Gal[p].DustISM_elements.Si += Dust_SiC * 0.700453;
 			Gal[p].DustISM_elements.Cb  += Dust_SiC * 0.299547;
+>>>>>>> 53f679666f3dfb4ba8e2696cfcbafb4a1e8b145c
 
 			//SNII Fe -------------------------
 
