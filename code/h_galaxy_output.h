@@ -231,9 +231,9 @@ struct GALAXY_OUTPUT
 
 #ifdef DETAILED_DUST
 #ifdef FULL_DUST_RATES
-  struct DustRates DustISMRates; // ? // Rates of creation and destruction of dust
+  struct DustRates DustColdGasRates; // ? // Rates of creation and destruction of dust
 #endif
-  struct elements DustISM_elements; // ? // Mass of elements locked up in dust (in ColdGas)
+  struct elements DustColdGas_elements; // ? // Mass of elements locked up in dust (in ColdGas)
 #endif //DETAILED_DUST
 
 

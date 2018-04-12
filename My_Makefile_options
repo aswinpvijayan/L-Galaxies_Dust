@@ -4,6 +4,7 @@
 # Options that control I/O
 OPT += -DOVERWRITE_OUTPUT    # overwrite output files if they exist (otherwise will quit without overwriting)
 OPT += -DNOUT=17             # This sets the number of galaxy output times. IGNORED IN GALAXYTREE MODE. VALUE CORRESPONDS TO NO. OF ROWS READ FROM desired_outputsnaps FILE
+#OPT += -DNOUT=1              # This sets the number of galaxy output times. IGNORED IN GALAXYTREE MODE. VALUE CORRESPONDS TO NO. OF ROWS READ FROM desired_outputsnaps FILE
 
 #OPT += -DPARALLEL
 #OPT += -DGALAXYTREE         # This will enable output of full galaxy merger trees, implicitly sets NOUT to maximum value
@@ -130,15 +131,19 @@ OPT += -DRNUM=0
 
 OPT += -DDETAILED_DUST
 ifeq (DETAILED_DUST,$(findstring DETAILED_DUST,$(OPT)))
-# Growth rate parameters in years
-OPT += -DDUST_TACC0=0.20E6
-OPT += -DDUST_TEXCH=20.0E6
 # Options to switch on various dust production/growth/destruction processes
 OPT += -DDUST_AGB
 OPT += -DDUST_SNII
 OPT += -DDUST_SNIA
 OPT += -DDUST_GROWTH
 OPT += -DDUST_GROWTH_SCOTT #Use Scott's dust growth recipe
+# Growth rate parameters in years
+OPT += -DDUST_TEXCH=20.0E6
+ifeq (DUST_GROWTH_SCOTT,$(findstring DUST_GROWTH_SCOTT,$(OPT)))
+OPT += -DDUST_TACC0=0.20E6
+else
+OPT += -DDUST_TACC0=2.00E6
+endif
 OPT += -DDUST_DESTRUCTION
 # Remember instantaneous production/growth/destruction rates
 OPT += -DFULL_DUST_RATES

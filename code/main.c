@@ -561,11 +561,11 @@ int join_galaxies_of_progenitors(int halonr, int ngalstart, int *cenngal)
 
 #ifdef DETAILED_DUST
 #ifdef FULL_DUST_RATES
-	  Gal[ngal].DustISMRates.AGB = 0.0;
-	  Gal[ngal].DustISMRates.SNII = 0.0;
-	  Gal[ngal].DustISMRates.SNIA = 0.0;
-	  Gal[ngal].DustISMRates.GROW = 0.0;
-	  Gal[ngal].DustISMRates.DEST = 0.0;
+	  Gal[ngal].DustColdGasRates.AGB = 0.0;
+	  Gal[ngal].DustColdGasRates.SNII = 0.0;
+	  Gal[ngal].DustColdGasRates.SNIA = 0.0;
+	  Gal[ngal].DustColdGasRates.GROW = 0.0;
+	  Gal[ngal].DustColdGasRates.DEST = 0.0;
 #endif
 #endif	  
 	  
