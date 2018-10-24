@@ -219,9 +219,15 @@ void update_stars_due_to_reheat(int p, int centralgal, double *stars)
 void update_from_star_formation(int p, double stars, bool flag_burst, int nstep)
 {
   int i;
+<<<<<<< HEAD
   double fraction, fraction_clouds, fraction_diff;
   double stars_to_add=0.;
   
+=======
+  double fraction;
+  double stars_to_add=0.;
+
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
   if(Gal[p].ColdGas <= 0. || stars <= 0.) {
     printf("update_from_star_formation: Gal[p].ColdGas <= 0. || stars <= 0.\n");
     exit(0);
@@ -244,6 +250,7 @@ void update_from_star_formation(int p, double stars, bool flag_burst, int nstep)
   mass_checks("update_from_star_formation #0",p);
 
   fraction=stars_to_add/Gal[p].ColdGas;
+<<<<<<< HEAD
   fraction_clouds = stars_to_add/(Gal[p].ColdGas*Gal[p].mu_gas);
   if (fraction_clouds > 1.) {
     
@@ -252,6 +259,9 @@ void update_from_star_formation(int p, double stars, bool flag_burst, int nstep)
   
   }
   
+=======
+
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 
 #ifdef STAR_FORMATION_HISTORY
   Gal[p].sfh_DiskMass[Gal[p].sfh_ibin]+=stars_to_add; //ROB: Now, all SF gas is put in SFH array ("recycled' mass will return to gas phase over time)
@@ -274,12 +284,19 @@ void update_from_star_formation(int p, double stars, bool flag_burst, int nstep)
 #ifdef INDIVIDUAL_ELEMENTS
   Gal[p].DiskMass_elements=elements_add(Gal[p].DiskMass_elements,Gal[p].ColdGas_elements,fraction);
   Gal[p].ColdGas_elements=elements_add(Gal[p].ColdGas_elements,Gal[p].ColdGas_elements,-fraction);
+<<<<<<< HEAD
   Gal[p].ColdGasClouds_elements=elements_add(Gal[p].ColdGasClouds_elements,Gal[p].ColdGasClouds_elements,-fraction_clouds);
   Gal[p].ColdGasDiff_elements=elements_add(Gal[p].ColdGasDiff_elements,Gal[p].ColdGasDiff_elements,-fraction_diff);
 #endif
 
 #ifdef DETAILED_DUST
   transfer_dust_from_starformation(p, fraction_diff, fraction_clouds);
+=======
+#endif
+
+#ifdef DETAILED_DUST
+  transfer_dust_from_starformation(p, fraction);
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
 
 #ifdef TRACK_BURST
@@ -470,6 +487,7 @@ void update_from_feedback(int p, int centralgal, double reheated_mass, double ej
 	    if(Gal[p].ColdGas > 0.) //if the reheat to itself, left cold gas below limit do not reheat to central
 #ifdef DETAILED_DUST	     
 	      fraction_sn_feedback = (reheated_mass-massremain)/Gal[p].ColdGas;
+<<<<<<< HEAD
 #endif	  
           if ((reheated_mass-massremain)/Gal[p].ColdGas > 1.) {
           
@@ -478,6 +496,9 @@ void update_from_feedback(int p, int centralgal, double reheated_mass, double ej
             printf("massremain=%f.\n", massremain);
             
           }   
+=======
+#endif	     
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 	      transfer_gas(centralgal,"Hot",p,"Cold",(reheated_mass-massremain)/Gal[p].ColdGas,"update_from_feedback", __LINE__);
 #ifdef DETAILED_DUST		  
 		  transfer_dust_to_hot(p,fraction_sn_feedback);

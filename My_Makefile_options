@@ -21,7 +21,11 @@ OPT += -DUPDATETYPETWO       # This updates the positions of type 2 galaxies whe
 #OPT += -DHENRIQUES13
 
 # Debugging options
+<<<<<<< HEAD
 OPT += -DMASS_CHECKS         # Check for mass conservation at every stage of galaxy building
+=======
+#OPT += -DMASS_CHECKS         # Check for mass conservation at every stage of galaxy building
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #OPT += -DDEBUG
 #OPT += -DDEBUG_HDF5
 
@@ -118,9 +122,15 @@ OPT  += -DPORTINARI #Use Portinari et al. (1998) SN-II yield tables.
 #OPT   += -DCHIEFFI #Use Chieffi & Limongi (2007) SN-II yield tables.
 OPT   += -DDTD #If on, a delay time distribution (DTD) is used for SNIa enrichment. If off, the Matteucci & Greggio (1986) formalism is used.
 ifeq (DTD,$(findstring DTD,$(OPT)))
+<<<<<<< HEAD
 #OPT  += -DBIMODALDTD #Use the Mannucci et al. (2006) delay time distribution. ~Half SNe-Ia die within ~100 Myrs. Rest distributed out to ~11 Gyrs.
 #OPT   += -DGAUSSIANDTD #Use a Gaussian delay time distribution, centered on 2 Gyrs.
 OPT  += -DPOWERLAWDTD #Use a declining power-law delay time distribution of slope -1.12.
+=======
+OPT  += -DBIMODALDTD #Use the Mannucci et al. (2006) delay time distribution. ~Half SNe-Ia die within ~100 Myrs. Rest distributed out to ~11 Gyrs.
+#OPT   += -DGAUSSIANDTD #Use a Gaussian delay time distribution, centered on 2 Gyrs.
+#OPT  += -DPOWERLAWDTD #Use a declining power-law delay time distribution of slope -1.12.
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #OPT  += -DRUITERDTD
 #OPT  += -DINSTANTANEOUS_RECYCLE #Recycle all metals in one time step to resemble instantaneous recycling approximation 
 endif
@@ -128,10 +138,14 @@ endif
 
 # There are no rings, but HDF5 references RNUM, so need to define it
 OPT += -DRNUM=0
+<<<<<<< HEAD
 # Option to choose the molecular gas fraction model, Krumholz one seems to give much better results than others
 #OPT += -DObreshkow
 #OPT += -DGK11
 OPT += -DKrumholz
+=======
+
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 OPT += -DDETAILED_DUST
 ifeq (DETAILED_DUST,$(findstring DETAILED_DUST,$(OPT)))
 # Options to switch on various dust production/growth/destruction processes
@@ -139,17 +153,28 @@ OPT += -DDUST_AGB
 OPT += -DDUST_SNII
 OPT += -DDUST_SNIA
 OPT += -DDUST_GROWTH
+<<<<<<< HEAD
 #OPT += -DDUST_GROWTH_SCOTT #Use Scott's dust growth recipe
 # Growth rate parameters in years
 OPT += -DDUST_TEXCH=20.0E6
 ifeq (DUST_GROWTH_SCOTT,$(findstring DUST_GROWTH_SCOTT,$(OPT)))
 OPT += -DDUST_TACC0=0.2E6
+=======
+OPT += -DDUST_GROWTH_SCOTT #Use Scott's dust growth recipe
+# Growth rate parameters in years
+OPT += -DDUST_TEXCH=20.0E6
+ifeq (DUST_GROWTH_SCOTT,$(findstring DUST_GROWTH_SCOTT,$(OPT)))
+OPT += -DDUST_TACC0=0.20E6
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 else
 OPT += -DDUST_TACC0=2.00E6
 endif
 OPT += -DDUST_DESTRUCTION
+<<<<<<< HEAD
 #OPT += -DCR_Dest
 #OPT += -DDestHIIregion
+=======
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 # Remember instantaneous production/growth/destruction rates
 OPT += -DFULL_DUST_RATES
 # The following is nothing to do with dust but does help to reduce the output file size.

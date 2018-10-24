@@ -40,9 +40,15 @@ include My_Makefile_options
 #include My_Makefile_options_MCMC_HaloModel
 
 # Choose your system type (needs to match an entry in Makefile_compilers)
+<<<<<<< HEAD
 #SYSTYPE = "MyMachine"
 include Makefile_compilers
 #include My_Makefile_compilers
+=======
+SYSTYPE = "MyMachine"
+#include Makefile_compilers
+include My_Makefile_compilers
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 
 LIBS   =   -g $(LDFLAGS) -lm  $(GSL_LIBS)  $(RLIBS) -lgsl -lgslcblas 
 ifeq (HDF5_OUTPUT,$(findstring HDF5_OUTPUT,$(OPT)))

@@ -324,21 +324,28 @@ struct GALAXY			/* Galaxy data */
   struct elements HotGas_elements;
   struct elements ICM_elements;
   struct elements EjectedMass_elements;
+<<<<<<< HEAD
   struct elements ColdGasDiff_elements;
   struct elements ColdGasClouds_elements;
   float mu_gas;
+=======
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //INDIVIDUAL_ELEMENTS
 
 #ifdef DETAILED_DUST
 #ifdef FULL_DUST_RATES
 	struct DustRates DustColdGasRates;		
 #endif
+<<<<<<< HEAD
 	struct elements DustColdGasDiff_elements; // ? // Mass of elements in the diffused phase locked up in dust (in ColdGas)
     struct elements DustColdGasClouds_elements; // ? // Mass of elements in the clouds locked up in dust (in ColdGas)
     float t_acc; // ? // dust growth rate
     float f_i[9]; // ? // fraction of dust in diffused media
     float f_c[9]; // ? // fraction of dust in molecular media
     float f_cmax[9]; // ? // max fraction of molecular media
+=======
+	struct elements DustColdGas_elements; 
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //DETAILED_DUST
 
 } *Gal, *HaloGal;
@@ -624,8 +631,11 @@ extern double tau_dt[STEPS*MAXSNAPS];//Width of every timestep in the code. (Use
 #ifdef DETAILED_METALS_AND_MASS_RETURN
 
 //Number of interpolated points within the mass ranges for the four types of yield table:
+<<<<<<< HEAD
 //Edit given by Rob Yates 27/09/2018
 //Number of interpolated points within the mass ranges for the four types of yield table:
+=======
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #define LIFETIME_MASS_NUM 150
 #define LIFETIME_Z_NUM 6
 #define AGB_MASS_NUM 59 //55 //ROB: 59, when going from 0.85 to 7 Msun
@@ -645,8 +655,11 @@ extern double tau_dt[STEPS*MAXSNAPS];//Width of every timestep in the code. (Use
 #define AGB_MAX_MASS 7.0 //6.0
 #define SNIA_MIN_MASS 3.0
 #define SNIA_MAX_MASS 16.0
+<<<<<<< HEAD
 #define SNIA_MIN_TIME 35.0*1.0e6
 #define SNIA_MAX_TIME 21.0*1.0e9
+=======
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #ifdef PORTINARI
 #define SNII_MIN_MASS 7.0 //6.0
 #define SNII_MAX_MASS 120.0
@@ -710,6 +723,7 @@ float SNIIRate2[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
 float SNIaRate2[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
 float AGBRate2[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
 
+<<<<<<< HEAD
 
 //IMF parameters (for chemical enrichment):
 #define IMF_SLOPE 2.3 //2.15 //High-mass slope of Chabrier IMF. (2.3 = normal Chabrier IMF. <2.3 = top-heavy, >2.3 = bottom-heavy.)
@@ -730,10 +744,28 @@ float AGBRate2[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
 #endif
 #ifdef GAUSSIANDTD
 	#define DTD_NORM = 1.0 //For P98 Z=0.02 lifetimes (35Myrs - 17Gyrs) and (35Myrs - 21Gyrs)
+=======
+//SNIa parameters:
+#define A_FACTOR 0.04 //Fraction of mass from all objects between SNIa_MIN_MASS and SNIA_MAX_MASS that comes from SN-Ia.
+//#define FRAC2HOT 0.9 //Fraction of material released by disk stars that goes straight into the HotGas. Res goes in ColdGas.
+#ifdef DTD
+//#define KALPHA 1.4765 //1.59203 //Now set in yield_integrals.c
+//#define	F316 0.0384 //Integral of the IMF (by number) from 3.0 - 16.0 Msun //Now set in yield_integrals.c
+#define SNIAEJECMASS 1.2300971 //Total mass (and total metals) ejected by a SNIa explosion in Msun //Value form original yield table (42 elements): 1.3740855. //Value when only considering 11 elements: 1.2300971
+#ifdef BIMODALDTD
+	#define DTD_NORM 0.903206 //For P98 Z=0.02 lifetimes (26Myrs - 21Gyrs)
+#endif
+#ifdef CUSTOMDTD
+	#define DTD_NORM 0.524836 //For P98 Z=0.02 lifetimes (26Myrs - 21Gyrs)
+#endif
+#ifdef GAUSSIANDTD
+	#define DTD_NORM = 1.0
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 	#define TAUCHARAC 1.0 //Characteristic delay time for SNe-Ia (i.e. peak of Gaussian distribution) in Gyrs //default: 2.0
 	#define SIGMA_TD 0.2*TAUCHARAC //0.2 for narrow-DTD, 0.5 for wide_DTD
 #endif
 #ifdef POWERLAWDTD
+<<<<<<< HEAD
 	//#define DTD_NORM 7.21863 // (26Myrs - 21Gyrs)
 	#define DTD_NORM 6.72574 //6.72544 // (35Myrs - 21Gyrs)
 	//#define DTD_NORM 6.56087 //For P98 Z=0.02 lifetimes (35Myrs - 17Gyrs)
@@ -746,13 +778,23 @@ float AGBRate2[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
 	//#define DTD_NORM 1.09545 //(26Myrs - 21Gyrs)
 	#define DTD_NORM 1.09545 //(35Myrs - 21Gyrs)
 	//#define DTD_NORM 1.08422 //For P98 Z=0.02 lifetimes (35Myrs - 17Gyrs)
+=======
+	#define DTD_NORM 7.21863 //For P98 Z=0.02 lifetimes (26Myrs - 21Gyrs)
+	#define DTD_SLOPE -1.12 //Slope of power law, according to Maoz et al. (2012)
+#endif
+#ifdef RUITERDTD
+	#define DTD_NORM 1.09545 //For P98 Z=0.02 lifetimes (26Myrs - 21Gyrs)
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 	#define TAUCHARAC 0.5 //Peak of Gaussian (prompt) component [in Gyrs]
 	#define SIGMA_TD 0.2*TAUCHARAC //Width of Gaussian (prompt) component
 	#define DTD_SLOPE -2.0 //Slope of power law (delayed) component (see Ruiter et al. 2012)
 #endif
 #endif
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 double TotalMassReturnedToColdDiskGas;
 double TotalMassReturnedToHotGas;
 
@@ -778,8 +820,13 @@ float SNII_prevstep_Cold_Cb[SFH_NBIN];
 float SNIa_prevstep_Cold_Fe[SFH_NBIN];
 
 // For storing metallicity in model_yields.c
+<<<<<<< HEAD
 int Zi_saved[SFH_NBIN];
 double Zi_disp_saved[SFH_NBIN];
+=======
+int Zi_saved;
+float Zi_disp_saved;
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 
 #endif //DETAILED_DUST
 

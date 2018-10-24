@@ -1,0 +1,48 @@
+* Some notes on the dust model implementation
+
+** Compile time flags
+
+DETAILED_DUST - Follows the production/growth and destruction of dust.
+FULL_DUST_RATES - Tracks the production/growth/destruction rate (averaged over
+the previous snapshot?).
+
+** Data associated with dust
+
+In the present version of the model, dust is present only in the cold ISM: it is
+assumed to be destroyed on a short timescale in the hot gas.  
+Dust is stored as an elements array that measures how much of each element is
+locked up in dust.  It used to be that dust was stored as an amount of different
+dust types (C, SiC, Fe, PAH, ...) but grain growth means that these types get
+all mixed up.  As the majority of dust arises via grain growth, it was thought
+much easier simply to track the mass of each element tied up in dust grains.
+
+Note: Dust is *contained in* elements is *contained in* gas - they are not
+separate species.  So the *free* elements not locked up in dust are (elements-dust).
+
+In allvars.h : struct galaxy
+#ifdef DETAILED_DUST
+#ifdef FULL_DUST_RATES
+	struct DustRates DustISMRates;		
+#endif
+	struct elements DustISM_elements; 
+#endif //DETAILED_DUST
+
+In h_metals.h: 
+#ifdef FULL_DUST_RATES
+#define NDUST 5 // Needed for HDF5 table creation - should match struct below
+struct DustRates
+{
+  float AGB;
+  float SNII;
+  float SNIA;
+  float GROW;
+  float DEST;
+};
+#endif //FULL_DUST_RATES
+
+** Dust growth
+
+Dust growth is based on the implementation in PSG16 but is a bit of a kludge.
+There are many approximations in there that don't seem to have the correct
+limits and I suspect that it only works if the accretion timescale within clouds
+is much less than the exchange timescale of clouds with the diffuse ISM.

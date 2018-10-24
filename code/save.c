@@ -379,15 +379,19 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
   o->HotGas_elements = g->HotGas_elements;
   o->EjectedMass_elements = g->EjectedMass_elements;
   o->ICM_elements = g->ICM_elements;
+<<<<<<< HEAD
   o->ColdGasDiff_elements = g->ColdGasDiff_elements;
   o->ColdGasClouds_elements = g->ColdGasClouds_elements;
   o->mu_gas = g->mu_gas;
+=======
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
 
 #ifdef DETAILED_DUST
 #ifdef FULL_DUST_RATES
   o->DustColdGasRates = g->DustColdGasRates;
 #endif
+<<<<<<< HEAD
   o->DustColdGasDiff_elements = g->DustColdGasDiff_elements;
   o->DustColdGasClouds_elements = g->DustColdGasClouds_elements;
   o->t_acc = g->t_acc;
@@ -396,6 +400,9 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
       o->f_c[j] = g->f_c[j];
       o->f_cmax[j] = g->f_cmax[j];
   }    
+=======
+  o->DustColdGas_elements = g->DustColdGas_elements;
+>>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
 
   o->PrimordialAccretionRate = CORRECTDBFLOAT(g->PrimordialAccretionRate * UNITMASS_IN_G / UnitTime_in_s * SEC_PER_YEAR / SOLAR_MASS);
