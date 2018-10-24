@@ -1,10 +1,6 @@
 # L-Galaxies Dust
 
-<<<<<<< HEAD
 This repo holds the implementation of the detailed dust model into the public released version of the Henriques2015 L-Galaxies model. This adds a model of dust production from AGB stars, supernovae as well as grain growth in molecular clouds. It also includes a model of dust destruction from supernovae shocks as well as destruction due to miscallaneous processes incorporated at a timescale of 1 Gyr. The dust production arising from AGB and supernovae implemented following dust production tables from Zhukovska et al. 2008. This is implemented thorugh look up tables that injects dust based on the metallicity. All of the recipes for dust injection and destruction by SNe as well as integrating the code to the already present ```L-Galaxies``` framework were done by Dr. Scott Clay. The changes to his model is in the way dustgrowth and destruction in the ISM are implemented. Documentation of the public version of the code can be found at http://galformod.mpa-garching.mpg.de/public/LGalaxies/
-=======
-This repo holds the implementation of the detailed dust model into the public released version of the Henriques2015 L-Galaxies model. This adds a model of dust production from AGB stars, supernovae as well as grain growth in molecular clouds. It also includes a model of dust destruction from supernovae shocks. Documentation of the public version of the code can be found at http://galformod.mpa-garching.mpg.de/public/LGalaxies/
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 
 ## Changes to Henriques 2015 you might expect
 
@@ -13,12 +9,9 @@ This repo holds the implementation of the detailed dust model into the public re
 * Changes to various models, transfer functions, header files etc. to account for the dust. 
 * New file: ```dustyields_read_tables.c``` - Similar to yields_read_tables but for dust. Run before L-Galaxies. Reads in the mass and metallicity dependent dust yield tables. 
 * New file: ```dustyields_integrals.c``` - Similar to yields_integrals.c but for dust. Run before L-Galaxies. Pre-calculates the normalised ejecta rates at every timestep, assuming 1 Msun populations. 
-<<<<<<< HEAD
 * New file: ```model_dustyields.c``` - Holds the new detailed dust modelling code.
 * New functions to calculate the molecular gas fraction following three implementations: Blitz & Rosolowsky 2006, Gnedin & Kratsow 2011 and Krumholz et al. 2013. This can be implemented by switching on ```Obreshkow``` or ```GK11``` or ```Krumholz``` in  My_Makefile_options. Based on the output from these functions the cold ISM is split into moelcular clouds and the diffused ISM. The dust is injected into the two using this ratio. Dust growth happens only in molecular clouds, with exchange between the two media taking place on an effective exchange timescale.
-=======
-* New file: ```model_dustyields.c``` - Holds the new detailed dust modelling code
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 
 
 ## Changes to Henriques 2015 you might not expect
@@ -31,12 +24,6 @@ This repo holds the implementation of the detailed dust model into the public re
 
 A step by step series of instructions to run this version of L-Galaxies on your system. 
 
-<<<<<<< HEAD
-* ```git clone https://github.com/aswinpvijayan/Lgalaxies_Dust.git```
-=======
-* ```git clone https://github.com/scottclay/Lgalaxies_Dust.git```
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
-
 You will probably need to change the filepaths or obtain treefiles/coolfunctions etc. from elsewhere (check out http://galformod.mpa-garching.mpg.de/public/LGalaxies/running_the_model.php for general instructions on running the Henriques 2015 version of L-Galaxies, as well as where to find the tree files and Stellar Population Synthesis tables):
 
 * Edit the following in the input file:
@@ -48,12 +35,10 @@ You will probably need to change the filepaths or obtain treefiles/coolfunctions
 	* OutputDir
 	
 * The following compiler options have been added to ```My_Makefile_options```
-<<<<<<< HEAD
+
     * ```OPT += -DObreshkow``` - Calculate the molecular gas fraction using Blitz & Rosolowsky 2006 
     * ```OPT += -DGK11``` - Calculate the molecular gas fraction using Gnedin & Kratsow 2011
     * ```OPT += -DKrumholz``` - Calculate the molecular gas fraction using Krumholz et al. 2013
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 	* ```OPT += -DDETAILED_DUST``` - Switch on dust model with default options
 	* ```OPT += -DDUST_AGB``` - Switch on AGB dust production (default on)
 	* ```OPT += -DDUST_SNII``` - Switch on SNII dust production (default on)
@@ -72,14 +57,10 @@ To run the model locally on box 5 of MR   ```./L-Galaxies ./input/input_MR_W1_PL
 
 To run the model locally on box 40 of MRII ```./L-Galaxies ./input/input_MRII_W1_PLANCK_local.par```
 
-To run the model on apollo for all MR at Sussex ```qsub batch_MR_apollo.sh``` 
+To run the model on apollo for all MR at Sussex ```qsub batch_MR_script.sh``` 
 
-To run the model on apollo for box 1 and 2 of MRII at Sussex ```qsub -l m_mem_free=220G batch_MRII_apollo1.sh``` 
+To run the model on apollo for box 1 and 2 of MRII at Sussex ```qsub -l m_mem_free=220G batch_MRII_script_1_2.sh``` 
 
-To run the model on apollo for box 3-512 of MRII at Sussex ```qsub batch_MRII_apollo2.sh``` 
+To run the model on apollo for box 3-512 of MRII at Sussex ```qsub batch_MRII_script_3_512.sh``` 
 
-<<<<<<< HEAD
-=======
 
- 
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
