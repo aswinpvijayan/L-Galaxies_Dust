@@ -566,14 +566,11 @@ int join_galaxies_of_progenitors(int halonr, int ngalstart, int *cenngal)
 	  Gal[ngal].DustColdGasRates.SNIA = 0.0;
 	  Gal[ngal].DustColdGasRates.GROW = 0.0;
 	  Gal[ngal].DustColdGasRates.DEST = 0.0;
-<<<<<<< HEAD
 	  for (int l=0; l<9; l++) {
         Gal[ngal].f_i[l] = 0.0;
         Gal[ngal].f_c[l] = 0.0;
       } 
       Gal[ngal].t_acc = 0.0;   
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
 #endif	  
 	  
@@ -686,11 +683,7 @@ int join_galaxies_of_progenitors(int halonr, int ngalstart, int *cenngal)
     }
   
   for (i = ngalstart; i<ngal; i++)
-<<<<<<< HEAD
     //mass_checks("Bottom of join_galaxies_of_progenitors",i);
-=======
-    mass_checks("Bottom of join_galaxies_of_progenitors",i);
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
   
   report_memory_usage(&HighMark, "join_galaxies");
 
@@ -870,11 +863,8 @@ void evolve_galaxies(int halonr, int ngal, int treenr, int cenngal)
 			update_yields_and_return_mass(p, centralgal, deltaT/STEPS, nstep);
 #ifdef DETAILED_DUST
 			update_dust_mass(p, centralgal, deltaT/STEPS, nstep, halonr);
-<<<<<<< HEAD
 			mass_checks("update_dust_mass #0",p);
 			mass_checks("update_dust_mass #1",centralgal);
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #ifdef FEEDBACK_COUPLED_WITH_MASS_RETURN 
 //This takes place inside update_yields_and_return_mass if DETAILED_DUST is OFF
     		if(TotalMassReturnedToColdDiskGas>0.)

@@ -430,7 +430,6 @@ void grow_black_hole(int merger_centralgal, double mass_ratio, double deltaT)
 #ifdef INDIVIDUAL_ELEMENTS
       Gal[merger_centralgal].ColdGas_elements =
 	  elements_add(Gal[merger_centralgal].ColdGas_elements, Gal[merger_centralgal].ColdGas_elements,-fraction);
-<<<<<<< HEAD
 	  Gal[merger_centralgal].ColdGasDiff_elements =
 	  elements_add(Gal[merger_centralgal].ColdGasDiff_elements, Gal[merger_centralgal].ColdGasDiff_elements,-fraction);
 	  Gal[merger_centralgal].ColdGasClouds_elements =
@@ -447,8 +446,6 @@ void grow_black_hole(int merger_centralgal, double mass_ratio, double deltaT)
       Gal[merger_centralgal].DustColdGasClouds_elements.He = 0.;
 	  
 	  mass_checks("Bottom of removing cold gas elements due to growing black hole",merger_centralgal);
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
   }
 }
@@ -481,16 +478,10 @@ void add_galaxies_together(int t, int p)
   Gal[p].MergeSat=0.;
 
   transfer_gas(t,"Cold",p,"Cold",1.,"add_galaxies_together", __LINE__);
-<<<<<<< HEAD
   #ifdef DETAILED_DUST
     transfer_dust_mergers(t, p);
     mass_checks("transfer_dust_mergers",p);
   #endif  
-=======
-#ifdef DETAILED_DUST
-  transfer_dust_mergers(t, p);
-#endif  
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
   
   //transfer_gas(t,"Ejected",p,"Cold",1.,"add_galaxies_together", __LINE__);
   transfer_gas(t,"Hot",p,"Hot",1.,"add_galaxies_together", __LINE__);

@@ -220,11 +220,7 @@ int SFH_ibin[MAXSNAPS][STEPS];
 #ifdef DETAILED_METALS_AND_MASS_RETURN
 double tau_t[STEPS*MAXSNAPS]; //Time-to-z=0 of every timestep in the code. (Used for SNe rates in yield_integrals.c)
 double tau_dt[STEPS*MAXSNAPS];//Width of every timestep in the code. (Used for SNe rates in yield_integrals.c)
-<<<<<<< HEAD
 #endif //DETAILED_METALS_AND_MASS_RETURN
-=======
-#endif
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //STAR_FORMATION_HISTORY
 
 #ifdef COMPUTE_SPECPHOT_PROPERTIES

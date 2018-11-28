@@ -8,15 +8,9 @@ FileNameGalaxies          SA
 
 FileWithOutputRedshifts   ./input/desired_output_redshifts.txt
 McFile				      ./input/Mc.txt
-<<<<<<< HEAD
 CoolFunctionsDir          /lustre/scratch/astro/ap629/Development_Branch/CoolFunctions/
 
 SpecPhotDir               /lustre/scratch/astro/ap629/Development_Branch/SpecPhotTables/
-=======
-CoolFunctionsDir          /lustre/scratch/astro/virgo/L-Galaxies/CoolFunctions/
-
-SpecPhotDir               /lustre/scratch/astro/virgo/L-Galaxies/SpecPhotTables/
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 PhotPrefix                PLANCK_M05 ; WMAP7_BC03 ;WMAP7_CB07
 SpecPhotIMF               Chabrier ; Salpeter ; Kroupa 
 FileWithFilterNames       ./input/Filter_Names.txt
@@ -31,11 +25,8 @@ SimulationDir		/lustre/scratch/astro/virgo/Trees/MR/
 LastDarkMatterSnapShot  63
 Hashbits                8    ;needed for Peano hilbert key output with the GALAXYTREE option
 
-<<<<<<< HEAD
+
 OutputDir               /lustre/scratch/astro/ap629/Rob_dust_output/MR/
-=======
-OutputDir               /lustre/scratch/astro/sc558/output/dust/
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 
 %MaxMemSize              3000 ; 70000 ; 100000 galtree
 

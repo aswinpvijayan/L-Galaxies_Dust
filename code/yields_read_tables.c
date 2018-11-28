@@ -654,11 +654,7 @@ double Chabrier_IMF(double M)
 	}
 	else
 	{
-<<<<<<< HEAD
 		e = (1./M)*exp(-pow(log10(M)-log10(mc),2.)/(2.*sigma*sigma));
-=======
-		e = (1./M)*exp(-pow(log10(M)-log10(mc),2.)/(2.*pow(sigma,2.)));
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 		phi = A*M*e;
 	}
 

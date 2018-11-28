@@ -227,31 +227,22 @@ struct GALAXY_OUTPUT
   struct elements HotGas_elements; // ? // Mass of elements in hot gas
   struct elements ICM_elements; // ? // Mass of elements in ICM
   struct elements EjectedMass_elements; // ? // Mass of elements in ejected gas
-<<<<<<< HEAD
   struct elements ColdGasDiff_elements; // Msol // Mass of elements in the diffused phase (in ColdGas)
   struct elements ColdGasClouds_elements; // Msol // Mass of elements in the cloud phase (in ColdGas)
   float mu_gas; // ? // fraction of molecular media
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //INDIVIDUAL_ELEMENTS
 
 #ifdef DETAILED_DUST
 #ifdef FULL_DUST_RATES
   struct DustRates DustColdGasRates; // ? // Rates of creation and destruction of dust
 #endif
-<<<<<<< HEAD
   struct elements DustColdGasDiff_elements; // Msol // Mass of elements in the diffused phase locked up in dust (in ColdGas)
   struct elements DustColdGasClouds_elements; // Msol // Mass of elements in the cloud phase locked up in dust (in ColdGas)
   float t_acc; // ? // dust growth rate
   float f_i[9]; // ? // fraction of dust in diffused media
   float f_c[9]; // ? // fraction of dust in molecular media
   float f_cmax[9]; // ? // max fraction of molecular media
-=======
-  struct elements DustColdGas_elements; // ? // Mass of elements locked up in dust (in ColdGas)
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //DETAILED_DUST
-
-
 };
 
 // next only of interest to DB output, which generally requires complete tree
@@ -290,12 +281,9 @@ struct SFH_BIN {
   struct elements HotGas_elements;
   struct elements ICM_elements;
   struct elements EjectedMass_elements;
-<<<<<<< HEAD
   struct elements ColdGasDiff_elements;
   struct elements ColdGasClouds_elements;
   float mu_gas;
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //INDIVIDUAL_ELEMENTS
 };
 

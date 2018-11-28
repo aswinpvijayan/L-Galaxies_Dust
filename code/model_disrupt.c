@@ -140,13 +140,10 @@ void disrupt(int p)
      * Note that the satellite should have no extended components. */
 
     transfer_gas(centralgal,"Hot",p,"Cold",1.,"disrupt", __LINE__);
-<<<<<<< HEAD
     #ifdef DETAILED_DUST
 	  transfer_dust_to_hot(p,1.);
 	  mass_checks("transfer_dust_to_hot disrupt",p);
     #endif	
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
     transfer_gas(centralgal,"Hot",p,"Hot",1.,"disrupt", __LINE__);
 #ifdef TRACK_BURST
     /* Transfer burst component first */

@@ -369,7 +369,6 @@ void find_actual_ejecta_limits_dust(int channel_type, double Mi_lower_actual, do
 
 
 
-<<<<<<< HEAD
 void transfer_dust_from_starformation(int p, double fraction_diffuse, double fraction_clouds);
 void transfer_dust_mergers(int p, int q);
 void transfer_dust_to_hot(int p, double fraction);
@@ -382,12 +381,6 @@ double mu_Krumholz(int p);
 
 void shuffle_ISM(int p);
 
-=======
-void transfer_dust_from_starformation(int p, double fraction);
-void transfer_dust_mergers(int p, int q);
-void transfer_dust_to_hot(int p, double fraction);
-
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //DETAILED_DUST
 
 void print_galaxy(char string[], int p, int halonr);

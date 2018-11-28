@@ -35,7 +35,6 @@
 #include "proto.h"
 
 
-<<<<<<< HEAD
 double mu_Obr(int p) {
     
     float K = 4.949e-5;   // 4.949E-5(units pc^4) / (M_solar ^2)    Wolfram alpha gave me a value of 4.949E-5 
@@ -181,14 +180,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     */
     Gal[p].mu_gas = mu_gas;
     
-=======
-void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
-{
-	int Zi;
-	double timestep_width; //Width of current timestep in CODE UNITS
-	int TimeBin; //Bin in Yield arrays corresponding to current timestep
-	double Zi_disp, NormSNIIMassEjecRate_actual, NormSNIaMassEjecRate_actual, NormAGBMassEjecRate_actual, NormSNIIMetalEjecRate_actual, NormSNIaMetalEjecRate_actual, NormAGBMetalEjecRate_actual;
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #ifdef INDIVIDUAL_ELEMENTS
 	double NormSNIIYieldRate_actual[NUM_ELEMENTS], NormSNIaYieldRate_actual[NUM_ELEMENTS], NormAGBYieldRate_actual[NUM_ELEMENTS];
 #endif
@@ -206,11 +197,7 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 
 	TotalMassReturnedToColdDiskGas=0.0;
 	TotalMassReturnedToHotGas=0.0;
-<<<<<<< HEAD
-	
-=======
 
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 	for(n=0;n<NOUT;n++)
 	{
 		AgeCorrectionDisk[n] = 0.0;
@@ -218,13 +205,8 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 	}
 
 	timestep_width = dt; //Width of current timestep in CODE UNITS (units cancel out when dividing by SFH bin width, sfh_dt) (12-04-12)
-<<<<<<< HEAD
 	TimeBin = (STEPS*(Halo[Gal[p].HaloNr].SnapNum-1.0))+nstep; //TimeBin = (STEPS*Gal[p].SnapNum)+nstep; //Bin in Yield tables corresponding to current timestep //TEST!: BRUNO: Snapnum would be +1 too low for a 'jumping' galaxy (14-11-13)
-	//timet = NumToTime((Halo[Gal[p].HaloNr].SnapNum-1.0)) - (nstep + 0.5) * dt; //Time from middle of the current timestep to z=0 (used here for MassWeightAge corrections)
-=======
-	TimeBin = (STEPS*Gal[p].SnapNum)+nstep;//Bin in Yield tables corresponding to current timestep
-	timet = NumToTime(Gal[p].SnapNum) - (nstep + 0.5) * dt; //Time from middle of the current timestep to z=0 (used here for MassWeightAge corrections)
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+	timet = NumToTime((Halo[Gal[p].HaloNr].SnapNum-1.0)) - (nstep + 0.5) * dt; //Time from middle of the current timestep to z=0 (used here for MassWeightAge corrections)
 	//NB: NumToTime(Gal[p].SnapNum) is the time to z=0 from start of current snapshot
 	//    nstep is the number of the current timestep (0-19)
 	//    dt is the width of one timestep within current snapshot
@@ -237,15 +219,12 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 	fwind = 0.0; //For all stellar ejecta (from disk) to ColdGas
 #endif
 
-<<<<<<< HEAD
 	//for stars dying that enrich the Hot gas directly
     if(Gal[p].Type==2)
       igal=Gal[p].CentralGal;
     else
       igal=p;
 
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
     int i;
     for (i=0;i<=Gal[p].sfh_ibin;i++) //LOOP OVER SFH BINS
     {
@@ -264,20 +243,13 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     //*****************************************
     //ENRICHMENT FROM DISK STARS INTO COLD GAS:
     //*****************************************
-<<<<<<< HEAD
     if (Gal[p].DiskMass > 0.0) //Only calculate enrichment from the disc if there is a disc at the current timestep.
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
     if (Gal[p].sfh_DiskMass[i] > 0.0)
     {
      	//pre-calculations to speed up the code
     	DiskSFR = Gal[p].sfh_DiskMass[i]/Gal[p].sfh_dt[i];
     	step_width_times_DiskSFR = timestep_width * DiskSFR;
-<<<<<<< HEAD
     	DiskSFR_physical_units = DiskSFR * (1.0e10/Hubble_h); //Note: This is NOT in physical units (i.e. NOT in Msun/yr, but in Msun/[code_time_units]). But this is ok, as code-time-units cancel out when multiplying by timestep_width to get 'step_width_times_DiskSFR_physical_units' on the line below ('DiskSFR_physical_units' is never used itself).
-=======
-    	DiskSFR_physical_units = DiskSFR * (1.0e10/Hubble_h);
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
     	step_width_times_DiskSFR_physical_units = timestep_width * DiskSFR_physical_units;
     	inverse_DiskMass_physical_units=Hubble_h/(Gal[p].sfh_DiskMass[i]*1.0e10);
     	Disk_total_metallicity=metals_total(Gal[p].sfh_MetalsDiskMass[i])/Gal[p].sfh_DiskMass[i];
@@ -288,13 +260,9 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	Zi_disp = (Disk_total_metallicity - lifetimeMetallicities[Zi])/(lifetimeMetallicities[Zi+1] - lifetimeMetallicities[Zi]);
     	if (Zi_disp < 0.0) Zi_disp = 0.0; //Don't want to extrapolate yields down below lifetimeMetallicities[0]=0.0004. Instead, assume constant yield below this metallicity.
 #ifdef DETAILED_DUST
-<<<<<<< HEAD
+
 		Zi_saved[i] = Zi;
 		Zi_disp_saved[i] = Zi_disp;		
-=======
-		Zi_saved = Zi;
-		Zi_disp_saved = Zi_disp;		
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif    	
     	NormSNIIMassEjecRate_actual = NormSNIIMassEjecRate[TimeBin][i][Zi] + ((NormSNIIMassEjecRate[TimeBin][i][Zi+1] - NormSNIIMassEjecRate[TimeBin][i][Zi])*Zi_disp);
     	NormSNIaMassEjecRate_actual = NormSNIaMassEjecRate[TimeBin][i][Zi] + ((NormSNIaMassEjecRate[TimeBin][i][Zi+1] - NormSNIaMassEjecRate[TimeBin][i][Zi])*Zi_disp);
@@ -312,11 +280,7 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 
     	//pre-calculations to speed up the code
      	NormMassEjecRateSumAllTypes = NormSNIIMassEjecRate_actual + NormSNIaMassEjecRate_actual + NormAGBMassEjecRate_actual;
-<<<<<<< HEAD
 #ifdef INDIVIDUAL_ELEMENTS //Work out the actual yield of element k, by interpolating between the yields in the look-up table created by yield_integrals.c.
-=======
-#ifdef INDIVIDUAL_ELEMENTS
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
     	int k;
 	    for (k=0;k<NUM_ELEMENTS;k++)
 	    {
@@ -367,7 +331,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].HotGas_elements.He += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.He += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[1] + NormAGBYieldRate_actual[1]) + (Gal[p].sfh_ElementsDiskMass[i].He*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
     		
 /////////////////////////////////////////////////////////////////////////////////////////////////////
             
@@ -382,14 +345,11 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasClouds_elements.He += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual))*mu_gas;
     		Gal[p].ColdGasClouds_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[1] + NormAGBYieldRate_actual[1]) + (Gal[p].sfh_ElementsDiskMass[i].He*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;
     		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #ifndef MAINELEMENTS
     		Gal[p].HotGas_elements.Cb += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Cb += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Cb += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[2] + NormAGBYieldRate_actual[2]) + (Gal[p].sfh_ElementsDiskMass[i].Cb*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
+
     		
     		Gal[p].HotGas_elements.N += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].N * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.N += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].N * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
@@ -478,51 +438,18 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual))*mu_gas;
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10] + NormAGBYieldRate_actual[10]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;
 
-=======
-    		Gal[p].HotGas_elements.N += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].N * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.N += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].N * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.N += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsDiskMass[i].N*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.O += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].O * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.O += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].O * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsDiskMass[i].O*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Ne += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[5] + (Gal[p].sfh_ElementsDiskMass[i].Ne * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Ne += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[5] + (Gal[p].sfh_ElementsDiskMass[i].Ne * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Ne += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[5] + NormAGBYieldRate_actual[5]) + (Gal[p].sfh_ElementsDiskMass[i].Ne*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Mg += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[6] + (Gal[p].sfh_ElementsDiskMass[i].Mg * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Mg += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[6] + (Gal[p].sfh_ElementsDiskMass[i].Mg * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[6] + NormAGBYieldRate_actual[6]) + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Si += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Si += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Si += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[7] + NormAGBYieldRate_actual[7]) + (Gal[p].sfh_ElementsDiskMass[i].Si*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.S += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[8] + (Gal[p].sfh_ElementsDiskMass[i].S * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.S += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[8] + (Gal[p].sfh_ElementsDiskMass[i].S * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.S += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[8] + NormAGBYieldRate_actual[8]) + (Gal[p].sfh_ElementsDiskMass[i].S*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Ca += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[9] + (Gal[p].sfh_ElementsDiskMass[i].Ca * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Ca += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[9] + (Gal[p].sfh_ElementsDiskMass[i].Ca * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Ca += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[9] + NormAGBYieldRate_actual[9]) + (Gal[p].sfh_ElementsDiskMass[i].Ca*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Fe += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-    		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10] + NormAGBYieldRate_actual[10]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #else
     		Gal[p].HotGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIIYieldRate_actual[2] + NormSNIaYieldRate_actual[2] + NormAGBYieldRate_actual[2]) + (Gal[p].sfh_ElementsDiskMass[i].O*inverse_DiskMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
     		Gal[p].HotGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIIYieldRate_actual[3] + NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
     		Gal[p].HotGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIIYieldRate_actual[4] + NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #endif //MAINELEMENTS
 #ifdef DETAILED_DUST //SNIA TO COLD! //PORTINARI
 			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNIa_prevstep_Cold_Fe[i] += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10])));
-<<<<<<< HEAD
-			
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #endif //DETAILED_DUST
 #endif //NOT SNIATOHOT
 #ifdef SNIATOHOT
@@ -530,16 +457,11 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].HotGas_elements.H += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[0]); //SN-Ia ejecta to HotGas
     		Gal[p].ColdGas_elements.H += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[0] + (Gal[p].sfh_ElementsDiskMass[i].H * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual)); //SN-II ejecta to ColdGas (1.0-fwind)
     		Gal[p].ColdGas_elements.H += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[0] + (Gal[p].sfh_ElementsDiskMass[i].H*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual)); //AGB ejecta to ColdGas
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
     		Gal[p].HotGas_elements.He += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[1]);
     		Gal[p].ColdGas_elements.He += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
     		
  /////////////////////////////////////////////////////////////////////////////////////////////////////
     		
@@ -553,86 +475,57 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasClouds_elements.He += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual))*mu_gas;
     		Gal[p].ColdGasClouds_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;
     		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #ifndef MAINELEMENTS
     		Gal[p].HotGas_elements.Cb += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.Cb += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[2]);
     		Gal[p].ColdGas_elements.Cb += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Cb += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
     		Gal[p].HotGas_elements.N += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].N * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.N += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[3]);
     		Gal[p].ColdGas_elements.N += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].N * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.N += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].N*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
     		Gal[p].HotGas_elements.O += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].O * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[4]);
     		Gal[p].ColdGas_elements.O += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].O * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].O*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
     		Gal[p].HotGas_elements.Ne += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[5] + (Gal[p].sfh_ElementsDiskMass[i].Ne * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.Ne += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[5]);
     		Gal[p].ColdGas_elements.Ne += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[5] + (Gal[p].sfh_ElementsDiskMass[i].Ne * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Ne += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[5] + (Gal[p].sfh_ElementsDiskMass[i].Ne*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Mg += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[6] + (Gal[p].sfh_ElementsDiskMass[i].Mg * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[6]);
     		Gal[p].ColdGas_elements.Mg += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[6] + (Gal[p].sfh_ElementsDiskMass[i].Mg * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[6] + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Si += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.Si += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[7]);
     		Gal[p].ColdGas_elements.Si += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Si += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.S += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[8] + (Gal[p].sfh_ElementsDiskMass[i].S * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.S += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[8]);
     		Gal[p].ColdGas_elements.S += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[8] + (Gal[p].sfh_ElementsDiskMass[i].S * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.S += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[8] + (Gal[p].sfh_ElementsDiskMass[i].S*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Ca += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[9] + (Gal[p].sfh_ElementsDiskMass[i].Ca * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.Ca += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[9]);
     		Gal[p].ColdGas_elements.Ca += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[9] + (Gal[p].sfh_ElementsDiskMass[i].Ca * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Ca += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[9] + (Gal[p].sfh_ElementsDiskMass[i].Ca*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Fe += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].HotGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[10]);
     		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
     		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
     		
     		
 /////////////////////////////////////////////////////////////////////////////////////////////////////			
@@ -682,32 +575,23 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual))*mu_gas;
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;
     		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #else //MAINELEMENTS
        		Gal[p].HotGas_elements.O += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].O * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
         	Gal[p].HotGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[2]);
         	Gal[p].ColdGas_elements.O += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].O * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
         	Gal[p].ColdGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].O*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-        	
-        	
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
        		Gal[p].HotGas_elements.Mg += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].Mg * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
         	Gal[p].HotGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[3]);
         	Gal[p].ColdGas_elements.Mg += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].Mg * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
         	Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-        	
-        	
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
        		Gal[p].HotGas_elements.Fe += max(0.0, fwind * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
         	Gal[p].HotGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[4]);
         	Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
         	Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
         	
         	
 /////////////////////////////////////////////////////////////////////////////////////////////////////        	
@@ -728,20 +612,13 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
         	
         	
         	
-        	
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //MAINELEMENTS
 #ifdef DETAILED_DUST //SNIA TO HOT! //PORTINARI
 			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNIa_prevstep_Cold_Fe[i] += 0.0; //SNIA has gone to hot gas
-<<<<<<< HEAD
-			
-			
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #endif //DETAILED_DUST
 #endif //SNIATOHOT
 #endif //PORTINARI
@@ -751,7 +628,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].HotGas_elements.H += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[0]); //SN-II ejecta to HotGas in metal-rich wind (fwind) //NB: No unsynth component required for SN-II ejecta when using the CL04 SN-II yields
     		Gal[p].ColdGas_elements.H += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[0]); //SN-II ejecta to ColdGas (1.0-fwind)
     		Gal[p].ColdGas_elements.H += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[0] + NormAGBYieldRate_actual[0]) + (Gal[p].sfh_ElementsDiskMass[i].H*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual)); //SN-Ia and AGB ejecta to ColdGas
-<<<<<<< HEAD
     		
     		
     		Gal[p].HotGas_elements.He += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[1]);
@@ -771,16 +647,11 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasClouds_elements.He += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[1])*mu_gas;
     		Gal[p].ColdGasClouds_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[1] + NormAGBYieldRate_actual[1]) + (Gal[p].sfh_ElementsDiskMass[i].He*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;
     		
-=======
-    		Gal[p].HotGas_elements.He += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[1]);
-    		Gal[p].ColdGas_elements.He += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[1]);
-    		Gal[p].ColdGas_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[1] + NormAGBYieldRate_actual[1]) + (Gal[p].sfh_ElementsDiskMass[i].He*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #ifndef MAINELEMENTS
     		Gal[p].HotGas_elements.Cb += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
     		Gal[p].ColdGas_elements.Cb += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
     		Gal[p].ColdGas_elements.Cb += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[2] + NormAGBYieldRate_actual[2]) + (Gal[p].sfh_ElementsDiskMass[i].Cb*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
     		
     		
     		Gal[p].HotGas_elements.N += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
@@ -869,37 +740,11 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasDiff_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10] + NormAGBYieldRate_actual[10]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*(1.0-mu_gas);
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10])*mu_gas;
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10] + NormAGBYieldRate_actual[10]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;      		
-=======
-    		Gal[p].HotGas_elements.N += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
-    		Gal[p].ColdGas_elements.N += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
-    		Gal[p].ColdGas_elements.N += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsDiskMass[i].N*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.O += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
-    		Gal[p].ColdGas_elements.O += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
-    		Gal[p].ColdGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsDiskMass[i].O*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Ne += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[5]);
-    		Gal[p].ColdGas_elements.Ne += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[5]);
-    		Gal[p].ColdGas_elements.Ne += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[5] + NormAGBYieldRate_actual[5]) + (Gal[p].sfh_ElementsDiskMass[i].Ne*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Mg += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[6]);
-    		Gal[p].ColdGas_elements.Mg += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[6]);
-    		Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[6] + NormAGBYieldRate_actual[6]) + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Si += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[7]);
-    		Gal[p].ColdGas_elements.Si += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[7]);
-    		Gal[p].ColdGas_elements.Si += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[7] + NormAGBYieldRate_actual[7]) + (Gal[p].sfh_ElementsDiskMass[i].Si*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.S += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[8]);
-    		Gal[p].ColdGas_elements.S += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[8]);
-    		Gal[p].ColdGas_elements.S += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[8] + NormAGBYieldRate_actual[8]) + (Gal[p].sfh_ElementsDiskMass[i].S*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Ca += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[9]);
-    		Gal[p].ColdGas_elements.Ca += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[9]);
-    		Gal[p].ColdGas_elements.Ca += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[9] + NormAGBYieldRate_actual[9]) + (Gal[p].sfh_ElementsDiskMass[i].Ca*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Fe += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10]);
-    		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10]);
-    		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10] + NormAGBYieldRate_actual[10]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #else //MAINELEMENTS
     		Gal[p].HotGas_elements.O += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
     		Gal[p].ColdGas_elements.O += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
     		Gal[p].ColdGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[2] + NormAGBYieldRate_actual[2]) + (Gal[p].sfh_ElementsDiskMass[i].O*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
     		
     		
     		Gal[p].HotGas_elements.Mg += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
@@ -931,25 +776,13 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;
     		
     		
-=======
-    		Gal[p].HotGas_elements.Mg += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
-    		Gal[p].ColdGas_elements.Mg += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
-    		Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-    		Gal[p].HotGas_elements.Fe += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
-    		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
-    		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //MAINELEMENTS
 #ifdef DETAILED_DUST //SNIA TO COLD //CHIEFFI 
 			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[7]);
 			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10]);
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
 			SNIa_prevstep_Cold_Fe[i] += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[10]);
-<<<<<<< HEAD
-			
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #endif //DDust
 #endif //SNIATOHOT
 #ifdef SNIATOHOT
@@ -957,16 +790,11 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].HotGas_elements.H += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[0]); //SN-Ia ejecta to HotGas
     		Gal[p].ColdGas_elements.H += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[0]); //SN-II ejecta to ColdGas (1.0-fwind)
     		Gal[p].ColdGas_elements.H += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[0] + (Gal[p].sfh_ElementsDiskMass[i].H*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual)); //AGB ejecta to ColdGas
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
     		Gal[p].HotGas_elements.He += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[1]);
     		Gal[p].HotGas_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[1]);
     		Gal[p].ColdGas_elements.He += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[1]);
     		Gal[p].ColdGas_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
     		
     		
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -982,86 +810,60 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasClouds_elements.He += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[1])*mu_gas;
     		Gal[p].ColdGasClouds_elements.He += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[1] + (Gal[p].sfh_ElementsDiskMass[i].He*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;
     		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #ifndef MAINELEMENTS
     		Gal[p].HotGas_elements.Cb += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
         	Gal[p].HotGas_elements.Cb += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[2]);
         	Gal[p].ColdGas_elements.Cb += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
         	Gal[p].ColdGas_elements.Cb += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-        	
-        	
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.N += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
     		Gal[p].HotGas_elements.N += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[3]);
     		Gal[p].ColdGas_elements.N += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
     		Gal[p].ColdGas_elements.N += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].N*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.O += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
     		Gal[p].HotGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[4]);
     		Gal[p].ColdGas_elements.O += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
     		Gal[p].ColdGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].O*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Ne += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[5]);
     		Gal[p].HotGas_elements.Ne += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[5]);
     		Gal[p].ColdGas_elements.Ne += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[5]);
     		Gal[p].ColdGas_elements.Ne += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[5] + (Gal[p].sfh_ElementsDiskMass[i].Ne*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Mg += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[6]);
     		Gal[p].HotGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[6]);
     		Gal[p].ColdGas_elements.Mg += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[6]);
     		Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[6] + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Si += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[7]);
     		Gal[p].HotGas_elements.Si += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[7]);
     		Gal[p].ColdGas_elements.Si += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[7]);
     		Gal[p].ColdGas_elements.Si += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.S += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[8]);
     		Gal[p].HotGas_elements.S += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[8]);
     		Gal[p].ColdGas_elements.S += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[8]);
     		Gal[p].ColdGas_elements.S += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[8] + (Gal[p].sfh_ElementsDiskMass[i].S*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Ca += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[9]);
     		Gal[p].HotGas_elements.Ca += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[9]);
     		Gal[p].ColdGas_elements.Ca += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[9]);
     		Gal[p].ColdGas_elements.Ca += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[9] + (Gal[p].sfh_ElementsDiskMass[i].Ca*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Fe += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10]);
     		Gal[p].HotGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[10]);
     		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10]);
     		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
     		
     		
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1112,32 +914,24 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasDiff_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*(1.0-mu_gas);
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10])*mu_gas;
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #else //MAINELEMENTS
     		Gal[p].HotGas_elements.O += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
     		Gal[p].HotGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[2]);
     		Gal[p].ColdGas_elements.O += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
     		Gal[p].ColdGas_elements.O += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].O*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Mg += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
     		Gal[p].HotGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[3]);
     		Gal[p].ColdGas_elements.Mg += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[3]);
     		Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[3] + (Gal[p].sfh_ElementsDiskMass[i].Mg*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
-    		
-    		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
+
     		Gal[p].HotGas_elements.Fe += max(0.0, fwind * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
     		Gal[p].HotGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * NormSNIaYieldRate_actual[4]);
     		Gal[p].ColdGas_elements.Fe += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[4]);
     		Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual));
-<<<<<<< HEAD
     		
     		
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1159,19 +953,13 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     		Gal[p].ColdGasClouds_elements.Fe += max(0.0, step_width_times_DiskSFR_physical_units * (NormAGBYieldRate_actual[4] + (Gal[p].sfh_ElementsDiskMass[i].Fe*inverse_DiskMass_physical_units)*NormAGBMassEjecRate_actual))*mu_gas;
     		
     		
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //MAINELEMENTS
 #ifdef DETAILED_DUST //Inside SNIA TO HOT //CHIEFFI 
 			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[7]);
 			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[10]);
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * NormSNIIYieldRate_actual[2]);
 			SNIa_prevstep_Cold_Fe[i] += 0.0;
-<<<<<<< HEAD
-			
-			
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
 #endif //DDust
 #endif //SNIATOHOT
 #endif //CHIEFFI
@@ -1326,7 +1114,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 #ifdef INDIVIDUAL_ELEMENTS
 #ifdef PORTINARI
     	Gal[p].ColdGas_elements.H += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[0] + NormSNIaYieldRate_actual[0] + NormAGBYieldRate_actual[0]) + (Gal[p].sfh_ElementsBulgeMass[i].H*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-<<<<<<< HEAD
     	
     	
     	Gal[p].ColdGas_elements.He += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[1] + NormSNIaYieldRate_actual[1] + NormAGBYieldRate_actual[1]) + (Gal[p].sfh_ElementsBulgeMass[i].He*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
@@ -1424,29 +1211,11 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
         
         
     	
-=======
-    	Gal[p].ColdGas_elements.He += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[1] + NormSNIaYieldRate_actual[1] + NormAGBYieldRate_actual[1]) + (Gal[p].sfh_ElementsBulgeMass[i].He*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-#ifndef MAINELEMENTS
-    	Gal[p].ColdGas_elements.Cb += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[2] + NormSNIaYieldRate_actual[2] + NormAGBYieldRate_actual[2]) + (Gal[p].sfh_ElementsBulgeMass[i].Cb*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.N += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[3] + NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsBulgeMass[i].N*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.O += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[4] + NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsBulgeMass[i].O*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Ne += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[5] + NormSNIaYieldRate_actual[5] + NormAGBYieldRate_actual[5]) + (Gal[p].sfh_ElementsBulgeMass[i].Ne*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[6] + NormSNIaYieldRate_actual[6] + NormAGBYieldRate_actual[6]) + (Gal[p].sfh_ElementsBulgeMass[i].Mg*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Si += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[7] + NormSNIaYieldRate_actual[7] + NormAGBYieldRate_actual[7]) + (Gal[p].sfh_ElementsBulgeMass[i].Si*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.S += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[8] + NormSNIaYieldRate_actual[8] + NormAGBYieldRate_actual[8]) + (Gal[p].sfh_ElementsBulgeMass[i].S*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Ca += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[9] + NormSNIaYieldRate_actual[9] + NormAGBYieldRate_actual[9]) + (Gal[p].sfh_ElementsBulgeMass[i].Ca*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[10] + NormSNIaYieldRate_actual[10] + NormAGBYieldRate_actual[10]) + (Gal[p].sfh_ElementsBulgeMass[i].Fe*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-#else
-    	Gal[p].ColdGas_elements.O += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[2] + NormSNIaYieldRate_actual[2] + NormAGBYieldRate_actual[2]) + (Gal[p].sfh_ElementsBulgeMass[i].O*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[3] + NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsBulgeMass[i].Mg*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[4] + NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsBulgeMass[i].Fe*inverse_BulgeMass_physical_units)*(NormSNIIMassEjecRate_actual + NormAGBMassEjecRate_actual)));
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //MAINELEMENTS
 #endif //PORTINARI
 #ifdef CHIEFFI
     	Gal[p].ColdGas_elements.H += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[0] + NormSNIaYieldRate_actual[0] + NormAGBYieldRate_actual[0]) + (Gal[p].sfh_ElementsBulgeMass[i].H*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));  //ROB: No unsynth component required for SN-II ejecta, when using the Chieffi & Limongi 92007) yield tables/
-<<<<<<< HEAD
-    	
+
     	
     	Gal[p].ColdGas_elements.He += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[1] + NormSNIaYieldRate_actual[1] + NormAGBYieldRate_actual[1]) + (Gal[p].sfh_ElementsBulgeMass[i].He*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
     	
@@ -1543,25 +1312,6 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     	
 #endif //MAINELEMENTS
 
-
-=======
-    	Gal[p].ColdGas_elements.He += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[1] + NormSNIaYieldRate_actual[1] + NormAGBYieldRate_actual[1]) + (Gal[p].sfh_ElementsBulgeMass[i].He*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-#ifndef MAINELEMENTS
-    	Gal[p].ColdGas_elements.Cb += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[2] + NormSNIaYieldRate_actual[2] + NormAGBYieldRate_actual[2]) + (Gal[p].sfh_ElementsBulgeMass[i].Cb*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.N += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[3] + NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsBulgeMass[i].N*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.O += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[4] + NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsBulgeMass[i].O*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Ne += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[5] + NormSNIaYieldRate_actual[5] + NormAGBYieldRate_actual[5]) + (Gal[p].sfh_ElementsBulgeMass[i].Ne*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[6] + NormSNIaYieldRate_actual[6] + NormAGBYieldRate_actual[6]) + (Gal[p].sfh_ElementsBulgeMass[i].Mg*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Si += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[7] + NormSNIaYieldRate_actual[7] + NormAGBYieldRate_actual[7]) + (Gal[p].sfh_ElementsBulgeMass[i].Si*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.S += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[8] + NormSNIaYieldRate_actual[8] + NormAGBYieldRate_actual[8]) + (Gal[p].sfh_ElementsBulgeMass[i].S*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Ca += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[9] + NormSNIaYieldRate_actual[9] + NormAGBYieldRate_actual[9]) + (Gal[p].sfh_ElementsBulgeMass[i].Ca*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[10] + NormSNIaYieldRate_actual[10] + NormAGBYieldRate_actual[10]) + (Gal[p].sfh_ElementsBulgeMass[i].Fe*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-#else
-    	Gal[p].ColdGas_elements.O += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[2] + NormSNIaYieldRate_actual[2] + NormAGBYieldRate_actual[2]) + (Gal[p].sfh_ElementsBulgeMass[i].O*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Mg += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[3] + NormSNIaYieldRate_actual[3] + NormAGBYieldRate_actual[3]) + (Gal[p].sfh_ElementsBulgeMass[i].Mg*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-    	Gal[p].ColdGas_elements.Fe += max(0.0, step_width_times_BulgeSFR_physical_units * ((NormSNIIYieldRate_actual[4] + NormSNIaYieldRate_actual[4] + NormAGBYieldRate_actual[4]) + (Gal[p].sfh_ElementsBulgeMass[i].Fe*inverse_BulgeMass_physical_units)*(NormAGBMassEjecRate_actual)));
-#endif //MAINELEMENTS
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //CHIEFFI
 #endif //INDIVIDUAL_ELEMENTS
 #endif //BULGE_TO_COLD
@@ -1745,11 +1495,8 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
     }
     
 #ifdef H2_AND_RINGS
-<<<<<<< HEAD
+
     double  TotalMassReturnedToColdDiskGasr[RNUM], TotalMassReturnedToHotGasr[RNUM];
-=======
-    double TotalMassReturnedToColdDiskGasr[RNUM], TotalMassReturnedToHotGasr[RNUM];
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
     double Coldmetallicityr[RNUM], Hotmetallicity[RNUM];
     int ii;
     for(ii=0;ii<RNUM;ii++)
@@ -1953,7 +1700,4 @@ int find_initial_metallicity(int p, int sfh_bin, int table_type, int component_t
     	*NormAGBMetalEjecRate_actual =  0.0;
  }
 #endif //INSTANTANEOUS_RECYCLE
-<<<<<<< HEAD
-=======
 
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b

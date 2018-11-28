@@ -25,7 +25,7 @@ SimulationDir	        /lustre/scratch/astro/virgo/Trees/MR
 LastDarkMatterSnapShot  63
 Hashbits                8    ;needed for Peano hilbert key output with the GALAXYTREE option
 
-OutputDir               /lustre/scratch/astro/ap629/test_rmol/def_15e3/MR/
+OutputDir               /lustre/scratch/astro/ap629/test_rmol/no_GG/MR/
 
 MaxMemSize              3000 ; 70000 ; 100000 galtree
 

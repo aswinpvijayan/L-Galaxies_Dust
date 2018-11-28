@@ -358,19 +358,15 @@ void init_galaxy(int p, int halonr)
   Gal[p].HotGas_elements = elements_init();
   Gal[p].EjectedMass_elements = elements_init();
   Gal[p].ICM_elements = elements_init();
-<<<<<<< HEAD
   Gal[p].ColdGasDiff_elements = elements_init();
   Gal[p].ColdGasClouds_elements = elements_init();
   Gal[p].mu_gas = 0.;
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
 
 #ifdef DETAILED_DUST
 // Initialise dust as an array of elements - no longer a structure of its own 
 // This assumes all dust is in the ISM. If you add/consider dust in the CGM/ICM etc. you
 // should create a new structure i.e. Gal[p].Dust_CGM_elements
-<<<<<<< HEAD
    Gal[p].DustColdGasDiff_elements = elements_init();
    Gal[p].DustColdGasClouds_elements = elements_init();
    Gal[p].t_acc = 1E15;
@@ -379,9 +375,6 @@ void init_galaxy(int p, int halonr)
        Gal[p].f_c[j] = 0.;
        Gal[p].f_cmax[j] = 1.;
    }
-=======
-Gal[p].DustColdGas_elements = elements_init();
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //DETAILED_DUST
 
 }
@@ -633,11 +626,8 @@ void update_centralgal(int ngal,int halonr)
   Gal[ngal].MergeOn= 0;
   for (j=0;j<3;j++)
   Gal[ngal].HaloSpin[j] = Halo[halonr].Spin[j];
-<<<<<<< HEAD
   
   mass_checks("Update centralgal",ngal);
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 }
 
 
@@ -739,11 +729,9 @@ void update_type_1(int ngal, int halonr, int prog)
       }
     }
   }
-<<<<<<< HEAD
+
   mass_checks("Update Type1",ngal);
-=======
-  
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
+
   /*Mvir, Rvir and Vvir keep their value fixed after infall*/
 }	     
 
@@ -785,11 +773,8 @@ void update_type_2(int ngal,int halonr, int prog,int mostmassive)
       Gal[ngal].OriMvir = get_virial_mass(prog);
       Gal[ngal].OriRvir = get_virial_radius(prog);
     }
-<<<<<<< HEAD
 
   mass_checks("Update Type2",ngal);
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 }
 
 void transfer_stars(int p, char cp[], int q, char cq[], double fraction) {
@@ -1094,11 +1079,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
   struct metals Metals;
 #ifdef INDIVIDUAL_ELEMENTS
   struct elements Yield;
-<<<<<<< HEAD
   struct elements MYield_diffuse;
   struct elements MYield_clouds;
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
 #else
   float Metals;
@@ -1110,10 +1092,7 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
   {
   	char sbuf[1000];
   	sprintf(sbuf, "\nparent call from: %s, line %d \ntransfer_gas: fraction>1\nfraction = %.11f\nFrom '%s' to '%s\n",call_function, call_line, fraction,cq, cp);
-<<<<<<< HEAD
   	printf("coldgas=%f.\n", Gal[p].ColdGas);
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
   	terminate(sbuf);
   }
   //if (fraction > 1. && fraction < 1.000001) { //1.0000001
@@ -1130,11 +1109,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
       Metals = metals_add(metals_init(),Gal[q].MetalsColdGas,fraction);
 #ifdef INDIVIDUAL_ELEMENTS
       Yield = elements_add(elements_init(),Gal[q].ColdGas_elements,fraction);
-<<<<<<< HEAD
       MYield_diffuse = elements_add(elements_init(),Gal[q].ColdGasDiff_elements,fraction);
       MYield_clouds = elements_add(elements_init(),Gal[q].ColdGasClouds_elements,fraction);
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
     }
   else if (strcmp(cq,"Hot")==0)
@@ -1143,11 +1119,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
       Metals = metals_add(metals_init(),Gal[q].MetalsHotGas,fraction);
 #ifdef INDIVIDUAL_ELEMENTS
     Yield = elements_add(elements_init(),Gal[q].HotGas_elements,fraction);
-<<<<<<< HEAD
     MYield_diffuse = elements_add(elements_init(),Gal[q].HotGas_elements,fraction*(1-Gal[p].mu_gas));
     MYield_clouds = elements_add(elements_init(),Gal[q].HotGas_elements,fraction*Gal[p].mu_gas);
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
     }
   else if (strcmp(cq,"Ejected")==0)
@@ -1156,11 +1129,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
       Metals = metals_add(metals_init(),Gal[q].MetalsEjectedMass,fraction);
 #ifdef INDIVIDUAL_ELEMENTS
     Yield = elements_add(elements_init(),Gal[q].EjectedMass_elements,fraction);
-<<<<<<< HEAD
     MYield_diffuse = elements_add(elements_init(),Gal[q].EjectedMass_elements,fraction*(1-Gal[p].mu_gas));
     MYield_clouds = elements_add(elements_init(),Gal[q].EjectedMass_elements,fraction*Gal[p].mu_gas);
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
     }
   else
@@ -1176,12 +1146,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
       Gal[p].MetalsColdGas = metals_add(Gal[p].MetalsColdGas,Metals,1.);
 #ifdef INDIVIDUAL_ELEMENTS
       Gal[p].ColdGas_elements = elements_add(Gal[p].ColdGas_elements,Yield,1.);
-<<<<<<< HEAD
       Gal[p].ColdGasDiff_elements = elements_add(Gal[p].ColdGasDiff_elements,MYield_diffuse,1.);
       Gal[p].ColdGasClouds_elements = elements_add(Gal[p].ColdGasClouds_elements,MYield_clouds,1.);
-      
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
     }
   else if (strcmp(cp,"Hot")==0)
@@ -1215,11 +1181,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
     Gal[q].MetalsColdGas = metals_add(Gal[q].MetalsColdGas,Metals,-1.);
 #ifdef INDIVIDUAL_ELEMENTS
     Gal[q].ColdGas_elements = elements_add(Gal[q].ColdGas_elements,Yield,-1.);
-<<<<<<< HEAD
     Gal[q].ColdGasDiff_elements = elements_add(Gal[q].ColdGasDiff_elements,MYield_diffuse,-1.);
     Gal[q].ColdGasClouds_elements = elements_add(Gal[q].ColdGasClouds_elements,MYield_clouds,-1.);
-=======
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif
   } else if (strcmp(cq,"Hot")==0) {
     Gal[q].HotGas -= Mass;
@@ -1240,7 +1203,6 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
     printf("Unknown component type %s in call to transfer_gas\n",cq);
     exit(1);
   }
-<<<<<<< HEAD
   
   return;
 }
@@ -1262,32 +1224,11 @@ void transfer_dust_from_starformation(int p, double fraction_diffuse, double fra
 	
 	Gal[p].DustColdGasClouds_elements = elements_add(Gal[p].DustColdGasClouds_elements, Gal[p].DustColdGasClouds_elements, -fraction_clouds);
 	
-=======
-
   return;
 }
-#ifdef DETAILED_DUST
-void transfer_dust_from_starformation(int p, double fraction)
-  {  
-	//Don't need to transfer any dust -> disk metals as dust is considered
-	//part of metals. But we do need to destroy the correct amount of dust
-	Gal[p].DustColdGas_elements.Cb -= fraction * Gal[p].DustColdGas_elements.Cb;
-	Gal[p].DustColdGas_elements.N  -= fraction * Gal[p].DustColdGas_elements.N;
-	Gal[p].DustColdGas_elements.O  -= fraction * Gal[p].DustColdGas_elements.O;
-	Gal[p].DustColdGas_elements.Ne -= fraction * Gal[p].DustColdGas_elements.Ne;
-	Gal[p].DustColdGas_elements.Mg -= fraction * Gal[p].DustColdGas_elements.Mg;
-	Gal[p].DustColdGas_elements.Si -= fraction * Gal[p].DustColdGas_elements.Si;
-	Gal[p].DustColdGas_elements.S  -= fraction * Gal[p].DustColdGas_elements.S;
-	Gal[p].DustColdGas_elements.Ca -= fraction * Gal[p].DustColdGas_elements.Ca;
-	Gal[p].DustColdGas_elements.Fe -= fraction * Gal[p].DustColdGas_elements.Fe;
-  
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
-  return;
-  }  
 
 void transfer_dust_mergers(int p, int q)
   {
-<<<<<<< HEAD
 	
 	Gal[p].DustColdGasDiff_elements = elements_add(Gal[p].DustColdGasDiff_elements, Gal[q].DustColdGasDiff_elements, 1.0);
 	
@@ -1298,34 +1239,10 @@ void transfer_dust_mergers(int p, int q)
 		
 	Gal[q].DustColdGasClouds_elements = elements_init();
     
-=======
-	Gal[p].DustColdGas_elements.Cb += Gal[q].DustColdGas_elements.Cb;
-	Gal[p].DustColdGas_elements.N  += Gal[q].DustColdGas_elements.N;
-	Gal[p].DustColdGas_elements.O  += Gal[q].DustColdGas_elements.O;
-	Gal[p].DustColdGas_elements.Ne += Gal[q].DustColdGas_elements.Ne;
-	Gal[p].DustColdGas_elements.Mg += Gal[q].DustColdGas_elements.Mg;
-	Gal[p].DustColdGas_elements.Si += Gal[q].DustColdGas_elements.Si;
-	Gal[p].DustColdGas_elements.S  += Gal[q].DustColdGas_elements.S;
-	Gal[p].DustColdGas_elements.Ca += Gal[q].DustColdGas_elements.Ca;
-	Gal[p].DustColdGas_elements.Fe += Gal[q].DustColdGas_elements.Fe;
-	
-	Gal[q].DustColdGas_elements.Cb = 0.0;
-	Gal[q].DustColdGas_elements.N  = 0.0;
-	Gal[q].DustColdGas_elements.O  = 0.0;
-	Gal[q].DustColdGas_elements.Ne = 0.0;
-	Gal[q].DustColdGas_elements.Mg = 0.0;
-	Gal[q].DustColdGas_elements.Si = 0.0;
-	Gal[q].DustColdGas_elements.S  = 0.0;
-	Gal[q].DustColdGas_elements.Ca = 0.0;
-	Gal[q].DustColdGas_elements.Fe = 0.0;
-
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
-  return;
   }
  
 void transfer_dust_to_hot(int p, double fraction)
   {
-<<<<<<< HEAD
   	
   	double previoustime, newtime, deltaT;
 	
@@ -1504,22 +1421,6 @@ void shuffle_ISM(int p) {
 	    
 }
 
-=======
-  	//Dust is actually not transferred to hot phase - just destroy it
-	Gal[p].DustColdGas_elements.Cb -= fraction * Gal[p].DustColdGas_elements.Cb;
-	Gal[p].DustColdGas_elements.N  -= fraction * Gal[p].DustColdGas_elements.N;
-	Gal[p].DustColdGas_elements.O  -= fraction * Gal[p].DustColdGas_elements.O;
-	Gal[p].DustColdGas_elements.Ne -= fraction * Gal[p].DustColdGas_elements.Ne;
-	Gal[p].DustColdGas_elements.Mg -= fraction * Gal[p].DustColdGas_elements.Mg;
-	Gal[p].DustColdGas_elements.Si -= fraction * Gal[p].DustColdGas_elements.Si;
-	Gal[p].DustColdGas_elements.S  -= fraction * Gal[p].DustColdGas_elements.S;
-	Gal[p].DustColdGas_elements.Ca -= fraction * Gal[p].DustColdGas_elements.Ca;
-	Gal[p].DustColdGas_elements.Fe -= fraction * Gal[p].DustColdGas_elements.Fe;
-  
-  return;
-  }
-  
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
 #endif //DETAILED_DUST
 
 
@@ -1546,7 +1447,6 @@ void mass_checks(char string[], int igal) {
       Gal[igal].ColdGas = 0.;
       Gal[igal].MetalsColdGas = metals_init();
     }
-<<<<<<< HEAD
   
   if( Gal[igal].ColdGas * (1E10/Hubble_h) * (0.99999999) > elements_total(Gal[igal].ColdGas_elements) > Gal[igal].ColdGas * (1E10/Hubble_h)   *  (1.00000001))
     {
@@ -1819,10 +1719,7 @@ void mass_checks(char string[], int igal) {
   }
  
  
-  
-=======
 
->>>>>>> 39853857269bc0dcfaeb394b679ec6c80393ee4b
   //check if the gas mass is less than 0
   if(Gal[igal].ColdGas < 0.0) {
     if (Gal[igal].ColdGas > -1e-7)
