@@ -1,6 +1,6 @@
 # L-Galaxies Dust
 
-This repo holds the implementation of the detailed dust model into the public released version of the Henriques2015 L-Galaxies model. This adds a model of dust production from AGB stars, supernovae as well as grain growth in molecular clouds. It also includes a model of dust destruction from supernovae shocks as well as destruction due to miscallaneous processes incorporated at a timescale of 1 Gyr. The dust production arising from AGB and supernovae implemented following dust production tables from Zhukovska et al. 2008. This is implemented thorugh look up tables that injects dust based on the metallicity. All of the recipes for dust injection and destruction by SNe as well as integrating the code to the already present ```L-Galaxies``` framework were done by Dr. Scott Clay. The changes to his model is in the way dustgrowth and destruction in the ISM are implemented. Documentation of the public version of the code can be found at http://galformod.mpa-garching.mpg.de/public/LGalaxies/
+This repo holds the implementation of the detailed dust model into the public released version of the Henriques2015 L-Galaxies model. This adds a model of dust production from AGB stars, supernovae as well as grain growth in molecular clouds. It also includes a model of dust destruction from supernovae shocks. The dust production arising from AGB and supernovae implemented following dust production tables from Zhukovska et al. 2008. This is implemented thorugh look up tables that injects dust based on the metallicity. All of the recipes for dust injection and destruction by SNe as well as integrating the code to the already present ```L-Galaxies``` framework were done by Dr. Scott Clay. The changes to his model is in the way dustgrowth and destruction in the ISM are implemented. Documentation of the public version of the code can be found at http://galformod.mpa-garching.mpg.de/public/LGalaxies/
 
 ## Changes to Henriques 2015 you might expect
 
@@ -38,12 +38,14 @@ You will probably need to change the filepaths or obtain treefiles/coolfunctions
 
     * ```OPT += -DObreshkow``` - Calculate the molecular gas fraction using Blitz & Rosolowsky 2006 
     * ```OPT += -DGK11``` - Calculate the molecular gas fraction using Gnedin & Kratsow 2011
-    * ```OPT += -DKrumholz``` - Calculate the molecular gas fraction using Krumholz et al. 2013
+    * ```OPT += -DKrumholz``` - Calculate the molecular gas fraction using Fu et al. 2013
 	* ```OPT += -DDETAILED_DUST``` - Switch on dust model with default options
 	* ```OPT += -DDUST_AGB``` - Switch on AGB dust production (default on)
 	* ```OPT += -DDUST_SNII``` - Switch on SNII dust production (default on)
 	* ```OPT += -DDUST_SNIA``` - Switch on SNIA dust production (default on)
 	* ```OPT += -DDUST_GROWTH``` - Switch on grain growth dust production (default on)
+	* ```OPT += -DDUST_TEXCH``` - Set the dust exchange timescale (set to 20.0E6 yrs now)
+    * ```OPT += -DDUST_TACC0``` - Set the accretion timescale in molecular clouds (set to 0.5E5 yrs now)
 	* ```OPT += -DDUST_DESTRUCTION``` - Switch on dust destruction (default on)
 	* ```OPT += -DFULL_DUST_RATES``` - Output dust production/destruction rates (default on)
 	* ```OPT += -DREDUCED_OUTPUT``` - Shorten output (mainly cutting SFH bins)
