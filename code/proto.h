@@ -267,7 +267,7 @@ void update_hot_frac(int p, double reincorporated, float HotGas);
 int set_merger_center(int fofhalo);
 
 void transfer_stars(int p, char cp[], int q, char cq[], double fraction);
-void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call_function[], int line);
+void transfer_gas(int p, char cp[], int q, char cq[], float fraction, char call_function[], int line);
 void deal_with_satellites(int centralgal, int ngal);
 void mass_checks(char string[], int igal) ;
 
@@ -336,6 +336,7 @@ struct elements elements_init();
 void elements_print(char s[],struct elements ele);
 double elements_total(struct elements ele);
 double metal_elements_total(struct elements ele);
+struct elements elements_nonneg(struct elements ele1);
 
 //in recipe_yields.c:
 void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep);
@@ -369,9 +370,9 @@ void find_actual_ejecta_limits_dust(int channel_type, double Mi_lower_actual, do
 
 
 
-void transfer_dust_from_starformation(int p, double fraction_diffuse, double fraction_clouds);
+void transfer_dust_from_starformation(int p, float fraction_diffuse, float fraction_clouds);
 void transfer_dust_mergers(int p, int q);
-void transfer_dust_to_hot(int p, double fraction);
+void transfer_dust_to_hot(int p, float fraction);
 
 double mu_Obr(int p);
 

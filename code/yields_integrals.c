@@ -33,6 +33,8 @@ void init_integrated_yields()
     for(jj=0;jj<SFH_NBIN;jj++)
       for(kk=0;kk<LIFETIME_Z_NUM;kk++)
 	{
+	  SNIIRate[ii][jj][kk]=0.;
+	  SNIaRate[ii][jj][kk]=0.;
 	  NormSNIIMassEjecRate[ii][jj][kk]=0.;
 	  NormSNIIMetalEjecRate[ii][jj][kk]=0.;
 #ifdef INDIVIDUAL_ELEMENTS
@@ -81,10 +83,10 @@ void integrate_yields()
   L1a=0;L2a=0;L3a=0;L4a=0;L4aa=0;L5a=0;L1b=0;L2b=0;L3b=0;L4b=0;
 
   int counta;
-  TheSFH[0] = 1.0/(tau_dt[0]*UnitTime_in_years/Hubble_h);
+  TheSFH[0] = 1.0;///(tau_dt[0]*UnitTime_in_years/Hubble_h);
   for(counta=1;counta<SFH_NBIN;counta++)
     {
-      TheSFH[counta] = 1.0/(tau_dt[counta]*UnitTime_in_years/Hubble_h);
+      TheSFH[counta] = 1.0;///(tau_dt[counta]*UnitTime_in_years/Hubble_h);
     }
   //TheSFH[0] = 0.0; TheSFH[1] = 3.8; TheSFH[2] = 5.0; TheSFH[3] = 5.5; TheSFH[4] = 5.2; TheSFH[5] = 5.0; TheSFH[6] = 4.8; TheSFH[7] = 4.2; TheSFH[8] = 4.0; TheSFH[9] = 3.8; TheSFH[10] = 3.2; TheSFH[11] = 3.0; TheSFH[12] = 2.8; TheSFH[13] = 2.5; TheSFH[14] = 2.2; TheSFH[15] = 2.2; TheSFH[16] = 2.0; TheSFH[17] = 1.8; TheSFH[18] = 1.8; TheSFH[19] = 1.5;
 
@@ -260,7 +262,7 @@ void integrate_yields()
 				      if (j != Mi_lower_SNII && j != Mi_upper_SNII) //If mass bin j is NEITHER the lowest NOR highest mass bin to be integrated over.
 					{
 					  L1a++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (1.0-A_FACTOR) * (SNIIMasses[j+1]-SNIIMasses[j]) * ((Chabrier_IMF(SNIIMasses[j])*TheSFH[i]) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH[i]))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * (SNIIMasses[j+1]-SNIIMasses[j]) * ((Chabrier_IMF(SNIIMasses[j])*TheSFH[i]) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * ((SNIIMasses[j+1]-SNIIMasses[j]) * ((SNIIEjectedMasses[Zi_SNII][j] + SNIIEjectedMasses[Zi_SNII][j+1])/2.0)); //IN [MSun/yr] //The rate of ejection of mass from a 1 Msun stellar population.
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * (SNIIMasses[j+1]-SNIIMasses[j]) * ((SNIITotalMetals[Zi_SNII][j] + SNIITotalMetals[Zi_SNII][j+1])/2.0); //IN [MSun/yr] //The rate of ejection of 'newly synthesised' metals from a 1 Msun stellar population.
 #ifdef INDIVIDUAL_ELEMENTS
@@ -280,7 +282,7 @@ void integrate_yields()
 				      else if (j == Mi_lower_SNII && j == Mi_upper_SNII && Mi_lower_actual >= SNII_MIN_MASS) //If mass bin j is BOTH the lowest AND highest mass bin to be integrated over.
 					{
 					  L2a++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (1.0-A_FACTOR) * (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * ((Mi_upper_actual-Mi_lower_actual) * ((SNIIEjectedMasses_lower_actual + SNIIEjectedMasses_upper_actual)/2.0));
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * ((Mi_upper_actual-Mi_lower_actual) * ((SNIITotalMetals_lower_actual + SNIITotalMetals_upper_actual)/2.0));
 					  float Sum_NormSNIIYieldRate; Sum_NormSNIIYieldRate = 0.0;
@@ -300,7 +302,7 @@ void integrate_yields()
 				      else if (j == Mi_lower_SNII && j == Mi_upper_SNII && Mi_lower_actual < SNII_MIN_MASS) //If mass bin j is BOTH the lowest AND highest mass bin to be integrated over, AND 'Mi_lower_actual' is below min. mass for SNe-II. (Still only counts stars from SNII_MIN_MASS to Mi_upper_actual).
 					{
 					  L3a++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (1.0-A_FACTOR) * (Mi_upper_actual-SNII_MIN_MASS) * ((Chabrier_IMF(SNII_MIN_MASS)*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * (Mi_upper_actual-SNII_MIN_MASS) * ((Chabrier_IMF(SNII_MIN_MASS)*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * ((Mi_upper_actual-SNII_MIN_MASS) * ((SNIIEjectedMasses_lower_actual + SNIIEjectedMasses_upper_actual)/2.0));
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * ((Mi_upper_actual-SNII_MIN_MASS) * ((SNIITotalMetals_lower_actual + SNIITotalMetals_upper_actual)/2.0));
 					  float Sum_NormSNIIYieldRate; Sum_NormSNIIYieldRate = 0.0;
@@ -320,7 +322,7 @@ void integrate_yields()
 				      else if (j == Mi_lower_SNII && j != Mi_upper_SNII && Mi_lower_actual >= SNII_MIN_MASS) //If mass bin j IS the lowest but IS NOT the highest mass bin to be integrated over.
 					{
 					  L4a++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (1.0-A_FACTOR) * (SNIIMasses[j+1]-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH_rate) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH_rate))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * (SNIIMasses[j+1]-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * ((SNIIMasses[j+1]-Mi_lower_actual) * ((SNIIEjectedMasses_lower_actual + SNIIEjectedMasses[Zi_SNII][j+1])/2.0));
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * (SNIIMasses[j+1]-Mi_lower_actual) * ((SNIITotalMetals_lower_actual + SNIITotalMetals[Zi_SNII][j+1])/2.0);
 #ifdef INDIVIDUAL_ELEMENTS
@@ -338,7 +340,7 @@ void integrate_yields()
 				      else if (j == Mi_lower_SNII && j != Mi_upper_SNII && Mi_lower_actual < SNII_MIN_MASS) //If mass bin j IS the lowest but IS NOT the highest mass bin to be integrated over, and Mi_lower_actual < SNII_MIN_MASS
 					{
 					  L4aa++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (1.0-A_FACTOR) * (SNIIMasses[j+1]-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH_rate) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH_rate))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * (SNIIMasses[j+1]-SNII_MIN_MASS) * ((Chabrier_IMF(SNII_MIN_MASS)*TheSFH[i]) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * ((SNIIMasses[j+1]-SNII_MIN_MASS) * ((SNIIEjectedMasses_lower_actual + SNIIEjectedMasses[Zi_SNII][j+1])/2.0));
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * (SNIIMasses[j+1]-SNII_MIN_MASS) * ((SNIITotalMetals_lower_actual + SNIITotalMetals[Zi_SNII][j+1])/2.0);
 #ifdef INDIVIDUAL_ELEMENTS
@@ -356,7 +358,7 @@ void integrate_yields()
 				      else if (j == Mi_upper_SNII && j != Mi_lower_SNII) //If mass bin j IS NOT the lowest but IS the highest mass bin to be integrated over.
 					{
 					  L5a++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (1.0-A_FACTOR) * (Mi_upper_actual-SNIIMasses[j]) * ((Chabrier_IMF(SNIIMasses[j])*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * (Mi_upper_actual-SNIIMasses[j]) * ((Chabrier_IMF(SNIIMasses[j])*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * ((Mi_upper_actual-SNIIMasses[j]) * ((SNIIEjectedMasses[Zi_SNII][j] + SNIIEjectedMasses_upper_actual)/2.0));
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += (1.0-A_FACTOR) * ((Mi_upper_actual-SNIIMasses[j]) * ((SNIITotalMetals[Zi_SNII][j] + SNIITotalMetals_upper_actual)/2.0));
 #ifdef INDIVIDUAL_ELEMENTS
@@ -378,7 +380,7 @@ void integrate_yields()
 				      if (j != Mi_lower_SNII && j != Mi_upper_SNII)
 					{
 					  L1b++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (SNIIMasses[j+1]-SNIIMasses[j]) * ((Chabrier_IMF(SNIIMasses[j])*TheSFH[i]) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH[i]))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (SNIIMasses[j+1]-SNIIMasses[j]) * ((Chabrier_IMF(SNIIMasses[j])*TheSFH[i]) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += ((SNIIMasses[j+1]-SNIIMasses[j]) * ((SNIIEjectedMasses[Zi_SNII][j] + SNIIEjectedMasses[Zi_SNII][j+1])/2.0));
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += (SNIIMasses[j+1]-SNIIMasses[j]) * ((SNIITotalMetals[Zi_SNII][j] + SNIITotalMetals[Zi_SNII][j+1])/2.0);
 #ifdef INDIVIDUAL_ELEMENTS
@@ -396,7 +398,7 @@ void integrate_yields()
 				      else if (j == Mi_lower_SNII && j == Mi_upper_SNII) //NB: No checks on the values of Mi_lower_actual and Mi_upper_actual are needed here, as Mi_upper_actual cannot be larger that SNII_MAX_MASS (this is forced above), and Mi_lower_actual cannot be smaller than SNII_MIN_MASS because we're in the loop for SNIIMasses[Mi_lower_SNII] > SNIA_MAX_MASS. (09-06-19)
 					{
 					  L2b++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += ((Mi_upper_actual-Mi_lower_actual) * ((SNIIEjectedMasses_lower_actual + SNIIEjectedMasses_upper_actual)/2.0));
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += ((Mi_upper_actual-Mi_lower_actual) * ((SNIITotalMetals_lower_actual + SNIITotalMetals_upper_actual)/2.0));
 #ifdef INDIVIDUAL_ELEMENTS
@@ -414,7 +416,7 @@ void integrate_yields()
 				      else if (j == Mi_lower_SNII && j != Mi_upper_SNII)
 					{
 					  L3b++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (SNIIMasses[j+1]-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH[i]))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (SNIIMasses[j+1]-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(SNIIMasses[j+1])*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += ((SNIIMasses[j+1]-Mi_lower_actual) * ((SNIIEjectedMasses_lower_actual + SNIIEjectedMasses[Zi_SNII][j+1])/2.0));
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += (SNIIMasses[j+1]-Mi_lower_actual) * ((SNIITotalMetals_lower_actual + SNIITotalMetals[Zi_SNII][j+1])/2.0);
 #ifdef INDIVIDUAL_ELEMENTS
@@ -432,7 +434,7 @@ void integrate_yields()
 				      else if (j == Mi_upper_SNII && j != Mi_lower_SNII)
 					{
 					  L4b++;
-					  //SNIIRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-SNIIMasses[j]) * ((Chabrier_IMF(SNIIMasses[j])*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
+					  SNIIRate[(STEPS*snap)+step][i][Zi] += (Mi_upper_actual-SNIIMasses[j]) * ((Chabrier_IMF(SNIIMasses[j])*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 					  NormSNIIMassEjecRate[(STEPS*snap)+step][i][Zi] += ((Mi_upper_actual-SNIIMasses[j]) * ((SNIIEjectedMasses[Zi_SNII][j] + SNIIEjectedMasses_upper_actual)/2.0));
 					  NormSNIIMetalEjecRate[(STEPS*snap)+step][i][Zi] += ((Mi_upper_actual-SNIIMasses[j]) * ((SNIITotalMetals[Zi_SNII][j] + SNIITotalMetals_upper_actual)/2.0));
 #ifdef INDIVIDUAL_ELEMENTS
@@ -479,7 +481,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(lifetimes[Zi][j+1]) * 1.0e-9; //NOTE: DTDcalc returns SNe/Gyr, not SNe/yr, hence the multiple (1.0e-9).
 				      DTD_upper = DTDcalc(lifetimes[Zi][j]) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-lifetimes[Zi][j+1]) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-lifetimes[Zi][j+1]) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-lifetimes[Zi][j+1]) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr]
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -505,7 +507,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(SNIA_MIN_TIME) * 1.0e-9; //NOTE: DTDcalc returns SNe/Gyr, not SNe/yr, hence the multiple (1.0e-9).
 				      DTD_upper = DTDcalc(lifetimes[Zi][j]) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-lifetimes[Zi][j+1]) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-SNIA_MIN_TIME) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-SNIA_MIN_TIME) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr]
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -547,7 +549,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(t_lower) * 1.0e-9;
 				      DTD_upper = DTDcalc(t_upper) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-t_lower) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-t_lower) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-t_lower) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr] //Using t_upper/t_lower is the equivalent of using Mi_lower_actual/Mi_upper_actual for SNe-II and AGB stars.
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -570,7 +572,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(SNIA_MIN_TIME) * 1.0e-9;
 				      DTD_upper = DTDcalc(t_upper) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-t_lower) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-SNIA_MIN_TIME) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-SNIA_MIN_TIME) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr] //Using t_upper/t_lower is the equivalent of using Mi_lower_actual/Mi_upper_actual for SNe-II and AGB stars.
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -593,7 +595,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(t_lower) * 1.0e-9;
 				      DTD_upper = DTDcalc(SNIA_MAX_TIME) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-t_lower) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (SNIA_MAX_TIME-t_lower) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (SNIA_MAX_TIME-t_lower) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr] //Using t_upper/t_lower is the equivalent of using Mi_lower_actual/Mi_upper_actual for SNe-II and AGB stars.
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -616,7 +618,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(t_lower) * 1.0e-9;
 				      DTD_upper = DTDcalc(lifetimes[Zi][j]) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-t_lower) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-t_lower) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-t_lower) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr]
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -639,7 +641,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(SNIA_MIN_TIME) * 1.0e-9;
 				      DTD_upper = DTDcalc(lifetimes[Zi][j]) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-lifetimes[Zi][j+1]) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-SNIA_MIN_TIME) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (lifetimes[Zi][j]-SNIA_MIN_TIME) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr]
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -681,7 +683,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(lifetimes[Zi][j+1]) * 1.0e-9;
 				      DTD_upper = DTDcalc(t_upper) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-lifetimes[Zi][j+1]) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-lifetimes[Zi][j+1]) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-lifetimes[Zi][j+1]) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr]
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -704,7 +706,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(SNIA_MIN_TIME) * 1.0e-9;
 				      DTD_upper = DTDcalc(t_upper) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-lifetimes[Zi][j+1]) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-SNIA_MIN_TIME) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-SNIA_MIN_TIME) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr]
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -727,7 +729,7 @@ void integrate_yields()
 				      DTD_lower = DTDcalc(lifetimes[Zi][j+1]) * 1.0e-9;
 				      DTD_upper = DTDcalc(SNIA_MAX_TIME) * 1.0e-9;
 
-				      //SNIaRate[(STEPS*snap)+step][Zi] += A_FACTOR*F316 * KALPHA * (t_upper-lifetimes[Zi][j+1]) * ((DTD_lower * TheSFH_rate) + (DTD_upper * TheSFH_rate))/2.0;
+				      SNIaRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (SNIA_MAX_TIME-lifetimes[Zi][j+1]) * ((DTD_lower * TheSFH[i]) + (DTD_upper * TheSFH[i]))/2.0;
 				      NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi] += A_FACTOR*F316 * KALPHA * (SNIA_MAX_TIME-lifetimes[Zi][j+1]) * ((DTD_lower * SNIAEJECMASS) + (DTD_upper * SNIAEJECMASS))/2.0; //IN [MSun/yr]
 				      NormSNIaMetalEjecRate[(STEPS*snap)+step][i][Zi] = NormSNIaMassEjecRate[(STEPS*snap)+step][i][Zi];
 #ifdef INDIVIDUAL_ELEMENTS
@@ -786,7 +788,7 @@ void integrate_yields()
 				{
 				  if (j != Mi_lower_AGB && j != Mi_upper_AGB)
 				    {
-				      //AGBRate[(STEPS*snap)+step][Zi] += (AGBMasses[j+1]-AGBMasses[j]) * ((Chabrier_IMF(AGBMasses[j])*TheSFH_rate) + (Chabrier_IMF(AGBMasses[j+1])*TheSFH_rate))/2.0;
+				      //AGBRate[(STEPS*snap)+step][Zi] += (AGBMasses[j+1]-AGBMasses[j]) * ((Chabrier_IMF(AGBMasses[j])*TheSFH[i]) + (Chabrier_IMF(AGBMasses[j+1])*TheSFH[i]))/2.0;
 				      NormAGBMassEjecRate[(STEPS*snap)+step][i][Zi] += ((AGBMasses[j+1]-AGBMasses[j]) * ((AGBEjectedMasses[Zi_AGB][j] + AGBEjectedMasses[Zi_AGB][j+1])/2.0));
 				      NormAGBMetalEjecRate[(STEPS*snap)+step][i][Zi] += (AGBMasses[j+1]-AGBMasses[j]) * ((AGBTotalMetals[Zi_AGB][j] + AGBTotalMetals[Zi_AGB][j+1])/2.0);
 #ifdef INDIVIDUAL_ELEMENTS
@@ -803,7 +805,7 @@ void integrate_yields()
 				    }
 				  else if (j == Mi_lower_AGB && j == Mi_upper_AGB && Mi_lower_actual >= AGB_MIN_MASS && Mi_lower_actual <= AGB_MAX_MASS && Mi_upper_actual <= AGB_MAX_MASS) //NB: Mi_lower_actual cannot be below AGB_MIN_MASS
 				    {
-				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH_rate) + (Chabrier_IMF(Mi_upper_actual)*TheSFH_rate))/2.0;
+				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 				      NormAGBMassEjecRate[(STEPS*snap)+step][i][Zi] += ((Mi_upper_actual-Mi_lower_actual) * ((AGBEjectedMasses_lower_actual + AGBEjectedMasses_upper_actual)/2.0));
 				      NormAGBMetalEjecRate[(STEPS*snap)+step][i][Zi] += (Mi_upper_actual-Mi_lower_actual) * ((AGBTotalMetals_lower_actual + AGBTotalMetals_upper_actual)/2.0);
 #ifdef INDIVIDUAL_ELEMENTS
@@ -820,7 +822,7 @@ void integrate_yields()
 				    }
 				  else if (j == Mi_lower_AGB && j == Mi_upper_AGB && Mi_lower_actual >= AGB_MIN_MASS && Mi_lower_actual > AGB_MAX_MASS && Mi_upper_actual <= AGB_MAX_MASS) //NB: Mi_lower_actual cannot be below AGB_MIN_MASS
 				    {
-				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH_rate) + (Chabrier_IMF(Mi_upper_actual)*TheSFH_rate))/2.0;
+				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 				      NormAGBMassEjecRate[(STEPS*snap)+step][i][Zi] += 0.0;
 				      NormAGBMetalEjecRate[(STEPS*snap)+step][i][Zi] += 0.0;
 #ifdef INDIVIDUAL_ELEMENTS
@@ -837,7 +839,7 @@ void integrate_yields()
 				    }
 				  else if (j == Mi_lower_AGB && j == Mi_upper_AGB && Mi_upper_actual > AGB_MAX_MASS)
 				    {
-				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH_rate) + (Chabrier_IMF(Mi_upper_actual)*TheSFH_rate))/2.0;
+				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 				      NormAGBMassEjecRate[(STEPS*snap)+step][i][Zi] += ((AGB_MAX_MASS-Mi_lower_actual) * ((AGBEjectedMasses_lower_actual + AGBEjectedMasses_upper_actual)/2.0));
 				      NormAGBMetalEjecRate[(STEPS*snap)+step][i][Zi] += (AGB_MAX_MASS-Mi_lower_actual) * ((AGBTotalMetals_lower_actual + AGBTotalMetals_upper_actual)/2.0);
 #ifdef INDIVIDUAL_ELEMENTS
@@ -854,7 +856,7 @@ void integrate_yields()
 				    }
 				  else if (j == Mi_lower_AGB && j != Mi_upper_AGB && Mi_lower_actual >= AGB_MIN_MASS)
 				    {
-				      //AGBRate[(STEPS*snap)+step][Zi] += (AGBMasses[j+1]-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH_rate) + (Chabrier_IMF(AGBMasses[j+1])*TheSFH_rate))/2.0;
+				      //AGBRate[(STEPS*snap)+step][Zi] += (AGBMasses[j+1]-Mi_lower_actual) * ((Chabrier_IMF(Mi_lower_actual)*TheSFH[i]) + (Chabrier_IMF(AGBMasses[j+1])*TheSFH[i]))/2.0;
 				      NormAGBMassEjecRate[(STEPS*snap)+step][i][Zi] += ((AGBMasses[j+1]-Mi_lower_actual) * ((AGBEjectedMasses_lower_actual + AGBEjectedMasses[Zi_AGB][j+1])/2.0));
 				      NormAGBMetalEjecRate[(STEPS*snap)+step][i][Zi] += (AGBMasses[j+1]-Mi_lower_actual) * ((AGBTotalMetals_lower_actual + AGBTotalMetals[Zi_AGB][j+1])/2.0);
 #ifdef INDIVIDUAL_ELEMENTS
@@ -871,7 +873,7 @@ void integrate_yields()
 				    }
 				  else if (j == Mi_upper_AGB && j != Mi_lower_AGB  && Mi_upper_actual <= AGB_MAX_MASS)
 				    {
-				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-AGBMasses[j]) * ((Chabrier_IMF(AGBMasses[j])*TheSFH_rate) + (Chabrier_IMF(Mi_upper_actual)*TheSFH_rate))/2.0;
+				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-AGBMasses[j]) * ((Chabrier_IMF(AGBMasses[j])*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 				      NormAGBMassEjecRate[(STEPS*snap)+step][i][Zi] += ((Mi_upper_actual-AGBMasses[j]) * ((AGBEjectedMasses[Zi_AGB][j] + AGBEjectedMasses_upper_actual)/2.0));
 				      NormAGBMetalEjecRate[(STEPS*snap)+step][i][Zi] += ((Mi_upper_actual-AGBMasses[j]) * ((AGBTotalMetals[Zi_AGB][j] + AGBTotalMetals_upper_actual)/2.0));
 #ifdef INDIVIDUAL_ELEMENTS
@@ -888,7 +890,7 @@ void integrate_yields()
 				    }
 				  else if (j == Mi_upper_AGB && j != Mi_lower_AGB  && Mi_upper_actual > AGB_MAX_MASS)
 				    {
-				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-AGBMasses[j]) * ((Chabrier_IMF(AGBMasses[j])*TheSFH_rate) + (Chabrier_IMF(Mi_upper_actual)*TheSFH_rate))/2.0;
+				      //AGBRate[(STEPS*snap)+step][Zi] += (Mi_upper_actual-AGBMasses[j]) * ((Chabrier_IMF(AGBMasses[j])*TheSFH[i]) + (Chabrier_IMF(Mi_upper_actual)*TheSFH[i]))/2.0;
 				      NormAGBMassEjecRate[(STEPS*snap)+step][i][Zi] += ((AGB_MAX_MASS-AGBMasses[j]) * ((AGBEjectedMasses[Zi_AGB][j] + AGBEjectedMasses_upper_actual)/2.0));
 				      NormAGBMetalEjecRate[(STEPS*snap)+step][i][Zi] += ((AGB_MAX_MASS-AGBMasses[j]) * ((AGBTotalMetals[Zi_AGB][j] + AGBTotalMetals_upper_actual)/2.0));
 #ifdef INDIVIDUAL_ELEMENTS
@@ -910,7 +912,7 @@ void integrate_yields()
 		    } //for (Zi=0;Zi<LIFETIME_Z_NUM;Zi++)
 		} //for (j=0;j<=width_in_timesteps;j++) //MINI_BINS
 	    } //for (i=0;i<=SFH_ibin_structure[(SFH_NBIN*snap)+step];i++)
-
+	//printf("timestep=%i | lookback time = %.2f [Myr] | SNIIRate(Zi=2) = %.8f\n", (STEPS*snap)+step, (timet*UnitTime_in_years/Hubble_h)/1.0e6, SNIIRate[(STEPS*snap)+step][2]);
 	} //for(step=0;step<STEPS;step++)
     } //for(snap=0;snap<LastDarkMatterSnapShot;snap++)
   /*printf("L1a = %i\n", L1a);
@@ -923,12 +925,9 @@ void integrate_yields()
 	printf("L2b = %i\n", L2b);
 	printf("L3b = %i\n", L3b);
 	printf("L4b = %i\n", L4b);*/
-
 #ifdef PARALLEL
   if(ThisTask == 0)
 #endif
-    printf("Yield integrals calculated.\n");
-
   int ii, jj, kk;
   for(snap=0;snap<LastDarkMatterSnapShot;snap++) //LOOP OVER SNAPSHOTS
     for(step=0;step<STEPS;step++) //LOOP O

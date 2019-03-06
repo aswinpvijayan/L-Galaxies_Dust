@@ -327,10 +327,13 @@ struct GALAXY			/* Galaxy data */
   struct elements ColdGasDiff_elements;
   struct elements ColdGasClouds_elements;
   float mu_gas;
+  float RatesSNII;
+  float RatesSNIa;
 #endif //INDIVIDUAL_ELEMENTS
 
 #ifdef DETAILED_DUST
 #ifdef FULL_DUST_RATES
+    float tdes;
 	struct DustRates DustColdGasRates;		
 #endif
 	struct elements DustColdGasDiff_elements; // ? // Mass of elements in the diffused phase locked up in dust (in ColdGas)
@@ -701,9 +704,9 @@ float NormSNIaYieldRate[STEPS*MAXSNAPS][SFH_NBIN][LIFETIME_Z_NUM][NUM_ELEMENTS];
 
 //Arrays used to plot SNe rates from SFH bins (yield_integrals.c):
 float TheSFH[SFH_NBIN];
-float SNIIRate[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
-float SNIaRate[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
-float AGBRate[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
+float SNIIRate[STEPS*MAXSNAPS][SFH_NBIN][LIFETIME_Z_NUM];
+float SNIaRate[STEPS*MAXSNAPS][SFH_NBIN][LIFETIME_Z_NUM];
+float AGBRate[STEPS*MAXSNAPS][SFH_NBIN][LIFETIME_Z_NUM];
 //Arrays used to plot SNe rates from SFH-timesteps (calc_SNe_rates.c):
 float TheSFH2[STEPS*MAXSNAPS];
 float SNIIRate2[STEPS*MAXSNAPS][LIFETIME_Z_NUM];
@@ -779,6 +782,10 @@ float SNIa_prevstep_Cold_Fe[SFH_NBIN];
 // For storing metallicity in model_yields.c
 int Zi_saved[SFH_NBIN];
 double Zi_disp_saved[SFH_NBIN];
+
+// For storing SNe rates for the timestep
+float SN2_rate;
+float SN1_rate;
 
 #endif //DETAILED_DUST
 

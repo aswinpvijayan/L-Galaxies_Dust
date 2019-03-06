@@ -480,7 +480,8 @@ void add_galaxies_together(int t, int p)
   transfer_gas(t,"Cold",p,"Cold",1.,"add_galaxies_together", __LINE__);
   #ifdef DETAILED_DUST
     transfer_dust_mergers(t, p);
-    mass_checks("transfer_dust_mergers",p);
+    mass_checks("transfer_dust_mergers#0",t);
+    mass_checks("transfer_dust_mergers#1",p);
   #endif  
   
   //transfer_gas(t,"Ejected",p,"Cold",1.,"add_galaxies_together", __LINE__);
@@ -657,7 +658,7 @@ double collisional_starburst_recipe(double mass_ratio, int merger_centralgal, in
   /* This is the major and minor merger starburst recipe of Somerville 2001.
    * The coefficients in eburst are taken from TJ Cox's PhD thesis and should
    * be more accurate then previous. */
-
+  mass_checks("collisional_starburst_recipe #1",merger_centralgal);
   Ggas=Gal[merger_centralgal].ColdGas;
 
   /* the bursting fraction given the mass ratio */
@@ -699,7 +700,7 @@ double collisional_starburst_recipe(double mass_ratio, int merger_centralgal, in
   if (mstars > 0.)
     SN_feedback(merger_centralgal, centralgal, mstars, "ColdGas");
 #endif
-
+    
 #ifdef COMPUTE_SPECPHOT_PROPERTIES
 #ifndef POST_PROCESS_MAGS
   /*  update the luminosities due to the stars formed */

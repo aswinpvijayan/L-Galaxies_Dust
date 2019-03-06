@@ -382,12 +382,15 @@ void prepare_galaxy_for_output(int n, struct GALAXY *g, struct GALAXY_OUTPUT *o)
   o->ColdGasDiff_elements = g->ColdGasDiff_elements;
   o->ColdGasClouds_elements = g->ColdGasClouds_elements;
   o->mu_gas = g->mu_gas;
+  o->RatesSNII = g->RatesSNII;
+  o->RatesSNIa = g->RatesSNIa;
 #endif
 
 #ifdef DETAILED_DUST
 #ifdef FULL_DUST_RATES
   o->DustColdGasRates = g->DustColdGasRates;
 #endif
+  o->tdes = g->tdes;
   o->DustColdGasDiff_elements = g->DustColdGasDiff_elements;
   o->DustColdGasClouds_elements = g->DustColdGasClouds_elements;
   o->t_acc = g->t_acc;

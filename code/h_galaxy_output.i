@@ -1,5 +1,5 @@
 # 1 "./code/h_galaxy_output.h"
-# 1 "/lustre/scratch/astro/ap629/sc558/Dust_Rob//"
+# 1 "/lustre/scratch/astro/ap629/sc558/Dust_Rob_copy//"
 # 1 "<built-in>"
 # 1 "<command-line>"
 # 1 "./code/h_galaxy_output.h"
@@ -96,10 +96,13 @@ struct GALAXY_OUTPUT
   struct elements ColdGasDiff_elements; // Msol // Mass of elements in the diffused phase (in ColdGas)
   struct elements ColdGasClouds_elements; // Msol // Mass of elements in the cloud phase (in ColdGas)
   float mu_gas; // ? // fraction of molecular media
+  float RatesSNII; // /yr // SNII rate
+  float RatesSNIa; // /yr // SNIa rate
 
 
 
 
+  float tdes;
   struct DustRates DustColdGasRates; // ? // Rates of creation and destruction of dust
 
   struct elements DustColdGasDiff_elements; // Msol // Mass of elements in the diffused phase locked up in dust (in ColdGas)
@@ -126,7 +129,7 @@ struct SFH_BIN {
   struct metals sfh_MetalsDiskMass; // Metals locked up in stars in disk.
   struct metals sfh_MetalsBulgeMass; // Metals locked up in stars in bulge.
   struct metals sfh_MetalsICM; // Metals locked up in stars in ICM.
-# 273 "./code/h_galaxy_output.h"
+# 276 "./code/h_galaxy_output.h"
   struct elements sfh_ElementsDiskMass;
   struct elements sfh_ElementsBulgeMass;
   struct elements sfh_ElementsICM;
@@ -141,6 +144,8 @@ struct SFH_BIN {
   struct elements ColdGasDiff_elements;
   struct elements ColdGasClouds_elements;
   float mu_gas;
+  float RatesSNII; // /yr // SNII rate
+  float RatesSNIa; // /yr // SNIa rate
 
 };
 

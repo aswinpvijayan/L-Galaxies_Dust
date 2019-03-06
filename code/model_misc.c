@@ -361,12 +361,15 @@ void init_galaxy(int p, int halonr)
   Gal[p].ColdGasDiff_elements = elements_init();
   Gal[p].ColdGasClouds_elements = elements_init();
   Gal[p].mu_gas = 0.;
+  Gal[p].RatesSNII = 0.;
+  Gal[p].RatesSNIa = 0.;
 #endif
 
 #ifdef DETAILED_DUST
 // Initialise dust as an array of elements - no longer a structure of its own 
 // This assumes all dust is in the ISM. If you add/consider dust in the CGM/ICM etc. you
 // should create a new structure i.e. Gal[p].Dust_CGM_elements
+   Gal[p].tdes = 0.;
    Gal[p].DustColdGasDiff_elements = elements_init();
    Gal[p].DustColdGasClouds_elements = elements_init();
    Gal[p].t_acc = 1E15;
@@ -1066,7 +1069,7 @@ void transfer_stars(int p, char cp[], int q, char cq[], double fraction) {
 }
 
 
-void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call_function[], int call_line) {
+void transfer_gas(int p, char cp[], int q, char cq[], float fraction, char call_function[], int call_line) {
 
   /* Transfers a fraction of component cq of galaxy q onto component cp of galaxy p.
    * cp and cq must each be one of:
@@ -1079,15 +1082,22 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
   struct metals Metals;
 #ifdef INDIVIDUAL_ELEMENTS
   struct elements Yield;
-  struct elements MYield_diffuse;
-  struct elements MYield_clouds;
+  struct elements Yield_diffuse;
+  struct elements Yield_clouds;
 #endif
 #else
   float Metals;
 #endif
 
   /* Sanity check */
-
+    
+  if (fraction > 1. && fraction < 1.000001) { //1.0000001
+	  fraction = 1.0;
+      //printf("\n*** fraction forced to 1.0 ***\n");
+      //printf("*** fraction was = %.11f ***\n", fraction);
+      //printf("*** From '%s' to '%s' ***\n\n", cq, cp);
+}
+  
   if (fraction > 1.) //1.000001
   {
   	char sbuf[1000];
@@ -1095,12 +1105,6 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
   	printf("coldgas=%f.\n", Gal[p].ColdGas);
   	terminate(sbuf);
   }
-  //if (fraction > 1. && fraction < 1.000001) { //1.0000001
-	//  fraction = 1.0;
-    /*printf("\n*** fraction forced to 1.0 ***\n");
-    printf("*** fraction was = %.11f ***\n", fraction);
-    printf("*** From '%s' to '%s' ***\n\n", cq, cp);*/
- // }
 
   //Mass and Metals to be transfered
   if (strcmp(cq,"Cold")==0)
@@ -1109,8 +1113,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
       Metals = metals_add(metals_init(),Gal[q].MetalsColdGas,fraction);
 #ifdef INDIVIDUAL_ELEMENTS
       Yield = elements_add(elements_init(),Gal[q].ColdGas_elements,fraction);
-      MYield_diffuse = elements_add(elements_init(),Gal[q].ColdGasDiff_elements,fraction);
-      MYield_clouds = elements_add(elements_init(),Gal[q].ColdGasClouds_elements,fraction);
+      Yield_clouds = elements_add(elements_init(),Gal[q].ColdGasClouds_elements,fraction);
+      Yield_diffuse = elements_add(elements_init(),Gal[q].ColdGasDiff_elements,fraction);
 #endif
     }
   else if (strcmp(cq,"Hot")==0)
@@ -1119,8 +1123,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
       Metals = metals_add(metals_init(),Gal[q].MetalsHotGas,fraction);
 #ifdef INDIVIDUAL_ELEMENTS
     Yield = elements_add(elements_init(),Gal[q].HotGas_elements,fraction);
-    MYield_diffuse = elements_add(elements_init(),Gal[q].HotGas_elements,fraction*(1-Gal[p].mu_gas));
-    MYield_clouds = elements_add(elements_init(),Gal[q].HotGas_elements,fraction*Gal[p].mu_gas);
+    Yield_clouds = elements_add(elements_init(),Gal[q].HotGas_elements,fraction*Gal[p].mu_gas);
+    Yield_diffuse = elements_add(elements_init(), Gal[q].HotGas_elements,fraction*(1. - Gal[p].mu_gas));
 #endif
     }
   else if (strcmp(cq,"Ejected")==0)
@@ -1129,8 +1133,8 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
       Metals = metals_add(metals_init(),Gal[q].MetalsEjectedMass,fraction);
 #ifdef INDIVIDUAL_ELEMENTS
     Yield = elements_add(elements_init(),Gal[q].EjectedMass_elements,fraction);
-    MYield_diffuse = elements_add(elements_init(),Gal[q].EjectedMass_elements,fraction*(1-Gal[p].mu_gas));
-    MYield_clouds = elements_add(elements_init(),Gal[q].EjectedMass_elements,fraction*Gal[p].mu_gas);
+    Yield_clouds = elements_add(elements_init(),Gal[q].EjectedMass_elements,fraction*Gal[p].mu_gas);
+    Yield_diffuse = elements_add(elements_init(), Gal[q].EjectedMass_elements,fraction*(1. - Gal[p].mu_gas));
 #endif
     }
   else
@@ -1145,9 +1149,9 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
       Gal[p].ColdGas += Mass;
       Gal[p].MetalsColdGas = metals_add(Gal[p].MetalsColdGas,Metals,1.);
 #ifdef INDIVIDUAL_ELEMENTS
-      Gal[p].ColdGas_elements = elements_add(Gal[p].ColdGas_elements,Yield,1.);
-      Gal[p].ColdGasDiff_elements = elements_add(Gal[p].ColdGasDiff_elements,MYield_diffuse,1.);
-      Gal[p].ColdGasClouds_elements = elements_add(Gal[p].ColdGasClouds_elements,MYield_clouds,1.);
+      Gal[p].ColdGas_elements = elements_add(Gal[p].ColdGas_elements,Yield,1.0);
+      Gal[p].ColdGasDiff_elements = elements_add(Gal[p].ColdGasDiff_elements,Yield_diffuse,1.0);
+      Gal[p].ColdGasClouds_elements = elements_add(Gal[p].ColdGasClouds_elements,Yield_clouds,1.0);
 #endif
     }
   else if (strcmp(cp,"Hot")==0)
@@ -1180,9 +1184,14 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
     Gal[q].ColdGas -= Mass;
     Gal[q].MetalsColdGas = metals_add(Gal[q].MetalsColdGas,Metals,-1.);
 #ifdef INDIVIDUAL_ELEMENTS
-    Gal[q].ColdGas_elements = elements_add(Gal[q].ColdGas_elements,Yield,-1.);
-    Gal[q].ColdGasDiff_elements = elements_add(Gal[q].ColdGasDiff_elements,MYield_diffuse,-1.);
-    Gal[q].ColdGasClouds_elements = elements_add(Gal[q].ColdGasClouds_elements,MYield_clouds,-1.);
+    Gal[q].ColdGas_elements = elements_add(Gal[q].ColdGas_elements,Yield,-1.0);
+    //printf("mu_gas, ColdGas_elements = %f, %f\n", Gal[q].mu_gas, elements_total(Gal[q].ColdGas_elements));
+    Gal[q].ColdGasDiff_elements = elements_add(Gal[q].ColdGasDiff_elements,Yield_diffuse,-1.0);
+    Gal[q].ColdGasClouds_elements = elements_add(Gal[q].ColdGasClouds_elements,Yield_clouds,-1.0);
+    if (elements_total(Gal[q].ColdGas_elements)==0) {
+        Gal[q].ColdGasDiff_elements = elements_init();
+        Gal[q].ColdGasClouds_elements = elements_init();
+    }
 #endif
   } else if (strcmp(cq,"Hot")==0) {
     Gal[q].HotGas -= Mass;
@@ -1207,18 +1216,18 @@ void transfer_gas(int p, char cp[], int q, char cq[], double fraction, char call
   return;
 }
 #ifdef DETAILED_DUST
-void transfer_dust_from_starformation(int p, double fraction_diffuse, double fraction_clouds)
+void transfer_dust_from_starformation(int p, float fraction_diffuse, float fraction_clouds)
   {  
 	//Don't need to transfer any dust -> disk metals as dust is considered
 	//part of metals. But we do need to destroy the correct amount of dust
 	
 	double previoustime, newtime, deltaT;
 	
-	previoustime = NumToTime(Gal[p].SnapNum - 1);
-	newtime = NumToTime(Gal[p].SnapNum);
+	previoustime = NumToTime(Gal[p].SnapNum);
+	newtime = NumToTime(Gal[p].SnapNum+1);
 	deltaT = previoustime - newtime;
 	
-	Gal[p].DustColdGasRates.DEST += (elements_total(elements_add(elements_init(),Gal[p].DustColdGasDiff_elements,-fraction_diffuse)) + elements_total(elements_add(elements_init(),Gal[p].DustColdGasClouds_elements,-fraction_clouds)))/(deltaT * UnitTime_in_years);
+	Gal[p].DustColdGasRates.DEST += (elements_total(elements_add(elements_init(),Gal[p].DustColdGasDiff_elements,fraction_diffuse)) + elements_total(elements_add(elements_init(),Gal[p].DustColdGasClouds_elements,fraction_clouds)))/(deltaT * UnitTime_in_years);
 	
 	Gal[p].DustColdGasDiff_elements = elements_add(Gal[p].DustColdGasDiff_elements, Gal[p].DustColdGasDiff_elements, -fraction_diffuse);
 	
@@ -1241,16 +1250,16 @@ void transfer_dust_mergers(int p, int q)
     
   }
  
-void transfer_dust_to_hot(int p, double fraction)
+void transfer_dust_to_hot(int p, float fraction)
   {
   	
   	double previoustime, newtime, deltaT;
 	
-	previoustime = NumToTime(Gal[p].SnapNum - 1);
-	newtime = NumToTime(Gal[p].SnapNum);
+	previoustime = NumToTime(Gal[p].SnapNum);
+	newtime = NumToTime(Gal[p].SnapNum+1);
 	deltaT = previoustime - newtime;
   	
-  	Gal[p].DustColdGasRates.DEST += (elements_total(elements_add(elements_init(),Gal[p].DustColdGasDiff_elements,-fraction)) + elements_total(elements_add(elements_init(),Gal[p].DustColdGasClouds_elements,-fraction)))/(deltaT * UnitTime_in_years);
+  	Gal[p].DustColdGasRates.DEST += (elements_total(elements_add(elements_init(),Gal[p].DustColdGasDiff_elements,fraction)) + elements_total(elements_add(elements_init(),Gal[p].DustColdGasClouds_elements,fraction)))/(deltaT * UnitTime_in_years);
   	
   	//Dust is actually not transferred to hot phase - just destroy it
   	
@@ -1268,7 +1277,7 @@ void shuffle_ISM(int p) {
     This function redistributes the various elements in the molecular clouds and the diffused medium of the cold gas, so that
     the ratio between the media follows the same value as being calculated from the molecular gas prescription. This step is 
     should be done at the begining or the end of the timestep. It is also done in model_dustyields.c before dust growth since
-    the variable 'mu_gas' is used in the calculation and for that value to reflect what is pressent in the cold ISM, this step
+    the variable 'mu_gas' is used in the calculation and for that value to reflect what is present in the cold ISM, this step
     should be executed. 
     */
     
@@ -1288,136 +1297,50 @@ void shuffle_ISM(int p) {
 	
 	Gal[p].mu_gas = mu_gas;
 	
-	/*
-	float H_tot = Gal[p].ColdGasClouds_elements.H  +  Gal[p].ColdGasDiff_elements.H;
-	float He_tot = Gal[p].ColdGasClouds_elements.He  +  Gal[p].ColdGasDiff_elements.He;
-    float Cb_tot = Gal[p].ColdGasClouds_elements.Cb  +  Gal[p].ColdGasDiff_elements.Cb;
-    float N_tot = Gal[p].ColdGasClouds_elements.N  +  Gal[p].ColdGasDiff_elements.N;
-    float O_tot = Gal[p].ColdGasClouds_elements.O  +  Gal[p].ColdGasDiff_elements.O;
-    float Ne_tot = Gal[p].ColdGasClouds_elements.Ne  +  Gal[p].ColdGasDiff_elements.Ne;
-    float Mg_tot = Gal[p].ColdGasClouds_elements.Mg  +  Gal[p].ColdGasDiff_elements.Mg;
-    float Si_tot = Gal[p].ColdGasClouds_elements.Si  +  Gal[p].ColdGasDiff_elements.Si;
-    float S_tot = Gal[p].ColdGasClouds_elements.S  +  Gal[p].ColdGasDiff_elements.S;
-    float Ca_tot = Gal[p].ColdGasClouds_elements.Ca  +  Gal[p].ColdGasDiff_elements.Ca;
-    float Fe_tot = Gal[p].ColdGasClouds_elements.Fe  +  Gal[p].ColdGasDiff_elements.Fe;
-    */
-    
-    double yields, fraction_clouds, fraction_diffuse;
-    double delta, clouds, diff;
+	struct elements diff_init = Gal[p].ColdGasDiff_elements; 
+	struct elements clouds_init = Gal[p].ColdGasClouds_elements; 
+	struct elements yields_diff = elements_init();
+	struct elements yields_clouds = elements_init();    
     if (!(isnan(mu_gas)) && !(isinf(mu_gas)) && Gal[p].ColdGasDiff_elements.H != 0. && Gal[p].ColdGasClouds_elements.H != 0) {
         
-        yields = Gal[p].ColdGasClouds_elements.H * (mu_gas - 1.) + Gal[p].ColdGasDiff_elements.H*mu_gas;
+        Gal[p].ColdGasDiff_elements = elements_add(elements_init(), Gal[p].ColdGas_elements, 1.0 - mu_gas);   
+        Gal[p].ColdGasClouds_elements = elements_add(elements_init(), Gal[p].ColdGas_elements, mu_gas); 
         
-        fraction_clouds = yields/Gal[p].ColdGasClouds_elements.H;
-        fraction_diffuse = yields/Gal[p].ColdGasDiff_elements.H; 
+        yields_diff = elements_add(Gal[p].ColdGasDiff_elements, diff_init, -1.);   
+        yields_clouds = elements_add(Gal[p].ColdGasClouds_elements, clouds_init, -1.);  
         
-        Gal[p].ColdGasDiff_elements = elements_add(Gal[p].ColdGasDiff_elements,Gal[p].ColdGasDiff_elements, -fraction_diffuse);   
-        Gal[p].ColdGasClouds_elements = elements_add(Gal[p].ColdGasClouds_elements,Gal[p].ColdGasClouds_elements, fraction_clouds); 
+        yields_diff.Cb = yields_diff.Cb/diff_init.Cb;
+        yields_clouds.Cb = yields_clouds.Cb/clouds_init.Cb;
+        Gal[p].DustColdGasDiff_elements.Cb += Gal[p].DustColdGasDiff_elements.Cb*yields_diff.Cb;
+        Gal[p].DustColdGasClouds_elements.Cb += Gal[p].DustColdGasClouds_elements.Cb*yields_clouds.Cb;
         
-        Gal[p].DustColdGasDiff_elements = elements_add(Gal[p].DustColdGasDiff_elements,Gal[p].DustColdGasDiff_elements, -fraction_diffuse);   
-        Gal[p].DustColdGasClouds_elements = elements_add(Gal[p].DustColdGasClouds_elements,Gal[p].DustColdGasClouds_elements, fraction_clouds);   
+        yields_diff.O = yields_diff.O/diff_init.O;
+        yields_clouds.O = yields_clouds.O/clouds_init.O;
+        Gal[p].DustColdGasDiff_elements.O += Gal[p].DustColdGasDiff_elements.O*yields_diff.O;
+        Gal[p].DustColdGasClouds_elements.O += Gal[p].DustColdGasClouds_elements.O*yields_clouds.O;
         
-        /*
-        Gal[p].ColdGasClouds_elements.H = H_tot*mu_gas; 
-        Gal[p].ColdGasDiff_elements.H + H_tot*(1.-mu_gas);
+        yields_diff.Mg = yields_diff.Mg/diff_init.Mg;
+        yields_clouds.Mg = yields_clouds.Mg/clouds_init.Mg;
+        Gal[p].DustColdGasDiff_elements.Mg += Gal[p].DustColdGasDiff_elements.Mg*yields_diff.Mg;
+        Gal[p].DustColdGasClouds_elements.Mg += Gal[p].DustColdGasClouds_elements.Mg*yields_clouds.Mg;
         
-        Gal[p].ColdGasClouds_elements.He = He_tot*mu_gas; 
-        Gal[p].ColdGasDiff_elements.He + He_tot*(1.-mu_gas);
+        yields_diff.Si = yields_diff.Si/diff_init.Si;
+        yields_clouds.Si = yields_clouds.Si/clouds_init.Si;
+        Gal[p].DustColdGasDiff_elements.Si += Gal[p].DustColdGasDiff_elements.Si*yields_diff.Si;
+        Gal[p].DustColdGasClouds_elements.Si += Gal[p].DustColdGasClouds_elements.Si*yields_clouds.Si;
         
-        delta = Cb_tot*mu_gas - Gal[p].ColdGasClouds_elements.Cb;
-        fraction_clouds = delta/Gal[p].ColdGasClouds_elements.Cb;
-        fraction_diffuse = delta/Gal[p].ColdGasDiff_elements.Cb;
-        Gal[p].ColdGasClouds_elements.Cb += delta;
-        Gal[p].ColdGasDiff_elements.Cb -= delta;
-        clouds = Gal[p].DustColdGasClouds_elements.Cb*fraction_clouds;
-        diff = Gal[p].DustColdGasDiff_elements.Cb*fraction_diffuse;
-        if (!isnan(fraction_diffuse) || !isinf(fraction_diffuse)) {Gal[p].DustColdGasClouds_elements.Cb += diff;}
-        if (!isnan(fraction_clouds) || !isinf(fraction_clouds)) {Gal[p].DustColdGasDiff_elements.Cb -= clouds;}
-    
+        yields_diff.Ca = yields_diff.Ca/diff_init.Ca;
+        yields_clouds.Ca = yields_clouds.Ca/clouds_init.Ca;
+        Gal[p].DustColdGasDiff_elements.Ca += Gal[p].DustColdGasDiff_elements.Ca*yields_diff.Ca;
+        Gal[p].DustColdGasClouds_elements.Ca += Gal[p].DustColdGasClouds_elements.Ca*yields_clouds.Ca;
         
-        delta = N_tot*mu_gas - Gal[p].ColdGasClouds_elements.N;
-        fraction_clouds = delta/Gal[p].ColdGasClouds_elements.N;
-        fraction_diffuse = delta/Gal[p].ColdGasDiff_elements.N;
-        Gal[p].ColdGasClouds_elements.N += delta;
-        Gal[p].ColdGasDiff_elements.N -= delta;
-        clouds = Gal[p].DustColdGasClouds_elements.N*fraction_clouds;
-        diff = Gal[p].DustColdGasDiff_elements.N*fraction_diffuse;
-        if (!isnan(fraction_diffuse) || !isinf(fraction_diffuse)) {Gal[p].DustColdGasClouds_elements.N += diff;}
-        if (!isnan(fraction_clouds) || !isinf(fraction_clouds)) {Gal[p].DustColdGasDiff_elements.N -= clouds;}
+        yields_diff.Fe = yields_diff.Fe/diff_init.Fe;
+        yields_clouds.Fe = yields_clouds.Fe/clouds_init.Fe; 
+        Gal[p].DustColdGasDiff_elements.Fe += Gal[p].DustColdGasDiff_elements.Fe*yields_diff.Fe;
+        Gal[p].DustColdGasClouds_elements.Fe += Gal[p].DustColdGasClouds_elements.Fe*yields_clouds.Fe;
         
-        delta = O_tot*mu_gas - Gal[p].ColdGasClouds_elements.O;
-        fraction_clouds = delta/Gal[p].ColdGasClouds_elements.O;
-        fraction_diffuse = delta/Gal[p].ColdGasDiff_elements.O;
-        Gal[p].ColdGasClouds_elements.O += delta;
-        Gal[p].ColdGasDiff_elements.O -= delta;
-        clouds = Gal[p].DustColdGasClouds_elements.O*fraction_clouds;
-        diff = Gal[p].DustColdGasDiff_elements.O*fraction_diffuse;
-        if (!isnan(fraction_diffuse) || !isinf(fraction_diffuse)) {Gal[p].DustColdGasClouds_elements.O += diff;}
-        if (!isnan(fraction_clouds) || !isinf(fraction_clouds)) {Gal[p].DustColdGasDiff_elements.O -= clouds;}
-        
-        delta = Ne_tot*mu_gas - Gal[p].ColdGasClouds_elements.Ne;
-        fraction_clouds = delta/Gal[p].ColdGasClouds_elements.Ne;
-        fraction_diffuse = delta/Gal[p].ColdGasDiff_elements.Ne;
-        Gal[p].ColdGasClouds_elements.Ne += delta;
-        Gal[p].ColdGasDiff_elements.Ne -= delta;
-        clouds = Gal[p].DustColdGasClouds_elements.Ne*fraction_clouds;
-        diff = Gal[p].DustColdGasDiff_elements.Ne*fraction_diffuse;
-        if (!isnan(fraction_diffuse) || !isinf(fraction_diffuse)) {Gal[p].DustColdGasClouds_elements.Ne += diff;}
-        if (!isnan(fraction_clouds) || !isinf(fraction_clouds)) {Gal[p].DustColdGasDiff_elements.Ne -= clouds;}
-        
-        delta = Mg_tot*mu_gas - Gal[p].ColdGasClouds_elements.Mg;
-        fraction_clouds = delta/Gal[p].ColdGasClouds_elements.Mg;
-        fraction_diffuse = delta/Gal[p].ColdGasDiff_elements.Mg;
-        Gal[p].ColdGasClouds_elements.Mg += delta;
-        Gal[p].ColdGasDiff_elements.Mg -= delta;
-        clouds = Gal[p].DustColdGasClouds_elements.Mg*fraction_clouds;
-        diff = Gal[p].DustColdGasDiff_elements.Mg*fraction_diffuse;
-        if (!isnan(fraction_diffuse) || !isinf(fraction_diffuse)) {Gal[p].DustColdGasClouds_elements.Mg += diff;}
-        if (!isnan(fraction_clouds) || !isinf(fraction_clouds)) {Gal[p].DustColdGasDiff_elements.Mg -= clouds;}
-        
-        delta = Si_tot*mu_gas - Gal[p].ColdGasClouds_elements.Si;
-        fraction_clouds = delta/Gal[p].ColdGasClouds_elements.Si;
-        fraction_diffuse = delta/Gal[p].ColdGasDiff_elements.Si;
-        Gal[p].ColdGasClouds_elements.Si += delta;
-        Gal[p].ColdGasDiff_elements.Si -= delta;
-        clouds = Gal[p].DustColdGasClouds_elements.Si*fraction_clouds;
-        diff = Gal[p].DustColdGasDiff_elements.Si*fraction_diffuse;
-        if (!isnan(fraction_diffuse) || !isinf(fraction_diffuse)) {Gal[p].DustColdGasClouds_elements.Si += diff;}
-        if (!isnan(fraction_clouds) || !isinf(fraction_clouds)) {Gal[p].DustColdGasDiff_elements.Si -= clouds;}
-        
-        delta = S_tot*mu_gas - Gal[p].ColdGasClouds_elements.S;
-        fraction_clouds = delta/Gal[p].ColdGasClouds_elements.S;
-        fraction_diffuse = delta/Gal[p].ColdGasDiff_elements.S;
-        Gal[p].ColdGasClouds_elements.S += delta;
-        Gal[p].ColdGasDiff_elements.S -= delta;
-        clouds = Gal[p].DustColdGasClouds_elements.S*fraction_clouds;
-        diff = Gal[p].DustColdGasDiff_elements.S*fraction_diffuse;
-        if (!isnan(fraction_diffuse) || !isinf(fraction_diffuse)) {Gal[p].DustColdGasClouds_elements.S += diff;}
-        if (!isnan(fraction_clouds) || !isinf(fraction_clouds)) {Gal[p].DustColdGasDiff_elements.S -= clouds;}
-        
-        delta = Ca_tot*mu_gas - Gal[p].ColdGasClouds_elements.Ca;
-        fraction_clouds = delta/Gal[p].ColdGasClouds_elements.Ca;
-        fraction_diffuse = delta/Gal[p].ColdGasDiff_elements.Ca;
-        Gal[p].ColdGasClouds_elements.Ca += delta;
-        Gal[p].ColdGasDiff_elements.Ca -= delta;
-        clouds = Gal[p].DustColdGasClouds_elements.Ca*fraction_clouds;
-        diff = Gal[p].DustColdGasDiff_elements.Ca*fraction_diffuse;
-        if (!isnan(fraction_diffuse) || !isinf(fraction_diffuse)) {Gal[p].DustColdGasClouds_elements.Ca += diff;}
-        if (!isnan(fraction_clouds) || !isinf(fraction_clouds)) {Gal[p].DustColdGasDiff_elements.Ca -= clouds;}
-        
-        delta = Fe_tot*mu_gas - Gal[p].ColdGasClouds_elements.Fe;
-        fraction_clouds = delta/Gal[p].ColdGasClouds_elements.Fe;
-        fraction_diffuse = delta/Gal[p].ColdGasDiff_elements.Fe;
-        Gal[p].ColdGasClouds_elements.Fe += delta;
-        Gal[p].ColdGasDiff_elements.Fe -= delta;
-        clouds = Gal[p].DustColdGasClouds_elements.Fe*fraction_clouds;
-        diff = Gal[p].DustColdGasDiff_elements.Fe*fraction_diffuse;
-        if (!isnan(fraction_diffuse) || !isinf(fraction_diffuse)) {Gal[p].DustColdGasClouds_elements.Fe += diff;}
-        if (!isnan(fraction_clouds) || !isinf(fraction_clouds)) {Gal[p].DustColdGasDiff_elements.Fe -= clouds;}
-        */
     } 
-	 
-	 return;   
+	return;   
 	    
 }
 
@@ -1441,7 +1364,7 @@ void mass_checks(char string[], int igal) {
  // int i;
  // double sfh_sum;
 #endif
-
+      
   if(Gal[igal].ColdGas < 1.e-8)
     {
       Gal[igal].ColdGas = 0.;
@@ -1457,7 +1380,7 @@ void mass_checks(char string[], int igal) {
     }
     
       
-  if(!(0.98 < (Gal[igal].ColdGasDiff_elements.H + Gal[igal].ColdGasClouds_elements.H)/ Gal[igal].ColdGas_elements.H < 1.02) && (Gal[igal].ColdGasDiff_elements.H + Gal[igal].ColdGasClouds_elements.H != 0.))
+  if(!(0.99 < (Gal[igal].ColdGasDiff_elements.H + Gal[igal].ColdGasClouds_elements.H)/Gal[igal].ColdGas_elements.H < 1.01) && (Gal[igal].ColdGas_elements.H != 0.) && (Gal[igal].ColdGas_elements.H > 1e6))
     {
       printf("\n*** Mass check error, called from: %s, ColdGas_elements hydrogen doesnt add up ***\n",string);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.H);
@@ -1466,7 +1389,7 @@ void mass_checks(char string[], int igal) {
        
     }
     
-    if(!(0.98 < (Gal[igal].ColdGasDiff_elements.Cb + Gal[igal].ColdGasClouds_elements.Cb)/Gal[igal].ColdGas_elements.Cb < 1.02) && (Gal[igal].ColdGasDiff_elements.Cb + Gal[igal].ColdGasClouds_elements.Cb != 0.))
+    if(!(0.99 < (Gal[igal].ColdGasDiff_elements.Cb + Gal[igal].ColdGasClouds_elements.Cb)/Gal[igal].ColdGas_elements.Cb < 1.01) && (Gal[igal].ColdGas_elements.Cb != 0.) && (Gal[igal].ColdGas_elements.Cb > 1e3))
     {
       printf("\n*** Mass check error, called from: %s, ColdGas_elements Carbon doesnt add up ***\n",string);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.Cb);
@@ -1475,7 +1398,7 @@ void mass_checks(char string[], int igal) {
        
     }
     
-    if(!(0.98 < (Gal[igal].ColdGasDiff_elements.N + Gal[igal].ColdGasClouds_elements.N)/Gal[igal].ColdGas_elements.N < 1.02) && (Gal[igal].ColdGasDiff_elements.N + Gal[igal].ColdGasClouds_elements.N != 0.))
+    if(!(0.99 < (Gal[igal].ColdGasDiff_elements.N + Gal[igal].ColdGasClouds_elements.N)/Gal[igal].ColdGas_elements.N < 1.01) && (Gal[igal].ColdGasDiff_elements.N + Gal[igal].ColdGasClouds_elements.N != 0.))
     {
       printf("\n*** Mass check error, called from: %s, ColdGas_elements Nitrogen doesnt add up ***\n",string);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.N);
@@ -1484,7 +1407,7 @@ void mass_checks(char string[], int igal) {
        
     }
     
-    if(!(0.98 < (Gal[igal].ColdGasDiff_elements.O + Gal[igal].ColdGasClouds_elements.O)/Gal[igal].ColdGas_elements.O < 1.02) && (Gal[igal].ColdGasDiff_elements.O + Gal[igal].ColdGasClouds_elements.O != 0.))
+    if(!(0.99 < (Gal[igal].ColdGasDiff_elements.O + Gal[igal].ColdGasClouds_elements.O)/Gal[igal].ColdGas_elements.O < 1.01) && (Gal[igal].ColdGas_elements.O != 0.) && (Gal[igal].ColdGas_elements.O > 1e6))
     {
       printf("\n*** Mass check error, called from: %s, ColdGas_elements Oxygen doesnt add up ***\n",string);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.O);
@@ -1493,7 +1416,7 @@ void mass_checks(char string[], int igal) {
        
     }
     
-    if(!(0.98 < (Gal[igal].ColdGasDiff_elements.Ne + Gal[igal].ColdGasClouds_elements.Ne)/Gal[igal].ColdGas_elements.Ne < 1.02) && (Gal[igal].ColdGasDiff_elements.Ne + Gal[igal].ColdGasClouds_elements.Ne != 0.))
+    if(!(0.99 < (Gal[igal].ColdGasDiff_elements.Ne + Gal[igal].ColdGasClouds_elements.Ne)/Gal[igal].ColdGas_elements.Ne < 1.01) && (Gal[igal].ColdGasDiff_elements.Ne + Gal[igal].ColdGasClouds_elements.Ne != 0.))
     {
       printf("\n*** Mass check error, called from: %s, ColdGas_elements Neon doesnt add up ***\n",string);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.Ne);
@@ -1502,7 +1425,7 @@ void mass_checks(char string[], int igal) {
        
     }
     
-    if(!(0.98 < (Gal[igal].ColdGasDiff_elements.Mg + Gal[igal].ColdGasClouds_elements.Mg)/Gal[igal].ColdGas_elements.Mg < 1.02) && (Gal[igal].ColdGasDiff_elements.Mg + Gal[igal].ColdGasClouds_elements.Mg != 0.))
+    if(!(0.99 < (Gal[igal].ColdGasDiff_elements.Mg + Gal[igal].ColdGasClouds_elements.Mg)/Gal[igal].ColdGas_elements.Mg < 1.01) && (Gal[igal].ColdGasDiff_elements.Mg + Gal[igal].ColdGasClouds_elements.Mg != 0.))
     {
       printf("\n*** Mass check error, called from: %s, ColdGas_elements Magnesium doesnt add up ***\n",string);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.Mg);
@@ -1511,7 +1434,7 @@ void mass_checks(char string[], int igal) {
        
     }
     
-    if(!(0.98 < (Gal[igal].ColdGasDiff_elements.S + Gal[igal].ColdGasClouds_elements.S)/Gal[igal].ColdGas_elements.S < 1.02) && (Gal[igal].ColdGasDiff_elements.S + Gal[igal].ColdGasClouds_elements.S != 0.))
+    if(!(0.99 < (Gal[igal].ColdGasDiff_elements.S + Gal[igal].ColdGasClouds_elements.S)/Gal[igal].ColdGas_elements.S < 1.01) && (Gal[igal].ColdGasDiff_elements.S + Gal[igal].ColdGasClouds_elements.S != 0.))
     {
       printf("\n*** Mass check error, called from: %s, ColdGas_elements Sulphur doesnt add up ***\n",string);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.S);
@@ -1520,7 +1443,7 @@ void mass_checks(char string[], int igal) {
        
     }
     
-    if(!(0.98 < (Gal[igal].ColdGasDiff_elements.Si + Gal[igal].ColdGasClouds_elements.Si)/Gal[igal].ColdGas_elements.Si < 1.02) && (Gal[igal].ColdGasDiff_elements.Si + Gal[igal].ColdGasClouds_elements.Si != 0.))
+    if(!(0.99 < (Gal[igal].ColdGasDiff_elements.Si + Gal[igal].ColdGasClouds_elements.Si)/Gal[igal].ColdGas_elements.Si < 1.01) && (Gal[igal].ColdGasDiff_elements.Si + Gal[igal].ColdGasClouds_elements.Si != 0.))
     {
       printf("\n*** Mass check error, called from: %s, ColdGas_elements Silicon doesnt add up ***\n",string);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.Si);
@@ -1529,7 +1452,7 @@ void mass_checks(char string[], int igal) {
        
     }
     
-    if(!(0.98 < (Gal[igal].ColdGasDiff_elements.Ca + Gal[igal].ColdGasClouds_elements.Ca)/Gal[igal].ColdGas_elements.Ca < 1.02) && (Gal[igal].ColdGasDiff_elements.Ca + Gal[igal].ColdGasClouds_elements.Ca != 0.))
+    if(!(0.99 < (Gal[igal].ColdGasDiff_elements.Ca + Gal[igal].ColdGasClouds_elements.Ca)/Gal[igal].ColdGas_elements.Ca < 1.01) && (Gal[igal].ColdGasDiff_elements.Ca + Gal[igal].ColdGasClouds_elements.Ca != 0.))
     {
       printf("\n*** Mass check error, called from: %s, ColdGas_elements Calcium doesnt add up ***\n",string);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.Ca);
@@ -1549,11 +1472,24 @@ void mass_checks(char string[], int igal) {
 
 
     
+    if ((Gal[igal].DustColdGasDiff_elements.Cb < 0.) || (Gal[igal].DustColdGasClouds_elements.Cb) < 0.) {
+        
+        printf("\n*** Mass check error, called from: %s, Metal carbon in diffuse or clouds less than 0 ***\n",string);
+        printf("                ColdGasDiff_elements[%d] = %f\n",igal,Gal[igal].ColdGasDiff_elements.Cb);
+        printf("                DustColdGasDiff_elements[%d] = %f\n",igal,Gal[igal].DustColdGasDiff_elements.Cb);
+        printf("                ColdGasClouds_elements[%d] = %f\n",igal,Gal[igal].ColdGasClouds_elements.Cb);
+        printf("                DustColdGasClouds_elements[%d] = %f\n",igal,Gal[igal].DustColdGasClouds_elements.Cb);
+        terminate("");
+    }
+    
     if((Gal[igal].ColdGasDiff_elements.Cb - Gal[igal].DustColdGasDiff_elements.Cb < -0.02*Gal[igal].ColdGasDiff_elements.Cb) && (Gal[igal].ColdGasDiff_elements.Cb - Gal[igal].DustColdGasDiff_elements.Cb < -20.0))
     {
       printf("\n*** Mass check error, called from: %s, Metal carbon in diffused less than dust carbon ***\n",string);
       printf("                ColdGasDiff_elements[%d] = %f\n",igal,Gal[igal].ColdGasDiff_elements.Cb);
       printf("                DustColdGasDiff_elements[%d] = %f\n",igal,Gal[igal].DustColdGasDiff_elements.Cb);
+      printf("                ColdGasClouds_elements[%d] = %f\n",igal,Gal[igal].ColdGasClouds_elements.Cb);
+      printf("                DustColdGasClouds_elements[%d] = %f\n",igal,Gal[igal].DustColdGasClouds_elements.Cb);
+      printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGasDiff_elements.Cb);
       terminate("");
     }
    
@@ -1613,7 +1549,7 @@ void mass_checks(char string[], int igal) {
       terminate("");
     }
     
-    if((Gal[igal].ColdGasDiff_elements.Fe - Gal[igal].DustColdGasDiff_elements.Fe < -0.02*Gal[igal].ColdGasDiff_elements.Fe) && (Gal[igal].ColdGasDiff_elements.Fe - Gal[igal].DustColdGasDiff_elements.Fe < -20.0))
+    if((Gal[igal].ColdGasDiff_elements.Fe - Gal[igal].DustColdGasDiff_elements.Fe < -0.001*Gal[igal].ColdGasDiff_elements.Fe))
     {
       printf("\n*** Mass check error, called from: %s, Metal iron in diffused less than dust iron ***\n",string);
       printf("                ColdGasDiff_elements[%d] = %f\n",igal,Gal[igal].ColdGasDiff_elements.Fe);
@@ -1622,6 +1558,7 @@ void mass_checks(char string[], int igal) {
       printf("                DustColdGasClouds_elements[%d] = %f\n",igal,Gal[igal].DustColdGasClouds_elements.Fe);
       printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.Fe);
       printf("                1-mu_gas[%d] = %f\n",igal,1.-Gal[igal].mu_gas);
+      printf("                fi = %f\n",igal,Gal[igal].f_i[8]);
       terminate("");
     }
     
@@ -1633,6 +1570,12 @@ void mass_checks(char string[], int igal) {
       printf("\n*** Mass check error, called from: %s, Metal carbon in clouds less than dust carbon ***\n",string);
       printf("                ColdGasClouds_elements[%d] = %f\n",igal,Gal[igal].ColdGasClouds_elements.Cb);
       printf("                DustColdGasClouds_elements[%d] = %f\n",igal,Gal[igal].DustColdGasClouds_elements.Cb);
+      printf("                fc = %f\n",igal,Gal[igal].f_c[0]);
+      printf("                fc_max = %f\n",igal,Gal[igal].f_cmax[0]);
+      printf("                ColdGasDiff_elements[%d] = %f\n",igal,Gal[igal].ColdGasDiff_elements.Cb);
+      printf("                DustColdGasDiff_elements[%d] = %f\n",igal,Gal[igal].DustColdGasDiff_elements.Cb);
+      printf("                ColdGas_elements[%d] = %f\n",igal,Gal[igal].ColdGas_elements.Cb);
+      printf("                mu_gas = %f\n",Gal[igal].mu_gas);
       terminate("");
     }
    
@@ -1701,7 +1644,7 @@ void mass_checks(char string[], int igal) {
     }
 
 
-    if(!(0.95 < (elements_total(Gal[igal].DustColdGasClouds_elements))/(elements_total(Gal[igal].ColdGasClouds_elements)) < 1.05))
+    if(!(0.99 < (elements_total(Gal[igal].DustColdGasClouds_elements))/(elements_total(Gal[igal].ColdGasClouds_elements)) < 1.01))
   {
     printf("\n*** Mass check error, called from: %s, ColdGasClouds_elements less than DustColdGasClouds_elements ***\n",string);
     printf("                ColdGasClouds_elements[%d] = %f + %f + %f + %f + %f + %f + %f + %f + %f + %f +%f\n",igal,Gal[igal].ColdGasClouds_elements.H, Gal[igal].ColdGasClouds_elements.He, Gal[igal].ColdGasClouds_elements.Cb, Gal[igal].ColdGasClouds_elements.N, Gal[igal].ColdGasClouds_elements.O, Gal[igal].ColdGasClouds_elements.Ne, Gal[igal].ColdGasClouds_elements.S, Gal[igal].ColdGasClouds_elements.Si, Gal[igal].ColdGasClouds_elements.Mg, Gal[igal].ColdGasClouds_elements.Ca, Gal[igal].ColdGasClouds_elements.Fe);
@@ -1710,7 +1653,7 @@ void mass_checks(char string[], int igal) {
   }
 
    
-  if(!(0.95 < (elements_total(Gal[igal].DustColdGasDiff_elements))/(elements_total(Gal[igal].ColdGasDiff_elements)) < 1.05))
+  if(!(0.99 < (elements_total(Gal[igal].DustColdGasDiff_elements))/(elements_total(Gal[igal].ColdGasDiff_elements)) < 1.01))
   {
     printf("\n*** Mass check error, called from: %s, ColdGasDiff_elements less than DustColdGasDiff_elements ***\n",string);
     printf("                ColdGasDiff_elements[%d] = %f + %f + %f + %f + %f + %f + %f + %f + %f + %f +%f\n",igal,Gal[igal].ColdGasDiff_elements.H, Gal[igal].ColdGasDiff_elements.He, Gal[igal].ColdGasDiff_elements.Cb, Gal[igal].ColdGasDiff_elements.N, Gal[igal].ColdGasDiff_elements.O, Gal[igal].ColdGasDiff_elements.Ne, Gal[igal].ColdGasDiff_elements.S, Gal[igal].ColdGasDiff_elements.Si, Gal[igal].ColdGasDiff_elements.Mg, Gal[igal].ColdGasDiff_elements.Ca, Gal[igal].ColdGasDiff_elements.Fe);

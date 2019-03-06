@@ -230,10 +230,13 @@ struct GALAXY_OUTPUT
   struct elements ColdGasDiff_elements; // Msol // Mass of elements in the diffused phase (in ColdGas)
   struct elements ColdGasClouds_elements; // Msol // Mass of elements in the cloud phase (in ColdGas)
   float mu_gas; // ? // fraction of molecular media
+  float RatesSNII; // /yr // SNII rate
+  float RatesSNIa; // /yr // SNIa rate
 #endif //INDIVIDUAL_ELEMENTS
 
 #ifdef DETAILED_DUST
 #ifdef FULL_DUST_RATES
+  float tdes;
   struct DustRates DustColdGasRates; // ? // Rates of creation and destruction of dust
 #endif
   struct elements DustColdGasDiff_elements; // Msol // Mass of elements in the diffused phase locked up in dust (in ColdGas)
@@ -284,6 +287,8 @@ struct SFH_BIN {
   struct elements ColdGasDiff_elements;
   struct elements ColdGasClouds_elements;
   float mu_gas;
+  float RatesSNII; // /yr // SNII rate
+  float RatesSNIa; // /yr // SNIa rate
 #endif //INDIVIDUAL_ELEMENTS
 };
 

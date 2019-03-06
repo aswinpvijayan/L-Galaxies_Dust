@@ -23,7 +23,7 @@ size_t * output_sizes;
 hsize_t dims[6];
  
 // The number of fields in the data
-int nfields=74;
+int nfields=77;
  
 // The field names
 const char * field_names[]={
@@ -94,6 +94,9 @@ const char * field_names[]={
 "ColdGasDiff_elements",
 "ColdGasClouds_elements",
 "mu_gas",
+"RatesSNII",
+"RatesSNIa",
+"tdes",
 "DustColdGasRates",
 "DustColdGasDiff_elements",
 "DustColdGasClouds_elements",
@@ -174,6 +177,9 @@ char types[]={
 'e',
 'e',
 'f',
+'f',
+'f',
+'f',
 'd',
 'e',
 'e',
@@ -200,6 +206,9 @@ int flag3[]={
 0,
 1,
 1,
+0,
+0,
+0,
 0,
 0,
 0,
@@ -335,9 +344,15 @@ int flagMag[]={
 0,
 0,
 0,
+0,
+0,
+0,
 }; 
  
 int flagRings[]={
+0,
+0,
+0,
 0,
 0,
 0,
@@ -489,9 +504,15 @@ int flagSFH[]={
 0,
 0,
 0,
+0,
+0,
+0,
 }; 
  
 int flagElements[]={
+0,
+0,
+0,
 0,
 0,
 0,

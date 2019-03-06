@@ -220,9 +220,12 @@ void update_from_star_formation(int p, double stars, bool flag_burst, int nstep)
 {
   int i;
 
-  double fraction, fraction_clouds, fraction_diff;
-  double stars_to_add=0.;
-  
+  float fraction, fraction_clouds, cloud_mass, diff_mass; 
+  float fraction_diff=0.;
+  float stars_to_add=0.;
+  struct elements remove_clouds;
+  struct elements remove_diff;
+
   if(Gal[p].ColdGas <= 0. || stars <= 0.) {
     printf("update_from_star_formation: Gal[p].ColdGas <= 0. || stars <= 0.\n");
     exit(0);
@@ -245,14 +248,90 @@ void update_from_star_formation(int p, double stars, bool flag_burst, int nstep)
   mass_checks("update_from_star_formation #0",p);
 
   fraction=stars_to_add/Gal[p].ColdGas;
-  fraction_clouds = stars_to_add/(Gal[p].ColdGas*Gal[p].mu_gas);
-  if (fraction_clouds > 1.) {
-    
+  //remove_clouds = elements_add(elements_init(), Gal[p].ColdGas_elements, fraction);
+  cloud_mass = elements_total(Gal[p].ColdGasClouds_elements)/((1E10/Hubble_h));
+  diff_mass = elements_total(Gal[p].ColdGasDiff_elements)/((1E10/Hubble_h));
+  fraction_clouds = stars_to_add/cloud_mass;
+  if (fraction_clouds > 1.){ 
     fraction_clouds = 1.;
-    fraction_diff = min(1.0, (stars_to_add - (Gal[p].ColdGas*Gal[p].mu_gas))/(Gal[p].ColdGas*(1. - Gal[p].mu_gas)));
+    fraction_diff =  (stars_to_add - cloud_mass)/diff_mass;
+    if (fraction_diff > 1.) {fraction_diff = 1.;}
+  }
+  /*
+  Gal[p].ColdGasClouds_elements = elements_add(Gal[p].ColdGasClouds_elements, remove_clouds, -1.);
+  if (fraction_clouds > 1.){  
+      
+      fraction_clouds = 1.;   
+      if (Gal[p].ColdGasClouds_elements.H < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.H;
+        Gal[p].ColdGasDiff_elements.H += Gal[p].ColdGasClouds_elements.H;
+        Gal[p].ColdGasClouds_elements.H = 0.;
+      }
+      if (Gal[p].ColdGasClouds_elements.He < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.He;
+        Gal[p].ColdGasDiff_elements.He += Gal[p].ColdGasClouds_elements.He;
+        Gal[p].ColdGasClouds_elements.He = 0.;
+      }
+      if (Gal[p].ColdGasClouds_elements.Cb < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.Cb;
+        Gal[p].ColdGasDiff_elements.Cb += Gal[p].ColdGasClouds_elements.Cb;
+        Gal[p].ColdGasClouds_elements.Cb = 0.;
+      }
+      if (Gal[p].ColdGasClouds_elements.N < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.N;
+        Gal[p].ColdGasDiff_elements.N += Gal[p].ColdGasClouds_elements.N;
+        Gal[p].ColdGasClouds_elements.N = 0.;
+      }
+      if (Gal[p].ColdGasClouds_elements.O < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.O;
+        Gal[p].ColdGasDiff_elements.O += Gal[p].ColdGasClouds_elements.O;
+        Gal[p].ColdGasClouds_elements.O = 0.;
+      }
+      if (Gal[p].ColdGasClouds_elements.Ne < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.Ne;
+        Gal[p].ColdGasDiff_elements.Ne += Gal[p].ColdGasClouds_elements.Ne;
+        Gal[p].ColdGasClouds_elements.Ne = 0.;
+      }
+      if (Gal[p].ColdGasClouds_elements.Mg < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.Mg;
+        Gal[p].ColdGasDiff_elements.Mg += Gal[p].ColdGasClouds_elements.Mg;
+        Gal[p].ColdGasClouds_elements.Mg = 0.;
+      }
+      if (Gal[p].ColdGasClouds_elements.S < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.S;
+        Gal[p].ColdGasDiff_elements.S += Gal[p].ColdGasClouds_elements.S;
+        Gal[p].ColdGasClouds_elements.S = 0.;
+      }
+      if (Gal[p].ColdGasClouds_elements.Si < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.Si;
+        Gal[p].ColdGasDiff_elements.Si += Gal[p].ColdGasClouds_elements.Si;
+        Gal[p].ColdGasClouds_elements.Si = 0.;
+      }  
+      if (Gal[p].ColdGasClouds_elements.Ca < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.Ca;
+        remove_clouds.Ca -= Gal[p].ColdGasClouds_elements.Ca;
+        Gal[p].ColdGasDiff_elements.Ca += Gal[p].ColdGasClouds_elements.Ca;
+        Gal[p].ColdGasClouds_elements.Ca = 0.;
+      }
+      if (Gal[p].ColdGasClouds_elements.Fe < 0.) {
+        fraction_diff += Gal[p].ColdGasClouds_elements.Fe;
+        Gal[p].ColdGasDiff_elements.Fe += Gal[p].ColdGasClouds_elements.Fe;
+        Gal[p].ColdGasClouds_elements.Fe = 0.;
+      }
+      
+      fraction_diff = fraction_diff/elements_total(Gal[p].ColdGasDiff_elements);
+  }
+  */
+  /*
+  fraction_clouds = (stars_to_add)/(elements_total(Gal[p].ColdGasClouds_elements)/(1E10/Hubble_h));
+  if (fraction_clouds > 1.0) {
+    
+    fraction_clouds = 1.0;
+    fraction_diff = min(1.0, (stars_to_add - (elements_total(Gal[p].ColdGasClouds_elements)/(1E10/Hubble_h)))/(elements_total(Gal[p].ColdGasDiff_elements)/(1E10/Hubble_h)));
   
   }
-  
+  */
+  //printf("Gal[p].mu_gas, fraction, fraction_clouds, fraction_diff = %f, %f, %f, %f\n", Gal[p].mu_gas, fraction, fraction_clouds,fraction_diff);
 #ifdef STAR_FORMATION_HISTORY
   Gal[p].sfh_DiskMass[Gal[p].sfh_ibin]+=stars_to_add; //ROB: Now, all SF gas is put in SFH array ("recycled' mass will return to gas phase over time)
   Gal[p].sfh_MetalsDiskMass[Gal[p].sfh_ibin] = metals_add(Gal[p].sfh_MetalsDiskMass[Gal[p].sfh_ibin],Gal[p].MetalsColdGas,fraction);
@@ -286,7 +365,7 @@ void update_from_star_formation(int p, double stars, bool flag_burst, int nstep)
   if (flag_burst) Gal[p].BurstMass+=stars_to_add;
 #endif
 
-  mass_checks("update_from_star_formation #1",p);
+  //mass_checks("update_from_star_formation #1",p);
 
   /* Formation of new metals - instantaneous recycling approximation - only SNII
    * Also recompute the metallicity of the cold phase.*/

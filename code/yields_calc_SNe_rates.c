@@ -54,7 +54,8 @@ void SNe_rates()
 	//TheSFH2[0] = 1.0/(tau_dt[0]*UnitTime_in_years/Hubble_h);
 	for(counta=1;counta<(STEPS*MAXSNAPS);counta++)
 	{
-		TheSFH2[counta] = 0.0;// /(tau_dt[counta]*UnitTime_in_years/Hubble_h);
+		TheSFH2[counta] = 1.0;
+		//TheSFH2[counta] = 1.0/(tau_dt[counta]*UnitTime_in_years/Hubble_h);
 	}
 	//TheSFH2[0] = 0.0; TheSFH2[1] = 3.8; TheSFH2[2] = 5.0; TheSFH2[3] = 5.5; TheSFH2[4] = 5.2; TheSFH2[5] = 5.0; TheSFH2[6] = 4.8; TheSFH2[7] = 4.2; TheSFH2[8] = 4.0; TheSFH2[9] = 3.8; TheSFH2[10] = 3.2; TheSFH2[11] = 3.0; TheSFH2[12] = 2.8; TheSFH2[13] = 2.5; TheSFH2[14] = 2.2; TheSFH2[15] = 2.2; TheSFH2[16] = 2.0; TheSFH2[17] = 1.8; TheSFH2[18] = 1.8; TheSFH2[19] = 1.5;
 
@@ -223,7 +224,6 @@ void SNe_rates()
 	        	    			} //else of "if (SNIIMasses[j] <= 16.0)"
 	        	    		} //for (j=Mi_lower_SNII;j<=Mi_upper_SNII;j++)
 	        	    	} //if (Mi_lower_SNII <= Mi_upper_SNII)
-
 	        	    	//*****************************************
 	        			//SNe-Ia (Disc and Bulge):
 	        			//*****************************************
@@ -321,7 +321,20 @@ void SNe_rates()
 	printf("L2b = %i\n", L2b);
 	printf("L3b = %i\n", L3b);
 	printf("L4b = %i\n", L4b);*/
-	printf("\nSNe rates calculated.\n");
+	printf("SNe rates calculated.\n");
+    FILE *fp;
+    char output[]="sn2_out.txt";
+    int ii, jj;
+
+    fp=fopen(output,"w");
+    for(ii=0;ii<STEPS*MAXSNAPS;ii++)
+        for(jj=0;jj<LIFETIME_Z_NUM;jj++) {
+            fprintf(fp,"%.10lf\n", SNIIRate2[ii][jj]);
+        }
+     fclose(fp);
+
+
+
 }
 
 int find_initial_metallicity_comp2(int Zi, int sfh_bin, int table_type)
