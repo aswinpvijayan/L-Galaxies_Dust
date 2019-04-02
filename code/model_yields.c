@@ -102,10 +102,11 @@ double mu_Krumholz(int p) {
 	float Sigma_gas = (1.0e10 * (Gal[p].ColdGas/Hubble_h))/(M_PI*((((Gal[p].GasDiskRadius*1.0e6)/Hubble_h)/3.0)*(((Gal[p].GasDiskRadius*1.0e6)/Hubble_h)/3.0)));
     
 	float c_f;
-	if (Z_fraction < 1)
+	if (Z_fraction < 1) 
 	{
 	    c_f = pow(Z_fraction, -0.7);
 	}
+    
 	else
 	{
 	    c_f = 1.0;
@@ -113,14 +114,15 @@ double mu_Krumholz(int p) {
 	
 	float Sigma_comp = c_f*Sigma_gas;
 	
-	//float Sigma_comp = Sigma_gas;
-	float tau_c = 0.66*Sigma_comp*Z_fraction;
+	float tau_c = 0.066*Sigma_comp*Z_fraction;
 	float s = log(1.0 + 0.6*chi + 0.01*chi*chi)/(0.6*tau_c);
 	float f_h2;
-	if (s < 2.){
+	if (s < 2.)
+	{
 	    f_h2 = 1. - (0.75)*(s)/(1. + 0.25*s);
     }
-	else {
+	else 
+	{
 	    f_h2 = 0.;
     }
 	
@@ -360,7 +362,7 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 #endif //MAINELEMENTS
 #ifdef DETAILED_DUST //SNIA TO COLD! //PORTINARI
 			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
+			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNIa_prevstep_Cold_Fe[i] += max(0.0, step_width_times_DiskSFR_physical_units * ((NormSNIaYieldRate_actual[10])));
 #endif //DETAILED_DUST
@@ -427,7 +429,7 @@ void update_yields_and_return_mass(int p, int centralgal, double dt, int nstep)
 #endif //MAINELEMENTS
 #ifdef DETAILED_DUST //SNIA TO HOT! //PORTINARI
 			SNII_prevstep_Cold_Si[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[7] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
-			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Si * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
+			SNII_prevstep_Cold_Fe[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[10] + (Gal[p].sfh_ElementsDiskMass[i].Fe * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNII_prevstep_Cold_Cb[i] += max(0.0, (1.0-fwind) * step_width_times_DiskSFR_physical_units * (NormSNIIYieldRate_actual[2] + (Gal[p].sfh_ElementsDiskMass[i].Cb * inverse_DiskMass_physical_units) * NormSNIIMassEjecRate_actual));
 			SNIa_prevstep_Cold_Fe[i] += 0.0; //SNIA has gone to hot gas
 #endif //DETAILED_DUST

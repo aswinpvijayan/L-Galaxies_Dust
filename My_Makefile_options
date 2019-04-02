@@ -12,7 +12,7 @@ OPT += -DNOUT=17             # This sets the number of galaxy output times. IGNO
 OPT += -DUPDATETYPETWO       # This updates the positions of type 2 galaxies when the galaxies are written to file (requires aux files to be read)\
 
 # To run with different dark matter simulation
-OPT += -DMRII      
+#OPT += -DMRII      
 #OPT += -DCATERPILLAR
 
 # predefined some models (to be run with the corresponding input_***.par file)
@@ -140,8 +140,8 @@ OPT += -DDUST_SNII
 OPT += -DDUST_SNIA
 OPT += -DDUST_GROWTH
 # Growth rate parameters in years
-OPT += -DDUST_TEXCH=20.0E6
-OPT += -DDUST_TACC0=0.5E5
+OPT += -DDUST_TEXCH=10E6
+OPT += -DDUST_TACC0=5E4
 OPT += -DDUST_DESTRUCTION
 #OPT += -DCR_Dest
 #OPT += -DDestHIIregion
